@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智承太极 — 数字教案库 · 课程列表</title>
+  <link rel="stylesheet" href="assets/css/zhitaiji.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- 移动端顶栏 -->
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <span class="logo-text">智承<span class="logo-accent">太极</span></span>
+        <span class="logo-sub">数字教案库</span>
+      </div>
+      <nav class="mobile-nav">
+        <a href="00-课程列表.html" class="active">课程列表</a>
+        <a href="01-课程概览.html">课程概览</a>
+        <a href="02-招式详情.html">招式详情</a>
+        <a href="03-3D查看器.html">3D查看器</a>
+        <a href="04-分步教学.html">分步教学</a>
+      </nav>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-text">智承<span class="logo-accent">太极</span></div>
+        <div class="logo-sub">数字教学系统</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">一 / 数字教案库</div>
+        <a class="nav-item active" href="00-课程列表.html">
+          <span class="nav-icon">★</span> 课程列表
+        </a>
+        <a class="nav-item" href="01-课程概览.html">
+          <span class="nav-icon">◉</span> 课程概览
+        </a>
+        <a class="nav-item" href="02-招式详情.html">
+          <span class="nav-icon">◉</span> 招式详情
+        </a>
+        <a class="nav-item" href="03-3D查看器.html">
+          <span class="nav-icon">⊙</span> 3D动作查看器
+        </a>
+        <a class="nav-item" href="04-分步教学.html">
+          <span class="nav-icon">▶</span> 分步教学
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar">金</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">金润山</div>
+          <div class="sidebar-user-role">计算机科学与技术2504班</div>
+        </div>
+        <div class="sidebar-settings" title="设置">⚙</div>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <div class="breadcrumb">
+        <a href="00-课程列表.html">首页</a>
+        <span class="sep">/</span>
+        数字教案库
+        <span class="sep">/</span>
+        课程列表
+      </div>
+
+      <div class="page-title">数字教案库</div>
+      <div class="page-desc">杨氏十六式太极拳精编套路 · 点击招式卡片查看详细教学</div>
+
+      <!-- 课程总览卡 -->
+      <a class="course-hero" href="01-课程概览.html" style="display:block;">
+        <svg class="course-hero-taiji" width="150" height="150" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="96"></circle>
+          <path d="M100 4 A96 96 0 0 1 100 196 A48 48 0 0 1 100 100 A48 48 0 0 0 100 4"></path>
+          <circle cx="100" cy="52" r="14"></circle>
+          <circle cx="100" cy="148" r="14"></circle>
+        </svg>
+        <div class="course-hero-sub">智承太极 · 数字教案库</div>
+        <div class="course-hero-title">杨氏十六式太极拳</div>
+        <div class="course-hero-desc">中国武术研究院1997年创编 · 全套约3-4分钟 · 含掤捋挤按采挒肘靠八种劲法。点击进入课程概览。</div>
+        <div class="course-hero-stats">
+          <span class="stat-pill"><span class="stat-dot success"></span> 已掌握 2 式</span>
+          <span class="stat-pill"><span class="stat-dot gold"></span> 学习中 3 式</span>
+          <span class="stat-pill"><span class="stat-dot accent"></span> 未开始 11 式</span>
+        </div>
+      </a>
+
+      <!-- 搜索与筛选 -->
+      <div class="search-bar">
+        <input class="search-input" id="lesson-search" type="text" placeholder="搜索招式名称、关键词...">
+      </div>
+      <div class="filter-chips" id="filter-chips">
+        <button class="chip active" data-filter="all" type="button">全部 <span class="chip-count">16</span></button>
+        <button class="chip" data-filter="mastered" type="button">已掌握 <span class="chip-count">2</span></button>
+        <button class="chip" data-filter="learning" type="button">学习中 <span class="chip-count">3</span></button>
+        <button class="chip" data-filter="locked" type="button">未开始 <span class="chip-count">11</span></button>
+      </div>
+
+      <!-- 16 式卡片网格 -->
+      <div class="course-grid" id="course-grid">
+
+        <a class="form-card" href="02-招式详情.html?id=1" data-status="mastered" data-search="起势 太极起势 基础">
+          <div class="form-card-top">
+            <div class="form-index">01</div>
+            <span class="tag tag-mastered">已掌握</span>
+          </div>
+          <div class="form-title">起势</div>
+          <div class="form-meta"><span>基础</span><span>4个要诀</span></div>
+          <p class="form-desc">太极拳预备动作，站桩调息，进入练功状态。包含起势调息、马步开立、意念集中等基础要领。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>100%</span></div>
+            <div class="progress-track"><div class="progress-fill success" style="width:100%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=2" data-status="mastered" data-search="右野马分鬃 野马分鬃 基础">
+          <div class="form-card-top">
+            <div class="form-index">02</div>
+            <span class="tag tag-mastered">已掌握</span>
+          </div>
+          <div class="form-title">右野马分鬃</div>
+          <div class="form-meta"><span>基础</span><span>4个要诀</span></div>
+          <p class="form-desc">左转体收脚抱球，右转体迈步分手。双手如分鬃之势，一上一下形成对拔之力，体现掤劲的运用。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>100%</span></div>
+            <div class="progress-track"><div class="progress-fill success" style="width:100%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=3" data-status="learning" data-search="白鹤亮翅 基础">
+          <div class="form-card-top">
+            <div class="form-index">03</div>
+            <span class="tag tag-learning">学习中</span>
+          </div>
+          <div class="form-title">白鹤亮翅</div>
+          <div class="form-meta"><span>基础</span><span>4个要诀</span></div>
+          <p class="form-desc">一手上举一手下按，两臂展开如白鹤展翅。此势既可用于防守也可用于进攻。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>45%</span></div>
+            <div class="progress-track"><div class="progress-fill warning" style="width:45%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=4" data-status="learning" data-search="搂膝拗步 基础">
+          <div class="form-card-top">
+            <div class="form-index">04</div>
+            <span class="tag tag-learning">学习中</span>
+          </div>
+          <div class="form-title">搂膝拗步</div>
+          <div class="form-meta"><span>基础</span><span>5个要诀</span></div>
+          <p class="form-desc">一手搂膝一手推出，拗步身法要求手脚对开、腰胯带动、力从脊发。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>35%</span></div>
+            <div class="progress-track"><div class="progress-fill warning" style="width:35%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=5" data-status="locked" data-search="手挥琵琶 进阶">
+          <div class="form-card-top">
+            <div class="form-index">05</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">手挥琵琶</div>
+          <div class="form-meta"><span>进阶</span><span>4个要诀</span></div>
+          <p class="form-desc">模仿弹奏琵琶之态，双手前后展开如抱琵琶。此势要求裆劲下沉、双臂撑圆、气沉丹田。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=6" data-status="locked" data-search="倒卷肱 进阶">
+          <div class="form-card-top">
+            <div class="form-index">06</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">倒卷肱</div>
+          <div class="form-meta"><span>进阶</span><span>5个要诀</span></div>
+          <p class="form-desc">太极拳唯一的连续后退动作，退步中保持身体稳定。体现以退为进的战术思想。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=7" data-status="locked" data-search="揽雀尾 进阶">
+          <div class="form-card-top">
+            <div class="form-index">07</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">揽雀尾</div>
+          <div class="form-meta"><span>进阶</span><span>6个要诀</span></div>
+          <p class="form-desc">包含掤、捋、挤、按四正手，是太极拳最具代表性的技法组合。一揽一推蕴含阴阳变化。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=8" data-status="learning" data-search="单鞭 进阶">
+          <div class="form-card-top">
+            <div class="form-index">08</div>
+            <span class="tag tag-learning">学习中</span>
+          </div>
+          <div class="form-title">单鞭</div>
+          <div class="form-meta"><span>进阶</span><span>5个要诀</span></div>
+          <p class="form-desc">一手勾手一手推掌，两臂对拔拉长。要求含胸拔背、松腰沉胯，体现一身备五弓的整劲。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>60%</span></div>
+            <div class="progress-track"><div class="progress-fill warning" style="width:60%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=9" data-status="locked" data-search="云手 进阶">
+          <div class="form-card-top">
+            <div class="form-index">09</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">云手</div>
+          <div class="form-meta"><span>进阶</span><span>5个要诀</span></div>
+          <p class="form-desc">双手如行云流水般交替运转。配合侧行步法，训练腰胯灵活性和身体协调性。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=10" data-status="locked" data-search="高探马 高级">
+          <div class="form-card-top">
+            <div class="form-index">10</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">高探马</div>
+          <div class="form-meta"><span>高级</span><span>4个要诀</span></div>
+          <p class="form-desc">探掌前刺之势，探马寓意策马前行。虚步探掌身形挺拔，需要极好的平衡能力。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=11" data-status="locked" data-search="右蹬脚 高级">
+          <div class="form-card-top">
+            <div class="form-index">11</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">右蹬脚</div>
+          <div class="form-meta"><span>高级</span><span>5个要诀</span></div>
+          <p class="form-desc">腿法攻击动作，蹬脚高度与腰平。单腿支撑要求全身协调配合，是平衡能力的集中体现。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=12" data-status="locked" data-search="双峰贯耳 高级">
+          <div class="form-card-top">
+            <div class="form-index">12</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">双峰贯耳</div>
+          <div class="form-meta"><span>高级</span><span>4个要诀</span></div>
+          <p class="form-desc">双拳同时贯击对方耳门，势如双峰并峙。要求劲力完整、步法扎实、出手快速。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=13" data-status="locked" data-search="转身左蹬脚 高级">
+          <div class="form-card-top">
+            <div class="form-index">13</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">转身左蹬脚</div>
+          <div class="form-meta"><span>高级</span><span>5个要诀</span></div>
+          <p class="form-desc">转身后完成左蹬脚动作，对旋转控制和单腿平衡能力要求更高，是难度较大的综合动作。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=14" data-status="locked" data-search="左下势独立 高级">
+          <div class="form-card-top">
+            <div class="form-index">14</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">左下势独立</div>
+          <div class="form-meta"><span>高级</span><span>6个要诀</span></div>
+          <p class="form-desc">由扑步下势和独立步组成，下势要求身体低伏贴近地面，独立步单腿直立。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=15" data-status="locked" data-search="十字手 进阶">
+          <div class="form-card-top">
+            <div class="form-index">15</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">十字手</div>
+          <div class="form-meta"><span>进阶</span><span>3个要诀</span></div>
+          <p class="form-desc">双手腕部交叉成十字形。既是防守之势，也是收势前的重要衔接动作。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+        <a class="form-card" href="02-招式详情.html?id=16" data-status="locked" data-search="收势 基础">
+          <div class="form-card-top">
+            <div class="form-index">16</div>
+            <span class="tag tag-locked">未开始</span>
+          </div>
+          <div class="form-title">收势</div>
+          <div class="form-meta"><span>基础</span><span>3个要诀</span></div>
+          <p class="form-desc">全套动作的结束，通过双手下落、气息归元、并步还原，完成从动到静的收功过程。</p>
+          <div class="form-progress">
+            <div class="progress-label"><span>掌握进度</span><span>0%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </a>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // 课程列表筛选与搜索（静态页面交互）
+    var searchInput = document.getElementById('lesson-search');
+    var chips = document.querySelectorAll('#filter-chips .chip');
+    var cards = document.querySelectorAll('#course-grid .form-card');
+    var activeFilter = 'all';
+
+    function applyFilter() {
+      var keyword = (searchInput.value || '').trim().toLowerCase();
+      cards.forEach(function(card) {
+        var status = card.getAttribute('data-status');
+        var text = (card.getAttribute('data-search') || card.textContent).toLowerCase();
+        var matchStatus = activeFilter === 'all' || status === activeFilter;
+        var matchSearch = !keyword || text.indexOf(keyword) !== -1;
+        card.style.display = (matchStatus && matchSearch) ? '' : 'none';
+      });
+    }
+
+    chips.forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        chips.forEach(function(c) { c.classList.remove('active'); });
+        chip.classList.add('active');
+        activeFilter = chip.getAttribute('data-filter');
+        applyFilter();
+      });
+    });
+
+    searchInput.addEventListener('input', applyFilter);
+  </script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智承太极 — 招式详情 · 起势</title>
+  <link rel="stylesheet" href="assets/css/zhitaiji.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- 移动端顶栏 -->
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <span class="logo-text">智承<span class="logo-accent">太极</span></span>
+        <span class="logo-sub">数字教案库</span>
+      </div>
+      <nav class="mobile-nav">
+        <a href="00-课程列表.html">课程列表</a>
+        <a href="01-课程概览.html">课程概览</a>
+        <a href="02-招式详情.html" class="active">招式详情</a>
+        <a href="03-3D查看器.html">3D查看器</a>
+        <a href="04-分步教学.html">分步教学</a>
+      </nav>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-text">智承<span class="logo-accent">太极</span></div>
+        <div class="logo-sub">数字教学系统</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">一 / 数字教案库</div>
+        <a class="nav-item" href="00-课程列表.html">
+          <span class="nav-icon">★</span> 课程列表
+        </a>
+        <a class="nav-item" href="01-课程概览.html">
+          <span class="nav-icon">◉</span> 课程概览
+        </a>
+        <a class="nav-item active" href="02-招式详情.html">
+          <span class="nav-icon">◉</span> 招式详情
+        </a>
+        <a class="nav-item" href="03-3D查看器.html">
+          <span class="nav-icon">⊙</span> 3D动作查看器
+        </a>
+        <a class="nav-item" href="04-分步教学.html">
+          <span class="nav-icon">▶</span> 分步教学
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar">金</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">金润山</div>
+          <div class="sidebar-user-role">计算机科学与技术2504班</div>
+        </div>
+        <div class="sidebar-settings" title="设置">⚙</div>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <div class="breadcrumb" id="detail-breadcrumb">
+        <a href="00-课程列表.html">首页</a>
+        <span class="sep">/</span>
+        <a href="00-课程列表.html">数字教案库</a>
+        <span class="sep">/</span>
+        第1式 · 起势
+      </div>
+
+      <div class="page-title" id="detail-title">第1式 — 起势</div>
+      <div class="page-desc" id="detail-desc">杨氏16式 · 基础难度 · 4个动作要点</div>
+
+      <!-- Tabs -->
+      <div class="tabs" id="detail-tabs">
+        <button class="tab active" data-tab="overview" type="button">概览</button>
+        <button class="tab" data-tab="errors" type="button">常见错误</button>
+        <button class="tab" data-tab="criteria" type="button">考核标准</button>
+      </div>
+
+      <!-- 概览 -->
+      <div class="tab-panel active" id="panel-overview">
+        <div class="grid-2-1">
+          <div>
+            <!-- 标准动作演示占位 -->
+            <div class="viewer-3d" style="height:380px;">
+              <div class="viewer-status">
+                <div class="viewer-status-badge">
+                  <span class="rec-dot"></span>
+                  标准动作演示
+                </div>
+              </div>
+              <div class="model-stage">
+                <svg id="pose-svg" class="pose-svg" width="200" height="280" viewBox="0 0 200 280" fill="none">
+                  <circle cx="100" cy="40" r="18" class="bone subtle" fill="none"></circle>
+                  <line x1="100" y1="58" x2="100" y2="150" class="bone"></line>
+                  <line x1="100" y1="88" x2="58" y2="116" class="bone"></line>
+                  <line x1="100" y1="88" x2="142" y2="116" class="bone"></line>
+                  <line x1="100" y1="150" x2="70" y2="220" class="bone"></line>
+                  <line x1="100" y1="150" x2="130" y2="220" class="bone"></line>
+                  <circle cx="100" cy="58" r="4" class="joint" fill="#B8312F"></circle>
+                  <circle cx="100" cy="88" r="4" class="joint" fill="#B8312F"></circle>
+                  <circle cx="58" cy="116" r="4" class="joint" fill="#B8312F"></circle>
+                  <circle cx="142" cy="116" r="4" class="joint" fill="#B8312F"></circle>
+                  <circle cx="100" cy="150" r="4" class="joint" fill="#B8312F"></circle>
+                  <path class="force-line" d="M100 88 Q110 70 118 58"></path>
+                  <circle cx="118" cy="58" r="3" fill="#C4A35A"></circle>
+                </svg>
+              </div>
+              <div class="viewer-3d-hint" id="viewer-hint">
+                <div>起势 · 完整演示 · 正面 + 侧面</div>
+              </div>
+            </div>
+
+            <!-- CTA 按钮 -->
+            <div class="btn-group mt-16">
+              <a class="btn btn-primary" href="04-分步教学.html">进入分步教学 ➔</a>
+              <a class="btn btn-outline" href="03-3D查看器.html">3D 查看</a>
+              <button class="btn btn-outline" type="button" onclick="alert('演示版暂未包含 AI 实时跟练页，可先从分步教学开始。')">开始实时跟练</button>
+            </div>
+          </div>
+
+          <div>
+            <!-- 动作要点 -->
+            <div class="card" id="kp-card">
+              <div class="card-title mb-12">动作要点 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">点击要点查看详解</span></div>
+              <div class="kp-item open">
+                <div class="kp-header">
+                  <span class="feedback-dot good"></span>
+                  <span>要点1：双脚平行开立与肩同宽</span>
+                  <span class="kp-toggle">▼</span>
+                </div>
+                <div class="kp-detail">双脚平行开立，距离与肩同宽，十趾微抓地。重心落于涌泉穴，膝盖微屈不过脚尖。此为基础桩功，稳固下盘方能使气机沉入丹田。</div>
+              </div>
+              <div class="kp-item">
+                <div class="kp-header">
+                  <span class="feedback-dot good"></span>
+                  <span>要点2：沉肩坠肘含胸拔背</span>
+                  <span class="kp-toggle">▼</span>
+                </div>
+                <div class="kp-detail">沉肩坠肘时，肩关节放松下沉，肘关节微屈下垂，腋下虚空如含一鸡蛋。此势能打通手三阴经，使气血通达指端。</div>
+              </div>
+              <div class="kp-item">
+                <div class="kp-header">
+                  <span class="feedback-dot warn"></span>
+                  <span>要点3：虚领顶劲尾闾中正</span>
+                  <span class="kp-toggle">▼</span>
+                </div>
+                <div class="kp-detail">虚领顶劲是头部如被绳悬提，下颚微收，颈椎拔直但不僵挺。尾闾中正则尾骨向前微收，使脊柱形成自然的“弓”形，贯通任督二脉。</div>
+              </div>
+              <div class="kp-item">
+                <div class="kp-header">
+                  <span class="feedback-dot bad"></span>
+                  <span>要点4：呼吸自然意守丹田</span>
+                  <span class="kp-toggle">▼</span>
+                </div>
+                <div class="kp-detail">呼吸自然深长，用腹式呼吸法。吸气时意想清气从丹田升至膻中，呼气时气沉丹田。意念守于丹田而非头顶，避免气浮于上。</div>
+              </div>
+            </div>
+
+            <!-- 招式信息 -->
+            <div class="card" id="info-card">
+              <div class="card-title mb-12">招式信息</div>
+              <div class="data-row"><span class="data-row-label">招式名称</span><span class="data-row-value">起势</span></div>
+              <div class="data-row"><span class="data-row-label">所属套路</span><span class="data-row-value">杨氏16式</span></div>
+              <div class="data-row"><span class="data-row-label">难度等级</span><span class="data-row-value">基础</span></div>
+              <div class="data-row"><span class="data-row-label">动作要点</span><span class="data-row-value">4个</span></div>
+              <div class="data-row"><span class="data-row-label">学习状态</span><span class="data-row-value" style="color:var(--success);">已掌握</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 常见错误 -->
+      <div class="tab-panel" id="panel-errors">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title mb-12" style="color:var(--danger);">错误 1：耸肩抬肘</div>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">起势时双肩不自觉上耸，肘部外张，导致气浮于上、下盘不稳。这是初学者最常见的错误。</p>
+            <div class="info-box danger" style="margin-bottom:0;">
+              <div class="info-box-title">纠正方法</div>
+              先做“沉肩”练习：吸气时肩向上微抬，呼气时完全放松下沉。体会腋下虚空、肘尖向下的感觉。
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title mb-12" style="color:var(--danger);">错误 2：膝盖过脚尖</div>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">下蹲时膝盖向前超过脚尖，长期练习会损伤膝关节。起势应保持膝盖与脚尖方向一致且不超过脚尖。</p>
+            <div class="info-box danger" style="margin-bottom:0;">
+              <div class="info-box-title">纠正方法</div>
+              面对镜子练习，下蹲时臀部向后坐，重心放在脚掌中部。膝盖高度不超过脚尖连线。
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title mb-12" style="color:var(--warning);">错误 3：重心前倾</div>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">身体重心过分前移，导致前脚掌压力过大、后脚发飘，难以进入松静状态。</p>
+            <div class="info-box warning" style="margin-bottom:0;">
+              <div class="info-box-title">纠正方法</div>
+              调整双脚开立，想象身体如钟摆垂直向下；将重心均匀分布于两脚涌泉穴。
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title mb-12" style="color:var(--warning);">错误 4：呼吸急促</div>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">起势阶段呼吸短促、憋气，影响动作舒展与气机下沉。</p>
+            <div class="info-box warning" style="margin-bottom:0;">
+              <div class="info-box-title">纠正方法</div>
+              采用鼻吸鼻呼的腹式呼吸，先单独练习 3 分钟调息，再配合起落动作。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 考核标准 -->
+      <div class="tab-panel" id="panel-criteria">
+        <div class="card mb-16">
+          <div class="card-title mb-12">起势考核评分标准</div>
+          <div class="table-wrap">
+            <table class="criteria">
+              <thead>
+                <tr>
+                  <th>考核项</th>
+                  <th class="center">权重</th>
+                  <th>优秀 (90+)</th>
+                  <th>良好 (75-89)</th>
+                  <th>及格 (60-74)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>步型规范</td>
+                  <td class="center">25%</td>
+                  <td>双脚平行、间距与肩同宽</td>
+                  <td>间距偏差 ≤5cm</td>
+                  <td>基本站稳</td>
+                </tr>
+                <tr>
+                  <td>身体中正</td>
+                  <td class="center">25%</td>
+                  <td>百会-会阴-涌泉三点一线</td>
+                  <td>轻微前倾 ≤5°</td>
+                  <td>前倾 ≤15°</td>
+                </tr>
+                <tr>
+                  <td>沉肩坠肘</td>
+                  <td class="center">20%</td>
+                  <td>肩肘完全放松、腋下虚空</td>
+                  <td>肩部基本放松</td>
+                  <td>可见明显耸肩</td>
+                </tr>
+                <tr>
+                  <td>呼吸配合</td>
+                  <td class="center">15%</td>
+                  <td>起吸落呼、自然深长</td>
+                  <td>节奏基本稳定</td>
+                  <td>偶有憋气</td>
+                </tr>
+                <tr>
+                  <td>意念专注</td>
+                  <td class="center">15%</td>
+                  <td>全程意守丹田</td>
+                  <td>偶尔走神</td>
+                  <td>需要提醒</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="info-box accent">
+            <div class="info-box-title">考核须知</div>
+            考核采用 AI 实时评分 + 教师复核的双评模式。AI 评分即时生成，教师复核在 24 小时内完成。最终成绩取两者加权平均（AI 60% + 教师 40%）。
+          </div>
+          <div class="info-box gold">
+            <div class="info-box-title">补考规则</div>
+            单次招式考核不及格（&lt;60分）可申请补考，每人每学期最多 3 次补考机会。补考需间隔至少 3 天练习期。
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ============================================================
+    // 杨氏16式数据（供招式详情动态切换）
+    // ============================================================
+    var courseData = [
+      { id: 1, name: '起势', subtitle: '太极起势', category: '杨氏16式', difficulty: '基础', points: 4, status: 'mastered', desc: '太极拳预备动作，站桩调息，进入练功状态。包含起势调息、马步开立、意念集中等基础要领，为全套动作奠定基础。', keyPoints: ['双脚平行开立与肩同宽', '沉肩坠肘含胸拔背', '虚领顶劲尾闾中正', '呼吸自然意守丹田'] },
+      { id: 2, name: '右野马分鬃', subtitle: '右野马分鬃', category: '杨氏16式', difficulty: '基础', points: 4, status: 'mastered', desc: '左转体收脚抱球，右转体迈步分手。双手如分鬃之势，一上一下形成对拔之力，体现太极拳"掤"劲的运用。', keyPoints: ['转体时以腰为轴带动四肢', '分手时两臂保持弧形', '弓步与分手同时完成', '重心平稳过渡不断劲'] },
+      { id: 3, name: '白鹤亮翅', subtitle: '白鹤亮翅', category: '杨氏16式', difficulty: '基础', points: 4, status: 'learning', desc: '白鹤亮翅为太极拳典型亮翅动作，一手上举一手下按，两臂展开如白鹤展翅。此势既可用于防守也可用于进攻。', keyPoints: ['含胸拔背腋下虚空', '上手与下手对拔伸展', '虚步重心在后腿', '身法中正不前倾后仰'] },
+      { id: 4, name: '搂膝拗步', subtitle: '搂膝拗步', category: '杨氏16式', difficulty: '基础', points: 5, status: 'learning', desc: '搂膝拗步是太极拳核心步伐之一，一手搂膝一手推出，拗步身法要求手脚对开、腰胯带动、力从脊发。', keyPoints: ['搂膝时手不超过膝盖', '前推掌与弓步一合俱合', '身子中正不前俯', '手臂微屈以意导气'] },
+      { id: 5, name: '手挥琵琶', subtitle: '手挥琵琶', category: '杨氏16式', difficulty: '进阶', points: 4, status: 'locked', desc: '手挥琵琶模仿弹奏琵琶之态，双手前后展开如抱琵琶。此势要求裆劲下沉、双臂撑圆、气沉丹田。', keyPoints: ['后坐时重心平稳后移', '双手如抱球撑圆', '目视前手指尖方向', '身体保持中正安舒'] },
+      { id: 6, name: '倒卷肱', subtitle: '倒卷肱', category: '杨氏16式', difficulty: '进阶', points: 5, status: 'locked', desc: '倒卷肱是太极拳唯一的连续后退动作，退步中保持身体稳定。手臂如卷肱般翻转化解，体现太极拳以退为进的战术思想。', keyPoints: ['退步时脚尖先着地', '手臂回卷与推掌连贯', '重心不要上下起伏', '上下肢协调一致'] },
+      { id: 7, name: '揽雀尾', subtitle: '揽雀尾', category: '杨氏16式', difficulty: '进阶', points: 6, status: 'locked', desc: '揽雀尾包含掤、捋、挤、按四正手，是太极拳最具代表性的技法组合。一揽一推之间蕴含太极阴阳变化之理。', keyPoints: ['掤臂撑圆不耸肩', '捋手含胸引进落空', '挤势前弓后蹬发力', '按掌沉腕松腰沉胯'] },
+      { id: 8, name: '单鞭', subtitle: '单鞭', category: '杨氏16式', difficulty: '进阶', points: 5, status: 'learning', desc: '单鞭是太极拳经典招式，一手勾手一手推掌，两臂对拔拉长。要求含胸拔背、松腰沉胯，体现"一身备五弓"的整劲。', keyPoints: ['勾手时五指自然捏拢', '推掌与转腰协调一致', '弓步膝盖不超脚尖', '力量传导起于脚终于手'] },
+      { id: 9, name: '云手', subtitle: '云手', category: '杨氏16式', difficulty: '进阶', points: 5, status: 'locked', desc: '云手为太极拳重要手法，双手如行云流水般交替运转。配合侧行步法，训练腰胯灵活性和身体协调性。', keyPoints: ['以腰带动手臂运转', '眼神随主动手移动', '侧行步保持身体平稳', '双手交替划立圆'] },
+      { id: 10, name: '高探马', subtitle: '高探马', category: '杨氏16式', difficulty: '高级', points: 4, status: 'locked', desc: '高探马为探掌前刺之势，探马寓意策马前行。虚步探掌身形挺拔，需要极好的平衡能力和腰腿功夫。', keyPoints: ['虚步后坐重心稳定', '探掌与弓腿上下相随', '身体微向前探保持中正', '眼神注视前方'] },
+      { id: 11, name: '右蹬脚', subtitle: '右蹬脚', category: '杨氏16式', difficulty: '高级', points: 5, status: 'locked', desc: '右蹬脚为腿法攻击动作，蹬脚高度与腰平。单腿支撑要求全身协调配合，是太极拳平衡能力的集中体现。', keyPoints: ['蹬脚时支撑腿微屈', '分手与蹬脚同时完成', '蹬脚高度不低于腰', '身体保持正直不歪斜'] },
+      { id: 12, name: '双峰贯耳', subtitle: '双峰贯耳', category: '杨氏16式', difficulty: '高级', points: 4, status: 'locked', desc: '双峰贯耳以双拳同时贯击对方耳门，势如双峰并峙。此势要求劲力完整、步法扎实、出手快速。', keyPoints: ['双拳贯耳与弓步一致', '力量发自腰腿', '双臂保持弧形不伸直', '沉肩坠肘含胸拔背'] },
+      { id: 13, name: '转身左蹬脚', subtitle: '转身左蹬脚', category: '杨氏16式', difficulty: '高级', points: 5, status: 'locked', desc: '转身左蹬脚在转身后完成左蹬脚动作，对身体的旋转控制和单腿平衡能力要求更高，是难度较大的综合动作。', keyPoints: ['转身时以脚跟为轴', '转身后身体迅速稳定', '蹬脚发力短促干脆', '保持呼吸不憋气'] },
+      { id: 14, name: '左下势独立', subtitle: '左下势独立', category: '杨氏16式', difficulty: '高级', points: 6, status: 'locked', desc: '左下势独立由扑步下势和独立步组成，下势要求身体低伏贴近地面，独立步则单腿直立，起落之间反差强烈。', keyPoints: ['仆步时身体前俯贴腿', '重心由低到高过渡流畅', '独立步支撑腿微屈站稳', '提膝与举手上下对拔'] },
+      { id: 15, name: '十字手', subtitle: '十字手', category: '杨氏16式', difficulty: '进阶', points: 3, status: 'locked', desc: '十字手为太极拳常见过渡与收束动作，双手腕部交叉成十字形。既是防守之势，也是收势前的重要衔接动作。', keyPoints: ['两腕交叉与胸同高', '身体中正安舒', '重心平稳过渡到预备', '呼吸自然深长'] },
+      { id: 16, name: '收势', subtitle: '收势', category: '杨氏16式', difficulty: '基础', points: 3, status: 'locked', desc: '收势为全套动作的结束，通过双手下落、气息归元、并步还原等动作，使气血回归丹田，完成从动到静的收功过程。', keyPoints: ['双手下落与呼气配合', '意念随手下行归丹田', '并步时身体保持中正', '收式后稍作静立调息'] }
+    ];
+
+    var keyPointDetails = {
+      '起势': [
+        '双脚平行开立，距离与肩同宽，十趾微抓地。重心落于涌泉穴，膝盖微屈不过脚尖。此为基础桩功，稳固下盘方能使气机沉入丹田。',
+        '沉肩坠肘时，肩关节放松下沉，肘关节微屈下垂，腋下虚空如含一鸡蛋。此势能打通手三阴经，使气血通达指端。',
+        '虚领顶劲是头部如被绳悬提，下颚微收，颈椎拔直但不僵挺。尾闾中正则尾骨向前微收，使脊柱形成自然的“弓”形，贯通任督二脉。',
+        '呼吸自然深长，用腹式呼吸法。吸气时意想清气从丹田升至膻中，呼气时气沉丹田。意念守于丹田而非头顶，避免气浮于上。'
+      ]
+    };
+
+    function chineseNum(n) {
+      var nums = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六'];
+      return nums[n] || n;
+    }
+
+    function getQueryId() {
+      var match = location.search.match(/[?&]id=(\d+)/);
+      var id = match ? parseInt(match[1], 10) : 1;
+      return (id >= 1 && id <= 16) ? id : 1;
+    }
+
+    function renderDetail() {
+      var id = getQueryId();
+      var form = courseData.find(function(f) { return f.id === id; }) || courseData[0];
+      var idx = form.id - 1;
+
+      document.getElementById('detail-breadcrumb').innerHTML =
+        '<a href="00-课程列表.html">首页</a><span class="sep">/</span>' +
+        '<a href="00-课程列表.html">数字教案库</a><span class="sep">/</span>' +
+        '第' + chineseNum(form.id) + '式 · ' + form.name;
+      document.getElementById('detail-title').textContent = '第' + chineseNum(form.id) + '式 — ' + form.name;
+      document.getElementById('detail-desc').textContent = form.category + ' · ' + form.difficulty + '难度 · ' + form.points + '个动作要点';
+      document.getElementById('viewer-hint').innerHTML = '<div>' + form.name + ' · 完整演示 · 正面 + 侧面</div>';
+
+      // 动作要点
+      var kpCard = document.getElementById('kp-card');
+      var kpHtml = '<div class="card-title mb-12">动作要点 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">点击要点查看详解</span></div>';
+      form.keyPoints.forEach(function(kp, i) {
+        var dotClass = i < 2 ? 'good' : i < 3 ? 'warn' : 'bad';
+        var detail = (keyPointDetails[form.name] && keyPointDetails[form.name][i]) || (kp + '。练习时需反复体会身体各部位的协调配合，由慢到快、由松到整，逐步形成正确的肌肉记忆。');
+        kpHtml += '<div class="kp-item' + (i === 0 ? ' open' : '') + '">' +
+          '<div class="kp-header">' +
+            '<span class="feedback-dot ' + dotClass + '"></span>' +
+            '<span>要点' + (i + 1) + '：' + kp + '</span>' +
+            '<span class="kp-toggle">▼</span>' +
+          '</div>' +
+          '<div class="kp-detail">' + detail + '</div>' +
+        '</div>';
+      });
+      kpCard.innerHTML = kpHtml;
+
+      // 招式信息
+      var statusText = form.status === 'mastered' ? '已掌握' : form.status === 'learning' ? '学习中' : '未开始';
+      var statusColor = form.status === 'mastered' ? 'var(--success)' : form.status === 'learning' ? 'var(--warning)' : 'var(--text-muted)';
+      document.getElementById('info-card').innerHTML =
+        '<div class="card-title mb-12">招式信息</div>' +
+        '<div class="data-row"><span class="data-row-label">招式名称</span><span class="data-row-value">' + form.name + '</span></div>' +
+        '<div class="data-row"><span class="data-row-label">所属套路</span><span class="data-row-value">' + form.category + '</span></div>' +
+        '<div class="data-row"><span class="data-row-label">难度等级</span><span class="data-row-value">' + form.difficulty + '</span></div>' +
+        '<div class="data-row"><span class="data-row-label">动作要点</span><span class="data-row-value">' + form.points + '个</span></div>' +
+        '<div class="data-row"><span class="data-row-label">学习状态</span><span class="data-row-value" style="color:' + statusColor + ';">' + statusText + '</span></div>';
+
+      // 绑定折叠
+      kpCard.querySelectorAll('.kp-header').forEach(function(header) {
+        header.addEventListener('click', function() {
+          this.closest('.kp-item').classList.toggle('open');
+        });
+      });
+    }
+
+    // Tabs
+    document.querySelectorAll('#detail-tabs .tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('#detail-tabs .tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.getAttribute('data-tab')).classList.add('active');
+      });
+    });
+
+    renderDetail();
+  </script>
+</body>
+</html>

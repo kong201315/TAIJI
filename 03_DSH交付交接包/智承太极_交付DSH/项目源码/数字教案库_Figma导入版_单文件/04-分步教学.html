@@ -1,0 +1,1649 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智承太极 — 分步教学 · 起势</title>
+  <style>/* ============================================================
+   智承太极 · 数字教案库（Figma 导入版）
+   共享设计系统样式 — Ink-Tech Fusion
+   ============================================================ */
+
+/* ---------- Design Tokens ---------- */
+:root {
+  --bg: #F5F2ED;
+  --bg-warm: #EDE9E3;
+  --card: #FFFFFF;
+  --border: #D5D0C8;
+  --border-light: #E8E4DE;
+  --text: #1A1A1A;
+  --text-secondary: #3A3632;
+  --text-muted: #7A756D;
+  --accent: #B8312F;
+  --accent-hover: #9E2A28;
+  --accent-light: #FBF0F0;
+  --gold: #C4A35A;
+  --gold-light: #F5EDDA;
+  --nav-bg: #0F1419;
+  --nav-bg-subtle: #161D25;
+  --nav-text: #C8C2B8;
+  --nav-text-dim: #6B6560;
+  --success: #3D8B37;
+  --success-light: #EBF5EA;
+  --warning: #D4850A;
+  --warning-light: #FEF6E6;
+  --danger: #C62828;
+  --tag-bg: #EDE9E3;
+  --shadow-sm: 0 1px 3px rgba(26,26,26,0.06);
+  --shadow-md: 0 4px 16px rgba(26,26,26,0.08);
+  --shadow-lg: 0 8px 32px rgba(26,26,26,0.10);
+  --shadow-card: 0 2px 8px rgba(180,170,155,0.12);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --font-ui: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  --font-serif: 'Noto Serif SC', 'SimSun', serif;
+  --font-mono: 'SF Mono', 'Consolas', 'Courier New', monospace;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Paper grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ---------- App Layout ---------- */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  background: var(--nav-bg);
+  background-image: linear-gradient(180deg, var(--nav-bg) 0%, var(--nav-bg-subtle) 100%);
+  color: var(--nav-text);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 100;
+}
+
+.sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
+}
+
+.sidebar-logo {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 8px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+}
+
+.logo-accent { color: var(--accent); }
+
+.logo-sub {
+  font-size: 10px;
+  color: var(--nav-text-dim);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.nav-group { margin-bottom: 4px; }
+
+.nav-group-title {
+  padding: 16px 24px 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--nav-text-dim);
+  font-weight: 600;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--nav-text);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: color 150ms ease-out;
+  position: relative;
+  user-select: none;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.04);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 150ms ease-out;
+  pointer-events: none;
+}
+
+.nav-item:hover { color: #FFFFFF; }
+.nav-item:hover::before { transform: scaleX(1); }
+
+.nav-item.active {
+  background: rgba(184,49,47,0.08);
+  border-left-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.nav-item.active .nav-icon { color: var(--accent); }
+
+.nav-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 24px 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, #D4544F 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.sidebar-user-info { flex: 1; min-width: 0; }
+.sidebar-user-name {
+  font-size: 13px;
+  color: #FFFFFF;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-user-role { font-size: 11px; color: var(--nav-text-dim); }
+
+.sidebar-settings {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--nav-text-dim);
+  transition: all 150ms;
+  flex-shrink: 0;
+}
+.sidebar-settings:hover { background: rgba(255,255,255,0.06); color: var(--nav-text); }
+
+/* ---------- Mobile Topbar ---------- */
+.mobile-topbar { display: none; }
+
+/* ---------- Main Content ---------- */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 36px 48px 60px;
+  position: relative;
+}
+
+.page-section {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: pageFadeIn 280ms ease-out forwards;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.breadcrumb a { color: var(--text-muted); cursor: pointer; transition: color 150ms; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb .sep { color: var(--border); }
+
+/* ---------- Page Title & Desc ---------- */
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-clickable { cursor: pointer; }
+.card-clickable:active { transform: translateY(0); }
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ---------- Grids ---------- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-2-1 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+.grid-2-1 > div { min-width: 0; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(184,49,47,0.2);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 8px 16px;
+}
+.btn-ghost:hover { color: var(--accent); background: var(--accent-light); }
+
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+
+.btn-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* ---------- Tabs ---------- */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 200ms ease-out;
+  position: relative;
+  user-select: none;
+  background: transparent;
+  border: none;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: transparent;
+  transition: all 200ms ease-out;
+  border-radius: 1px 1px 0 0;
+}
+
+.tab:hover { color: var(--text-secondary); }
+
+.tab.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tab.active::after {
+  background: var(--accent);
+  left: 0;
+  right: 0;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeInUp 280ms ease-out; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Tags & Badges ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tag-default { background: var(--tag-bg); color: var(--text-muted); }
+.tag-mastered { background: var(--success-light); color: var(--success); }
+.tag-learning { background: var(--gold-light); color: #8B6914; }
+.tag-locked { background: var(--bg-warm); color: var(--text-muted); }
+
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.difficulty-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.difficulty-dot.filled { background: var(--accent); }
+
+/* ---------- Search & Filter ---------- */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 220px;
+  padding: 9px 16px 9px 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: border-color 200ms, box-shadow 200ms;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A756D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184,49,47,0.08);
+}
+
+.search-input::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+.filter-select {
+  padding: 9px 32px 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  background: var(--card);
+  color: var(--text-secondary);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A756D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 200ms;
+}
+
+.filter-select:focus { border-color: var(--accent); }
+
+.filter-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 180ms ease-out;
+  user-select: none;
+}
+
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.chip .chip-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  font-size: 10px;
+  background: var(--bg-warm);
+  color: var(--text-muted);
+}
+.chip.active .chip-count { background: rgba(255,255,255,0.2); color: #fff; }
+
+/* ---------- Course Hero ---------- */
+.course-hero {
+  background: linear-gradient(135deg, var(--nav-bg) 0%, #1C2530 60%, #233040 100%);
+  border-radius: var(--radius-lg);
+  padding: 32px 32px 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+  min-height: 180px;
+}
+
+.course-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -20px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,49,47,0.15) 0%, transparent 70%);
+}
+
+.course-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: 40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,163,90,0.12) 0%, transparent 70%);
+}
+
+.course-hero-taiji {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.07;
+  animation: taiji-spin 30s linear infinite;
+  pointer-events: none;
+}
+
+.course-hero-taiji path,
+.course-hero-taiji circle { fill: #FFFFFF; stroke: none; }
+
+@keyframes taiji-spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+.course-hero-sub { font-size: 13px; color: var(--nav-text); margin-bottom: 6px; }
+.course-hero-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.course-hero-desc { font-size: 12px; color: var(--nav-text); max-width: 620px; }
+
+.course-hero-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--nav-text);
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.stat-dot { width: 6px; height: 6px; border-radius: 50%; }
+.stat-dot.accent { background: var(--accent); }
+.stat-dot.gold { background: var(--gold); }
+.stat-dot.success { background: var(--success); }
+
+/* ---------- Course Cards ---------- */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  cursor: pointer;
+  transition: all 200ms ease-out;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(184,49,47,0.25);
+}
+
+.form-card:active { transform: translateY(0); }
+
+.form-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.form-index {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-light) 0%, #FDE8E8 100%);
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.form-title { font-size: 15px; font-weight: 600; color: var(--text); }
+
+.form-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.form-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.form-progress { margin-top: auto; }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.progress-track {
+  height: 6px;
+  background: var(--bg-warm);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 400ms ease-out;
+}
+
+.progress-fill.gold { background: var(--gold); }
+.progress-fill.success { background: var(--success); }
+.progress-fill.warning { background: var(--warning); }
+
+/* ---------- Overview ---------- */
+.overview-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.course-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.fact-item {
+  background: var(--bg-warm);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.fact-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.fact-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.objective-list { list-style: none; }
+.objective-list li {
+  display: flex;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-bottom: 1px dashed var(--border-light);
+}
+.objective-list li:last-child { border-bottom: none; }
+.objective-list li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 1.8; }
+
+.ring-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.progress-ring { position: relative; width: 128px; height: 128px; flex-shrink: 0; }
+.progress-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.progress-ring .ring-bg { fill: none; stroke: var(--bg-warm); stroke-width: 9; }
+.progress-ring .ring-fg {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1);
+}
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ring-value { font-size: 24px; font-weight: 700; font-family: var(--font-serif); color: var(--text); }
+.ring-label { font-size: 11px; color: var(--text-muted); }
+
+.ring-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 140px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legend-dot.mastered { background: var(--success); }
+.legend-dot.learning { background: var(--gold); }
+.legend-dot.locked { background: var(--border); }
+
+/* ---------- Form Overview List ---------- */
+.form-overview-list { display: flex; flex-direction: column; gap: 10px; }
+
+.overview-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 180ms ease-out;
+  box-shadow: var(--shadow-card);
+}
+
+.overview-item:hover {
+  transform: translateX(3px);
+  border-color: rgba(184,49,47,0.3);
+  box-shadow: var(--shadow-md);
+}
+
+.overview-index {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-warm);
+  color: var(--text-muted);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overview-info { flex: 1; min-width: 0; }
+.overview-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.overview-meta { font-size: 11px; color: var(--text-muted); }
+.overview-arrow { color: var(--border); font-size: 18px; transition: transform 180ms; }
+.overview-item:hover .overview-arrow { transform: translateX(3px); color: var(--accent); }
+
+/* ---------- Viewer ---------- */
+.viewer-3d {
+  background: linear-gradient(160deg, #0D1117 0%, #161B22 40%, #1A2332 100%);
+  border-radius: var(--radius-md);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 340px;
+}
+
+.viewer-3d.large { min-height: 460px; }
+
+.viewer-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+}
+
+.viewer-3d::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,49,47,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.viewer-3d-hint {
+  color: rgba(255,255,255,0.4);
+  font-size: 13px;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.viewer-3d-hint svg { display: block; margin: 0 auto 8px; opacity: 0.5; }
+
+.viewer-status {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+}
+
+.viewer-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+}
+
+.rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #EF4444;
+  animation: recBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes recBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.model-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  perspective: 1000px;
+}
+
+.pose-svg {
+  width: 220px;
+  height: 300px;
+  transition: transform 500ms ease;
+  transform-style: preserve-3d;
+}
+
+.pose-svg.side { transform: rotateY(-28deg); }
+.pose-svg.back { transform: rotateY(180deg) scaleX(-1); }
+
+.pose-svg .bone {
+  stroke: rgba(255,255,255,0.65);
+  stroke-width: 4;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.pose-svg .bone.subtle { stroke: rgba(255,255,255,0.3); }
+.pose-svg .joint {
+  fill: var(--accent);
+}
+.pose-svg .force-line {
+  fill: none;
+  stroke: rgba(196,163,90,0.65);
+  stroke-width: 1.6;
+  stroke-dasharray: 5 4;
+  animation: dashMove 1s linear infinite;
+}
+
+@keyframes dashMove { to { stroke-dashoffset: -18; } }
+
+.pose-svg.animating .arm-l { animation: armL 1.6s ease-in-out infinite; }
+.pose-svg.animating .arm-r { animation: armR 1.6s ease-in-out infinite; }
+.pose-svg.animating .leg-l { animation: legL 1.6s ease-in-out infinite; }
+.pose-svg.animating .leg-r { animation: legR 1.6s ease-in-out infinite; }
+
+@keyframes armL {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-6deg); }
+}
+@keyframes armR {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg); }
+}
+@keyframes legL {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+@keyframes legR {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.viewer-controls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.viewer-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+.viewer-btn:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
+.viewer-btn.active { background: rgba(184,49,47,0.35); border-color: rgba(184,49,47,0.5); color: #fff; }
+
+/* ---------- Control Bar ---------- */
+.control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-label { font-size: 11px; color: var(--text-muted); margin-right: 2px; }
+
+.seg-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms;
+}
+.seg-btn:hover { border-color: var(--accent); color: var(--accent); }
+.seg-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.separator { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+
+/* ---------- Action List ---------- */
+.action-list { display: flex; flex-direction: column; gap: 10px; }
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  cursor: pointer;
+  transition: all 180ms ease-out;
+  box-shadow: var(--shadow-card);
+}
+.action-item:hover { transform: translateX(3px); border-color: rgba(184,49,47,0.3); }
+.action-item.active { border-color: var(--accent); background: var(--accent-light); }
+.action-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.action-meta { font-size: 11px; color: var(--text-muted); }
+.action-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.action-item.active .action-thumb { background: var(--accent); color: #fff; }
+
+/* ---------- Step Indicator ---------- */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
+  overflow-x: auto;
+}
+
+.step { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all 200ms;
+}
+.step-num.done { background: var(--success); color: #fff; }
+.step-num.current {
+  background: var(--accent);
+  color: #fff;
+  animation: stepPulse 2s ease-in-out infinite;
+}
+
+@keyframes stepPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,49,47,0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(184,49,47,0); }
+}
+
+.step-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.step-label.active { color: var(--text); font-weight: 600; }
+.step-arrow { margin: 0 12px; color: var(--border); font-size: 16px; flex-shrink: 0; }
+
+/* ---------- Info Box ---------- */
+.info-box {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.info-box-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-box.gold { background: var(--gold-light); border-left-color: var(--gold); }
+.info-box.gold .info-box-title { color: #8B6914; }
+.info-box.warning { background: var(--warning-light); border-left-color: var(--warning); }
+.info-box.warning .info-box-title { color: var(--warning); }
+.info-box.danger { background: var(--accent-light); border-left-color: var(--danger); }
+.info-box.danger .info-box-title { color: var(--danger); }
+
+/* ---------- Key Points ---------- */
+.kp-item {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 8px;
+  background: var(--card);
+}
+
+.kp-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.kp-header .feedback-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.kp-header .feedback-dot.good { background: var(--success); }
+.kp-header .feedback-dot.warn { background: var(--warning); }
+.kp-header .feedback-dot.bad { background: var(--accent); }
+
+.kp-toggle { margin-left: auto; color: var(--text-muted); font-size: 10px; transition: transform 200ms; }
+
+.kp-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 300ms ease, padding 300ms ease;
+  padding: 0 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  background: var(--bg);
+  border-top: 0 solid transparent;
+}
+
+.kp-item.open .kp-detail {
+  max-height: 240px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-light);
+}
+
+.kp-item.open .kp-toggle { transform: rotate(180deg); }
+
+/* ---------- Feedback Items ---------- */
+.feedback-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.feedback-item:last-child { margin-bottom: 0; }
+.feedback-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.feedback-dot.good { background: var(--success); }
+.feedback-dot.warn { background: var(--warning); }
+.feedback-dot.bad { background: var(--accent); }
+
+/* ---------- Data Row ---------- */
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+  gap: 16px;
+}
+.data-row:last-child { border-bottom: none; }
+.data-row-label { color: var(--text-muted); flex-shrink: 0; }
+.data-row-value { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
+
+/* ---------- Table ---------- */
+.table-wrap { overflow-x: auto; }
+table.criteria {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+table.criteria th {
+  text-align: left;
+  padding: 8px 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+table.criteria td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+table.criteria td.center { text-align: center; }
+
+/* ---------- Utility ---------- */
+.text-accent { color: var(--accent); }
+.text-gold { color: var(--gold); }
+.text-success { color: var(--success); }
+.text-muted { color: var(--text-muted); }
+.font-serif { font-family: var(--font-serif); }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .overview-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  body { overflow: auto; }
+  .app { display: block; height: auto; width: 100%; }
+  .sidebar { display: none; }
+
+  .mobile-topbar {
+    display: block;
+    background: var(--nav-bg);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .mobile-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 14px 16px 8px;
+  }
+  .mobile-brand .logo-text { font-size: 17px; }
+  .mobile-brand .logo-sub { font-size: 9px; letter-spacing: 2px; }
+  .mobile-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 16px 12px;
+  }
+  .mobile-nav a {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: rgba(255,255,255,0.07);
+    color: var(--nav-text);
+    transition: all 150ms;
+  }
+  .mobile-nav a.active { background: var(--accent); color: #fff; }
+
+  .main { padding: 24px 16px 48px; overflow: visible; }
+  .grid-2, .grid-3, .grid-4, .grid-2-1, .course-facts { grid-template-columns: 1fr; }
+  .course-hero { padding: 24px 20px; }
+  .course-hero-taiji { opacity: 0.04; }
+  .steps { padding: 14px; }
+  .control-bar { justify-content: flex-start; }
+  .viewer-3d.large { min-height: 340px; }
+  .pose-svg { width: 180px; height: 250px; }
+}
+
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- 移动端顶栏 -->
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <span class="logo-text">智承<span class="logo-accent">太极</span></span>
+        <span class="logo-sub">数字教案库</span>
+      </div>
+      <nav class="mobile-nav">
+        <a href="00-课程列表.html">课程列表</a>
+        <a href="01-课程概览.html">课程概览</a>
+        <a href="02-招式详情.html">招式详情</a>
+        <a href="03-3D查看器.html">3D查看器</a>
+        <a href="04-分步教学.html" class="active">分步教学</a>
+      </nav>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-text">智承<span class="logo-accent">太极</span></div>
+        <div class="logo-sub">数字教学系统</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">一 / 数字教案库</div>
+        <a class="nav-item" href="00-课程列表.html">
+          <span class="nav-icon">★</span> 课程列表
+        </a>
+        <a class="nav-item" href="01-课程概览.html">
+          <span class="nav-icon">◉</span> 课程概览
+        </a>
+        <a class="nav-item" href="02-招式详情.html">
+          <span class="nav-icon">◉</span> 招式详情
+        </a>
+        <a class="nav-item" href="03-3D查看器.html">
+          <span class="nav-icon">⊙</span> 3D动作查看器
+        </a>
+        <a class="nav-item active" href="04-分步教学.html">
+          <span class="nav-icon">▶</span> 分步教学
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar">金</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">金润山</div>
+          <div class="sidebar-user-role">计算机科学与技术2504班</div>
+        </div>
+        <div class="sidebar-settings" title="设置">⚙</div>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <div class="breadcrumb">
+        <a href="00-课程列表.html">首页</a>
+        <span class="sep">/</span>
+        <a href="00-课程列表.html">数字教案库</a>
+        <span class="sep">/</span>
+        第1式 · 起势
+        <span class="sep">/</span>
+        分步教学
+      </div>
+
+      <div class="page-title font-serif">分步教学 — 起势</div>
+      <div class="page-desc">按步骤分解学习，每一步都配有动作示意、拳理要点与常见错误提示</div>
+
+      <!-- 步骤指示器 -->
+      <div class="steps" id="steps">
+        <div class="step">
+          <div class="step-num current">1</div>
+          <div class="step-label active">步骤1</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-label">步骤2</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-label">步骤3</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-label">步骤4</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-label">步骤5</div>
+        </div>
+      </div>
+
+      <!-- 步骤内容 -->
+      <div class="grid-2-1">
+        <div>
+          <!-- 当前步骤示意图 -->
+          <div class="viewer-3d" style="height:360px;">
+            <div class="viewer-status">
+              <div class="viewer-status-badge">
+                <span class="rec-dot"></span>
+                <span id="viewer-step-label">步骤 1 / 5</span>
+              </div>
+            </div>
+            <div class="model-stage">
+              <svg id="step-svg" class="pose-svg" width="210" height="290" viewBox="0 0 200 280" fill="none">
+                <circle cx="100" cy="40" r="17" class="bone subtle" fill="none"></circle>
+                <line x1="100" y1="57" x2="100" y2="150" class="bone"></line>
+                <line x1="100" y1="88" x2="56" y2="118" class="bone"></line>
+                <line x1="100" y1="88" x2="144" y2="118" class="bone"></line>
+                <line x1="100" y1="150" x2="70" y2="222" class="bone"></line>
+                <line x1="100" y1="150" x2="130" y2="222" class="bone"></line>
+                <path id="step-force" class="force-line" d="M100 88 Q110 70 118 58"></path>
+                <circle cx="118" cy="58" r="3" fill="#C4A35A"></circle>
+              </svg>
+            </div>
+            <div class="viewer-3d-hint" id="viewer-hint">步骤1 · 双脚开立 · 起势调息</div>
+          </div>
+
+          <!-- 上一步 / 下一步 -->
+          <div class="flex-center mt-16">
+            <button class="btn btn-outline" type="button" onclick="goStep(-1)">◀ 上一步</button>
+            <button class="btn btn-primary" style="margin:0 12px;" type="button" onclick="goStep(1)">下一步 ▶</button>
+          </div>
+        </div>
+
+        <!-- 步骤说明 -->
+        <div class="card">
+          <div class="card-title mb-8" id="step-title">步骤1：双脚开立，起势调息</div>
+
+          <div class="info-box gold mb-12" id="step-kp-box">
+            <div class="info-box-title">拳理要点</div>
+            <span id="step-kp-text">“无极生太极，预备势中求。松静自然，意守丹田。”</span>
+          </div>
+
+          <div class="step-desc" id="step-desc" style="font-size:13px;line-height:1.8;color:var(--text-secondary);">
+            <p style="margin-bottom:12px;">双脚平行开立，与肩同宽；身体自然直立，头正颈直，下颚微收。双膝微屈但不过脚尖，重心落于两脚涌泉穴。</p>
+            <p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">松静站立</strong>：先让全身肌肉放松，再通过自然呼吸将意念引入丹田，为后续动作做好准备。</p>
+            <p>注意观察示意图中的金色虚线：力量从脚底沿身体中轴向上传导，保持“虚领顶劲、尾闾中正”的身法。</p>
+          </div>
+
+          <div class="mt-16" style="display:flex;gap:8px;flex-wrap:wrap;" id="step-tags">
+            <span class="tag tag-learning">重点步骤</span>
+            <span class="tag tag-default">站桩调息</span>
+            <span class="tag tag-default">松静自然</span>
+          </div>
+
+          <!-- 常见错误提示 -->
+          <div class="info-box warning mt-16" id="step-error-box">
+            <div class="info-box-title">常见错误</div>
+            <span id="step-error-text">双脚间距过大或过小；耸肩抬肘、呼吸急促。练习时注意保持膝盖方向与脚尖一致。</span>
+          </div>
+
+          <!-- 练习建议 -->
+          <div class="info-box mt-16" style="margin-bottom:0;">
+            <div class="info-box-title">练习建议</div>
+            <span id="step-tip">建议先站立 1-2 分钟，只做调息与放松；确认身法稳定后再进入下一步。每天重复 5-10 遍，体会重心下沉的感觉。</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ============================================================
+    // 分步教学（起势）— 步骤数据与交互
+    // ============================================================
+    var steps = [
+      {
+        title: '步骤1：双脚开立，起势调息',
+        kp: '“无极生太极，预备势中求。松静自然，意守丹田。”',
+        desc: '<p style="margin-bottom:12px;">双脚平行开立，与肩同宽；身体自然直立，头正颈直，下颚微收。双膝微屈但不过脚尖，重心落于两脚涌泉穴。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">松静站立</strong>：先让全身肌肉放松，再通过自然呼吸将意念引入丹田，为后续动作做好准备。</p><p>注意观察示意图中的金色虚线：力量从脚底沿身体中轴向上传导，保持“虚领顶劲、尾闾中正”的身法。</p>',
+        tags: ['重点步骤', '站桩调息', '松静自然'],
+        error: '双脚间距过大或过小；耸肩抬肘、呼吸急促。练习时注意保持膝盖方向与脚尖一致。',
+        tip: '建议先站立 1-2 分钟，只做调息与放松；确认身法稳定后再进入下一步。每天重复 5-10 遍，体会重心下沉的感觉。',
+        hint: '步骤1 · 双脚开立 · 起势调息',
+        force: 'M100 88 Q110 70 118 58'
+      },
+      {
+        title: '步骤2：沉肩坠肘，松腰落胯',
+        kp: '“沉肩坠肘，含胸拔背；腋下虚空，气沉丹田。”',
+        desc: '<p style="margin-bottom:12px;">双肩放松下沉，肘尖微垂；胸部自然内含，背部撑圆。尾闾中正，松腰落胯，让上半身重量自然落于胯根。</p><p style="margin-bottom:12px;">此步骤重点体会<strong style="color:var(--accent);">“松”</strong>：不是松懈，而是关节松开、肌肉不用拙力，保持身体骨架的中正支撑。</p><p>练习时可面对镜子检查：侧面看耳尖、肩、髋、踝是否接近一条直线。</p>',
+        tags: ['沉肩坠肘', '含胸拔背', '松腰落胯'],
+        error: '肩膀耸起、肘部外张；塌腰撅臀或挺胸。纠正时可先做几次深呼吸，呼气时想象肩胛骨向两侧滑落。',
+        tip: '将注意力放在肩、肘、腰三个部位，逐步放松。可请同伴轻按肩部，检查是否真正下沉。',
+        hint: '步骤2 · 沉肩坠肘 · 松腰落胯',
+        force: 'M100 88 Q84 104 70 120'
+      },
+      {
+        title: '步骤3：虚领顶劲，尾闾中正',
+        kp: '“虚领顶劲，尾闾中正；百会会阴，一线贯通。”',
+        desc: '<p style="margin-bottom:12px;">头顶百会穴如被细绳轻轻上提，下颚微收；尾骨向前微收，使脊柱形成自然曲度，任督二脉上下贯通。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">“中正”</strong>：身体既不前倾也不后仰，不前俯也不后靠，保持从百会到会阴再到两脚之间的垂直稳定。</p><p>这是后续所有招式共同的身法基础，务必反复体会。</p>',
+        tags: ['虚领顶劲', '尾闾中正', '身法中正'],
+        error: '仰头挺腹、低头驼背或身体前倾。可用靠墙练习法：后脑、背、臀贴墙，体会脊柱中正。',
+        tip: '想象头顶有一根线向上提，同时尾骨向下松沉，形成对拔拉伸的感觉。',
+        hint: '步骤3 · 虚领顶劲 · 尾闾中正',
+        force: 'M100 88 Q100 60 100 38'
+      },
+      {
+        title: '步骤4：双臂前举，意念领气',
+        kp: '“起势双手缓缓举，以意领气不着力。”',
+        desc: '<p style="margin-bottom:12px;">保持身法不变，双臂缓慢向前向上举起，与肩同高、与肩同宽；掌心向下，肘微屈。动作要均匀、连贯、不用力。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">“以意领气”</strong>：手臂不是靠肌肉举起，而是意念引导内气从丹田经胸、肩、肘、腕到达指尖。</p><p>举臂过程中保持呼吸自然，不要憋气。</p>',
+        tags: ['双臂前举', '以意领气', '均匀连贯'],
+        error: '举臂过快、耸肩、手臂僵硬或呼吸停顿。可将动作放慢，用 3-5 个呼吸完成一次举臂。',
+        tip: '先闭眼想象手臂如浮在水面，被水轻轻托起；再睁眼慢练，保持动作均匀。',
+        hint: '步骤4 · 双臂前举 · 意念领气',
+        force: 'M100 88 Q78 62 56 52'
+      },
+      {
+        title: '步骤5：屈膝下按，气归丹田',
+        kp: '“屈膝下按气归元，起落开合太极全。”',
+        desc: '<p style="margin-bottom:12px;">双臂由前向下轻轻按落至大腿前侧，同时双膝随之下蹲，保持膝盖不超过脚尖；重心仍然均匀落在两脚。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">“气归丹田”</strong>：双手下按与呼气配合，意念随手下行，归于丹田，完成起势的收束。</p><p>下按后稍作静立，再自然呼吸 2-3 次，即可衔接下一式。</p>',
+        tags: ['屈膝下按', '气归丹田', '收束起势'],
+        error: '下蹲时膝盖内扣或过脚尖；双手下落与呼吸脱节；起立时身体前倾。',
+        tip: '每次下按都配合一次深呼气，想象把浊气从脚底排出；起身时吸气，保持身法不散。',
+        hint: '步骤5 · 屈膝下按 · 气归丹田',
+        force: 'M100 88 Q122 104 142 118'
+      }
+    ];
+
+    var currentStep = 0;
+
+    function renderSteps() {
+      var container = document.getElementById('steps');
+      container.innerHTML = '';
+      steps.forEach(function(step, i) {
+        if (i > 0) {
+          var arrow = document.createElement('div');
+          arrow.className = 'step-arrow';
+          arrow.textContent = '›';
+          container.appendChild(arrow);
+        }
+        var stepDiv = document.createElement('div');
+        stepDiv.className = 'step';
+        stepDiv.innerHTML =
+          '<div class="step-num' + (i < currentStep ? ' done' : '') + (i === currentStep ? ' current' : '') + '">' +
+          (i < currentStep ? '✓' : (i + 1)) + '</div>' +
+          '<div class="step-label' + (i === currentStep ? ' active' : '') + '">步骤' + (i + 1) + '</div>';
+        container.appendChild(stepDiv);
+      });
+    }
+
+    function renderStep() {
+      var step = steps[currentStep];
+      document.getElementById('step-title').textContent = step.title;
+      document.getElementById('step-kp-text').textContent = step.kp;
+      document.getElementById('step-desc').innerHTML = step.desc;
+      document.getElementById('step-error-text').textContent = step.error;
+      document.getElementById('step-tip').textContent = step.tip;
+      document.getElementById('viewer-hint').textContent = step.hint;
+      document.getElementById('viewer-step-label').textContent = '步骤 ' + (currentStep + 1) + ' / ' + steps.length;
+      document.getElementById('step-force').setAttribute('d', step.force);
+
+      var tagsEl = document.getElementById('step-tags');
+      tagsEl.innerHTML = '';
+      step.tags.forEach(function(tagText) {
+        var tag = document.createElement('span');
+        tag.className = tagText === '重点步骤' ? 'tag tag-learning' : 'tag tag-default';
+        tag.textContent = tagText;
+        tagsEl.appendChild(tag);
+      });
+
+      renderSteps();
+    }
+
+    function goStep(dir) {
+      currentStep = Math.max(0, Math.min(steps.length - 1, currentStep + dir));
+      renderStep();
+    }
+
+    renderStep();
+  </script>
+</body>
+</html>
+

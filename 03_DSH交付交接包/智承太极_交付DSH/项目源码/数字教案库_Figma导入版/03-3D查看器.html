@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智承太极 — 标准动作 3D 查看器</title>
+  <link rel="stylesheet" href="assets/css/zhitaiji.css">
+  <style>
+    /* 页面内补充：SVG 骨骼动画的变换基准 */
+    .pose-svg .arm-l,
+    .pose-svg .arm-r,
+    .pose-svg .leg-l,
+    .pose-svg .leg-r {
+      transform-box: fill-box;
+      transform-origin: top center;
+    }
+    .pose-svg.bones-off .force-line,
+    .pose-svg.bones-off .joint { opacity: 0; transition: opacity 200ms; }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- 移动端顶栏 -->
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <span class="logo-text">智承<span class="logo-accent">太极</span></span>
+        <span class="logo-sub">数字教案库</span>
+      </div>
+      <nav class="mobile-nav">
+        <a href="00-课程列表.html">课程列表</a>
+        <a href="01-课程概览.html">课程概览</a>
+        <a href="02-招式详情.html">招式详情</a>
+        <a href="03-3D查看器.html" class="active">3D查看器</a>
+        <a href="04-分步教学.html">分步教学</a>
+      </nav>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-text">智承<span class="logo-accent">太极</span></div>
+        <div class="logo-sub">数字教学系统</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">一 / 数字教案库</div>
+        <a class="nav-item" href="00-课程列表.html">
+          <span class="nav-icon">★</span> 课程列表
+        </a>
+        <a class="nav-item" href="01-课程概览.html">
+          <span class="nav-icon">◉</span> 课程概览
+        </a>
+        <a class="nav-item" href="02-招式详情.html">
+          <span class="nav-icon">◉</span> 招式详情
+        </a>
+        <a class="nav-item active" href="03-3D查看器.html">
+          <span class="nav-icon">⊙</span> 3D动作查看器
+        </a>
+        <a class="nav-item" href="04-分步教学.html">
+          <span class="nav-icon">▶</span> 分步教学
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar">金</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">金润山</div>
+          <div class="sidebar-user-role">计算机科学与技术2504班</div>
+        </div>
+        <div class="sidebar-settings" title="设置">⚙</div>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <div class="breadcrumb">
+        <a href="00-课程列表.html">首页</a>
+        <span class="sep">/</span>
+        <a href="00-课程列表.html">数字教案库</a>
+        <span class="sep">/</span>
+        标准动作 3D 查看器
+      </div>
+
+      <div class="page-title">标准动作 3D 查看器</div>
+      <div class="page-desc">拖拽旋转查看各角度、切换动作与可视化图层</div>
+
+      <div class="grid-2-1">
+        <!-- 左：3D 视口 + 控制条 -->
+        <div>
+          <div class="viewer-3d large">
+            <div class="viewer-status">
+              <div class="viewer-status-badge">
+                <span class="rec-dot"></span>
+                <span id="play-status">演示中</span>
+              </div>
+            </div>
+            <div class="viewer-controls">
+              <button class="viewer-btn" type="button" title="重置视角">↻</button>
+              <button class="viewer-btn" type="button" title="全屏">⛶</button>
+            </div>
+            <div class="model-stage">
+              <svg id="pose-svg" class="pose-svg" width="220" height="300" viewBox="0 0 200 280" fill="none">
+                <circle cx="100" cy="42" r="17" class="bone subtle" fill="none"></circle>
+                <line x1="100" y1="59" x2="100" y2="150" class="bone"></line>
+                <g class="arm-l"><line x1="100" y1="90" x2="56" y2="118" class="bone"></line></g>
+                <g class="arm-r"><line x1="100" y1="90" x2="144" y2="118" class="bone"></line></g>
+                <g class="leg-l"><line x1="100" y1="150" x2="70" y2="224" class="bone"></line></g>
+                <g class="leg-r"><line x1="100" y1="150" x2="130" y2="224" class="bone"></line></g>
+                <circle cx="100" cy="59" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="100" cy="90" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="56" cy="118" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="144" cy="118" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="100" cy="150" r="4" class="joint" fill="#B8312F"></circle>
+                <path class="force-line" d="M100 90 Q108 74 118 62"></path>
+                <circle cx="118" cy="62" r="3" fill="#C4A35A"></circle>
+              </svg>
+            </div>
+            <div class="viewer-3d-hint" id="viewer-hint">起势 · 正面视角 · 拖拽旋转 / 滚轮缩放</div>
+          </div>
+
+          <!-- 控制条 -->
+          <div class="control-bar">
+            <div class="control-group">
+              <button class="btn btn-outline btn-sm" id="play-btn" type="button" onclick="togglePlay()">▮▮ 暂停</button>
+            </div>
+            <span class="separator"></span>
+            <div class="control-group">
+              <span class="control-label">速度</span>
+              <button class="seg-btn" type="button" onclick="setSpeed(0.25)">0.25x</button>
+              <button class="seg-btn" type="button" onclick="setSpeed(0.5)">0.5x</button>
+              <button class="seg-btn active" type="button" onclick="setSpeed(1)">1x</button>
+            </div>
+            <span class="separator"></span>
+            <div class="control-group">
+              <span class="control-label">视角</span>
+              <button class="seg-btn active" type="button" onclick="setView('front')">正面</button>
+              <button class="seg-btn" type="button" onclick="setView('side')">侧面</button>
+              <button class="seg-btn" type="button" onclick="setView('back')">背面</button>
+            </div>
+            <span class="separator"></span>
+            <div class="control-group">
+              <button class="seg-btn active" id="bone-toggle" type="button" onclick="toggleBones()">骨骼线 开</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右：动作列表 + 关键数据 -->
+        <div>
+          <div class="card">
+            <div class="card-title mb-12">动作列表</div>
+            <div class="action-list" id="action-list">
+              <button class="action-item active" data-index="0" type="button" onclick="setPose(0)">
+                <span class="action-thumb">01</span>
+                <span style="flex:1;text-align:left;">
+                  <span class="action-name">起势</span>
+                  <div class="action-meta">基础 · 预备调息</div>
+                </span>
+                <span class="tag tag-mastered">已掌握</span>
+              </button>
+              <button class="action-item" data-index="1" type="button" onclick="setPose(1)">
+                <span class="action-thumb">02</span>
+                <span style="flex:1;text-align:left;">
+                  <span class="action-name">右野马分鬃</span>
+                  <div class="action-meta">基础 · 分手弓步</div>
+                </span>
+                <span class="tag tag-mastered">已掌握</span>
+              </button>
+              <button class="action-item" data-index="2" type="button" onclick="setPose(2)">
+                <span class="action-thumb">03</span>
+                <span style="flex:1;text-align:left;">
+                  <span class="action-name">白鹤亮翅</span>
+                  <div class="action-meta">基础 · 亮翅虚步</div>
+                </span>
+                <span class="tag tag-learning">学习中</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title mb-12">关键数据</div>
+            <div class="data-row"><span class="data-row-label">当前动作</span><span class="data-row-value" id="current-action">起势</span></div>
+            <div class="data-row"><span class="data-row-label">帧编号</span><span class="data-row-value" id="frame-counter">24 / 86</span></div>
+            <div class="data-row"><span class="data-row-label">前腿膝盖角度</span><span class="data-row-value" id="knee-angle">128°</span></div>
+            <div class="data-row"><span class="data-row-label">重心分布</span><span class="data-row-value" id="weight-dist">前脚 62%</span></div>
+            <div class="data-row"><span class="data-row-label">身体偏转</span><span class="data-row-value" id="body-rotation">15°</span></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title mb-12">当前帧动作要点</div>
+            <div class="feedback-item"><div class="feedback-dot good"></div><div id="frame-tip-1">双脚平行开立与肩同宽，重心平稳过渡</div></div>
+            <div class="feedback-item"><div class="feedback-dot warn"></div><div id="frame-tip-2">沉肩坠肘，力量源自腰部旋转，保持中正</div></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ============================================================
+    // 3D 查看器交互 — 本地 SVG 人体骨架示意
+    // ============================================================
+    var poses = [
+      {
+        name: '起势',
+        hint: '起势 · 正面视角 · 拖拽旋转 / 滚轮缩放',
+        svg: '<circle cx="100" cy="42" r="17" class="bone subtle" fill="none"></circle>' +
+             '<line x1="100" y1="59" x2="100" y2="150" class="bone"></line>' +
+             '<g class="arm-l"><line x1="100" y1="90" x2="56" y2="118" class="bone"></line></g>' +
+             '<g class="arm-r"><line x1="100" y1="90" x2="144" y2="118" class="bone"></line></g>' +
+             '<g class="leg-l"><line x1="100" y1="150" x2="70" y2="224" class="bone"></line></g>' +
+             '<g class="leg-r"><line x1="100" y1="150" x2="130" y2="224" class="bone"></line></g>' +
+             '<circle cx="100" cy="59" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="90" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="56" cy="118" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="144" cy="118" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="150" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<path class="force-line" d="M100 90 Q108 74 118 62"></path>' +
+             '<circle cx="118" cy="62" r="3" fill="#C4A35A"></circle>',
+        kp: ['双脚平行开立与肩同宽，重心平稳过渡', '沉肩坠肘，力量源自腰部旋转，保持中正'],
+        frames: 60
+      },
+      {
+        name: '右野马分鬃',
+        hint: '右野马分鬃 · 侧面视角 · 拖拽旋转 / 滚轮缩放',
+        svg: '<circle cx="96" cy="42" r="17" class="bone subtle" fill="none"></circle>' +
+             '<line x1="96" y1="59" x2="96" y2="148" class="bone"></line>' +
+             '<g class="arm-l"><line x1="96" y1="86" x2="54" y2="112" class="bone"></line></g>' +
+             '<g class="arm-r"><line x1="96" y1="86" x2="142" y2="64" class="bone"></line></g>' +
+             '<g class="leg-l"><line x1="96" y1="148" x2="62" y2="220" class="bone"></line></g>' +
+             '<g class="leg-r"><line x1="96" y1="148" x2="136" y2="222" class="bone"></line></g>' +
+             '<circle cx="96" cy="59" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="96" cy="86" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="54" cy="112" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="142" cy="64" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="96" cy="148" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<path class="force-line" d="M96 86 Q118 72 142 64"></path>' +
+             '<circle cx="142" cy="64" r="3" fill="#C4A35A"></circle>',
+        kp: ['转体以腰为轴，分手时两臂保持弧形', '弓步与分手同时完成，重心平稳过渡'],
+        frames: 86
+      },
+      {
+        name: '白鹤亮翅',
+        hint: '白鹤亮翅 · 正面视角 · 拖拽旋转 / 滚轮缩放',
+        svg: '<circle cx="100" cy="40" r="17" class="bone subtle" fill="none"></circle>' +
+             '<line x1="100" y1="57" x2="100" y2="146" class="bone"></line>' +
+             '<g class="arm-l"><line x1="100" y1="84" x2="50" y2="52" class="bone"></line></g>' +
+             '<g class="arm-r"><line x1="100" y1="84" x2="148" y2="118" class="bone"></line></g>' +
+             '<g class="leg-l"><line x1="100" y1="146" x2="66" y2="222" class="bone"></line></g>' +
+             '<g class="leg-r"><line x1="100" y1="146" x2="132" y2="220" class="bone"></line></g>' +
+             '<circle cx="100" cy="57" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="84" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="50" cy="52" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="148" cy="118" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="146" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<path class="force-line" d="M100 84 Q80 68 50 52"></path>' +
+             '<circle cx="50" cy="52" r="3" fill="#C4A35A"></circle>',
+        kp: ['含胸拔背，上手与下手对拔伸展', '虚步重心在后腿，身法中正'],
+        frames: 74
+      }
+    ];
+
+    var currentPose = 0;
+    var currentFrame = 1;
+    var playing = true;
+    var speed = 1;
+    var view = 'front';
+    var bonesOn = true;
+    var playTimer = null;
+
+    function setPose(index) {
+      currentPose = index;
+      currentFrame = 1;
+      var pose = poses[index];
+      document.getElementById('pose-svg').innerHTML = pose.svg;
+      document.getElementById('current-action').textContent = pose.name;
+      document.getElementById('viewer-hint').textContent = pose.hint;
+      document.getElementById('frame-tip-1').textContent = pose.kp[0];
+      document.getElementById('frame-tip-2').textContent = pose.kp[1];
+
+      document.querySelectorAll('#action-list .action-item').forEach(function(item) {
+        item.classList.toggle('active', parseInt(item.getAttribute('data-index'), 10) === index);
+      });
+
+      var total = pose.frames;
+      document.getElementById('frame-counter').textContent = currentFrame + ' / ' + total;
+      updateKeyData();
+    }
+
+    function updateFrameDisplay() {
+      var pose = poses[currentPose];
+      var total = pose.frames;
+      currentFrame++;
+      if (currentFrame > total) currentFrame = 1;
+      document.getElementById('frame-counter').textContent = currentFrame + ' / ' + total;
+      updateKeyData();
+    }
+
+    function updateKeyData() {
+      var pose = poses[currentPose];
+      var progress = currentFrame / pose.frames;
+      var knee = Math.round(118 + Math.sin(progress * Math.PI * 2) * 12) + '°';
+      var weight = Math.round(48 + Math.sin(progress * Math.PI * 2) * 16) + '%';
+      var rotation = Math.round(6 + Math.abs(Math.sin(progress * Math.PI * 2)) * 12) + '°';
+      document.getElementById('knee-angle').textContent = knee;
+      document.getElementById('weight-dist').textContent = '前脚 ' + weight;
+      document.getElementById('body-rotation').textContent = rotation;
+    }
+
+    function togglePlay() {
+      playing = !playing;
+      var btn = document.getElementById('play-btn');
+      var status = document.getElementById('play-status');
+      if (playing) {
+        btn.textContent = '▮▮ 暂停';
+        status.textContent = '演示中';
+        startTimer();
+      } else {
+        btn.textContent = '▶ 播放';
+        status.textContent = '已暂停';
+        stopTimer();
+      }
+      document.getElementById('pose-svg').classList.toggle('animating', playing);
+    }
+
+    function startTimer() {
+      stopTimer();
+      var delay = speed === 1 ? 160 : speed === 0.5 ? 320 : 640;
+      playTimer = setInterval(updateFrameDisplay, delay);
+    }
+
+    function stopTimer() {
+      if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    }
+
+    function setSpeed(value) {
+      speed = value;
+      document.querySelectorAll('.control-group .seg-btn').forEach(function(btn) {
+        var label = btn.textContent;
+        btn.classList.toggle('active', label === value + 'x' || label === (value === 0.25 ? '0.25x' : value === 0.5 ? '0.5x' : '1x'));
+      });
+      if (playing) startTimer();
+    }
+
+    function setView(v) {
+      view = v;
+      var svg = document.getElementById('pose-svg');
+      svg.classList.remove('side', 'back');
+      if (v === 'side') svg.classList.add('side');
+      if (v === 'back') svg.classList.add('back');
+      document.querySelectorAll('.control-group .seg-btn').forEach(function(btn) {
+        if (btn.textContent === '正面' || btn.textContent === '侧面' || btn.textContent === '背面') {
+          btn.classList.toggle('active', (btn.textContent === '正面' && v === 'front') || (btn.textContent === '侧面' && v === 'side') || (btn.textContent === '背面' && v === 'back'));
+        }
+      });
+      var hints = ['正面', '侧面', '背面'];
+      document.getElementById('viewer-hint').textContent = poses[currentPose].name + ' · ' + hints[v === 'front' ? 0 : v === 'side' ? 1 : 2] + '视角 · 拖拽旋转 / 滚轮缩放';
+    }
+
+    function toggleBones() {
+      bonesOn = !bonesOn;
+      var svg = document.getElementById('pose-svg');
+      var btn = document.getElementById('bone-toggle');
+      svg.classList.toggle('bones-off', !bonesOn);
+      btn.textContent = bonesOn ? '骨骼线 开' : '骨骼线 关';
+      btn.classList.toggle('active', bonesOn);
+    }
+
+    // 初始化
+    setPose(0);
+    startTimer();
+  </script>
+</body>
+</html>

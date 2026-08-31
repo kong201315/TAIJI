@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智承太极 — 分步教学 · 起势</title>
+  <link rel="stylesheet" href="assets/css/zhitaiji.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- 移动端顶栏 -->
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <span class="logo-text">智承<span class="logo-accent">太极</span></span>
+        <span class="logo-sub">数字教案库</span>
+      </div>
+      <nav class="mobile-nav">
+        <a href="00-课程列表.html">课程列表</a>
+        <a href="01-课程概览.html">课程概览</a>
+        <a href="02-招式详情.html">招式详情</a>
+        <a href="03-3D查看器.html">3D查看器</a>
+        <a href="04-分步教学.html" class="active">分步教学</a>
+      </nav>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-text">智承<span class="logo-accent">太极</span></div>
+        <div class="logo-sub">数字教学系统</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">一 / 数字教案库</div>
+        <a class="nav-item" href="00-课程列表.html">
+          <span class="nav-icon">★</span> 课程列表
+        </a>
+        <a class="nav-item" href="01-课程概览.html">
+          <span class="nav-icon">◉</span> 课程概览
+        </a>
+        <a class="nav-item" href="02-招式详情.html">
+          <span class="nav-icon">◉</span> 招式详情
+        </a>
+        <a class="nav-item" href="03-3D查看器.html">
+          <span class="nav-icon">⊙</span> 3D动作查看器
+        </a>
+        <a class="nav-item active" href="04-分步教学.html">
+          <span class="nav-icon">▶</span> 分步教学
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar">金</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">金润山</div>
+          <div class="sidebar-user-role">计算机科学与技术2504班</div>
+        </div>
+        <div class="sidebar-settings" title="设置">⚙</div>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <div class="breadcrumb">
+        <a href="00-课程列表.html">首页</a>
+        <span class="sep">/</span>
+        <a href="00-课程列表.html">数字教案库</a>
+        <span class="sep">/</span>
+        第1式 · 起势
+        <span class="sep">/</span>
+        分步教学
+      </div>
+
+      <div class="page-title font-serif">分步教学 — 起势</div>
+      <div class="page-desc">按步骤分解学习，每一步都配有动作示意、拳理要点与常见错误提示</div>
+
+      <!-- 步骤指示器 -->
+      <div class="steps" id="steps">
+        <div class="step">
+          <div class="step-num current">1</div>
+          <div class="step-label active">步骤1</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-label">步骤2</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-label">步骤3</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-label">步骤4</div>
+        </div>
+        <div class="step-arrow">›</div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-label">步骤5</div>
+        </div>
+      </div>
+
+      <!-- 步骤内容 -->
+      <div class="grid-2-1">
+        <div>
+          <!-- 当前步骤示意图 -->
+          <div class="viewer-3d" style="height:360px;">
+            <div class="viewer-status">
+              <div class="viewer-status-badge">
+                <span class="rec-dot"></span>
+                <span id="viewer-step-label">步骤 1 / 5</span>
+              </div>
+            </div>
+            <div class="model-stage">
+              <svg id="step-svg" class="pose-svg" width="210" height="290" viewBox="0 0 200 280" fill="none">
+                <circle cx="100" cy="40" r="17" class="bone subtle" fill="none"></circle>
+                <line x1="100" y1="57" x2="100" y2="150" class="bone"></line>
+                <line x1="100" y1="88" x2="56" y2="118" class="bone"></line>
+                <line x1="100" y1="88" x2="144" y2="118" class="bone"></line>
+                <line x1="100" y1="150" x2="70" y2="222" class="bone"></line>
+                <line x1="100" y1="150" x2="130" y2="222" class="bone"></line>
+                <path id="step-force" class="force-line" d="M100 88 Q110 70 118 58"></path>
+                <circle cx="118" cy="58" r="3" fill="#C4A35A"></circle>
+              </svg>
+            </div>
+            <div class="viewer-3d-hint" id="viewer-hint">步骤1 · 双脚开立 · 起势调息</div>
+          </div>
+
+          <!-- 上一步 / 下一步 -->
+          <div class="flex-center mt-16">
+            <button class="btn btn-outline" type="button" onclick="goStep(-1)">◀ 上一步</button>
+            <button class="btn btn-primary" style="margin:0 12px;" type="button" onclick="goStep(1)">下一步 ▶</button>
+          </div>
+        </div>
+
+        <!-- 步骤说明 -->
+        <div class="card">
+          <div class="card-title mb-8" id="step-title">步骤1：双脚开立，起势调息</div>
+
+          <div class="info-box gold mb-12" id="step-kp-box">
+            <div class="info-box-title">拳理要点</div>
+            <span id="step-kp-text">“无极生太极，预备势中求。松静自然，意守丹田。”</span>
+          </div>
+
+          <div class="step-desc" id="step-desc" style="font-size:13px;line-height:1.8;color:var(--text-secondary);">
+            <p style="margin-bottom:12px;">双脚平行开立，与肩同宽；身体自然直立，头正颈直，下颚微收。双膝微屈但不过脚尖，重心落于两脚涌泉穴。</p>
+            <p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">松静站立</strong>：先让全身肌肉放松，再通过自然呼吸将意念引入丹田，为后续动作做好准备。</p>
+            <p>注意观察示意图中的金色虚线：力量从脚底沿身体中轴向上传导，保持“虚领顶劲、尾闾中正”的身法。</p>
+          </div>
+
+          <div class="mt-16" style="display:flex;gap:8px;flex-wrap:wrap;" id="step-tags">
+            <span class="tag tag-learning">重点步骤</span>
+            <span class="tag tag-default">站桩调息</span>
+            <span class="tag tag-default">松静自然</span>
+          </div>
+
+          <!-- 常见错误提示 -->
+          <div class="info-box warning mt-16" id="step-error-box">
+            <div class="info-box-title">常见错误</div>
+            <span id="step-error-text">双脚间距过大或过小；耸肩抬肘、呼吸急促。练习时注意保持膝盖方向与脚尖一致。</span>
+          </div>
+
+          <!-- 练习建议 -->
+          <div class="info-box mt-16" style="margin-bottom:0;">
+            <div class="info-box-title">练习建议</div>
+            <span id="step-tip">建议先站立 1-2 分钟，只做调息与放松；确认身法稳定后再进入下一步。每天重复 5-10 遍，体会重心下沉的感觉。</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ============================================================
+    // 分步教学（起势）— 步骤数据与交互
+    // ============================================================
+    var steps = [
+      {
+        title: '步骤1：双脚开立，起势调息',
+        kp: '“无极生太极，预备势中求。松静自然，意守丹田。”',
+        desc: '<p style="margin-bottom:12px;">双脚平行开立，与肩同宽；身体自然直立，头正颈直，下颚微收。双膝微屈但不过脚尖，重心落于两脚涌泉穴。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">松静站立</strong>：先让全身肌肉放松，再通过自然呼吸将意念引入丹田，为后续动作做好准备。</p><p>注意观察示意图中的金色虚线：力量从脚底沿身体中轴向上传导，保持“虚领顶劲、尾闾中正”的身法。</p>',
+        tags: ['重点步骤', '站桩调息', '松静自然'],
+        error: '双脚间距过大或过小；耸肩抬肘、呼吸急促。练习时注意保持膝盖方向与脚尖一致。',
+        tip: '建议先站立 1-2 分钟，只做调息与放松；确认身法稳定后再进入下一步。每天重复 5-10 遍，体会重心下沉的感觉。',
+        hint: '步骤1 · 双脚开立 · 起势调息',
+        force: 'M100 88 Q110 70 118 58'
+      },
+      {
+        title: '步骤2：沉肩坠肘，松腰落胯',
+        kp: '“沉肩坠肘，含胸拔背；腋下虚空，气沉丹田。”',
+        desc: '<p style="margin-bottom:12px;">双肩放松下沉，肘尖微垂；胸部自然内含，背部撑圆。尾闾中正，松腰落胯，让上半身重量自然落于胯根。</p><p style="margin-bottom:12px;">此步骤重点体会<strong style="color:var(--accent);">“松”</strong>：不是松懈，而是关节松开、肌肉不用拙力，保持身体骨架的中正支撑。</p><p>练习时可面对镜子检查：侧面看耳尖、肩、髋、踝是否接近一条直线。</p>',
+        tags: ['沉肩坠肘', '含胸拔背', '松腰落胯'],
+        error: '肩膀耸起、肘部外张；塌腰撅臀或挺胸。纠正时可先做几次深呼吸，呼气时想象肩胛骨向两侧滑落。',
+        tip: '将注意力放在肩、肘、腰三个部位，逐步放松。可请同伴轻按肩部，检查是否真正下沉。',
+        hint: '步骤2 · 沉肩坠肘 · 松腰落胯',
+        force: 'M100 88 Q84 104 70 120'
+      },
+      {
+        title: '步骤3：虚领顶劲，尾闾中正',
+        kp: '“虚领顶劲，尾闾中正；百会会阴，一线贯通。”',
+        desc: '<p style="margin-bottom:12px;">头顶百会穴如被细绳轻轻上提，下颚微收；尾骨向前微收，使脊柱形成自然曲度，任督二脉上下贯通。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">“中正”</strong>：身体既不前倾也不后仰，不前俯也不后靠，保持从百会到会阴再到两脚之间的垂直稳定。</p><p>这是后续所有招式共同的身法基础，务必反复体会。</p>',
+        tags: ['虚领顶劲', '尾闾中正', '身法中正'],
+        error: '仰头挺腹、低头驼背或身体前倾。可用靠墙练习法：后脑、背、臀贴墙，体会脊柱中正。',
+        tip: '想象头顶有一根线向上提，同时尾骨向下松沉，形成对拔拉伸的感觉。',
+        hint: '步骤3 · 虚领顶劲 · 尾闾中正',
+        force: 'M100 88 Q100 60 100 38'
+      },
+      {
+        title: '步骤4：双臂前举，意念领气',
+        kp: '“起势双手缓缓举，以意领气不着力。”',
+        desc: '<p style="margin-bottom:12px;">保持身法不变，双臂缓慢向前向上举起，与肩同高、与肩同宽；掌心向下，肘微屈。动作要均匀、连贯、不用力。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">“以意领气”</strong>：手臂不是靠肌肉举起，而是意念引导内气从丹田经胸、肩、肘、腕到达指尖。</p><p>举臂过程中保持呼吸自然，不要憋气。</p>',
+        tags: ['双臂前举', '以意领气', '均匀连贯'],
+        error: '举臂过快、耸肩、手臂僵硬或呼吸停顿。可将动作放慢，用 3-5 个呼吸完成一次举臂。',
+        tip: '先闭眼想象手臂如浮在水面，被水轻轻托起；再睁眼慢练，保持动作均匀。',
+        hint: '步骤4 · 双臂前举 · 意念领气',
+        force: 'M100 88 Q78 62 56 52'
+      },
+      {
+        title: '步骤5：屈膝下按，气归丹田',
+        kp: '“屈膝下按气归元，起落开合太极全。”',
+        desc: '<p style="margin-bottom:12px;">双臂由前向下轻轻按落至大腿前侧，同时双膝随之下蹲，保持膝盖不超过脚尖；重心仍然均匀落在两脚。</p><p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">“气归丹田”</strong>：双手下按与呼气配合，意念随手下行，归于丹田，完成起势的收束。</p><p>下按后稍作静立，再自然呼吸 2-3 次，即可衔接下一式。</p>',
+        tags: ['屈膝下按', '气归丹田', '收束起势'],
+        error: '下蹲时膝盖内扣或过脚尖；双手下落与呼吸脱节；起立时身体前倾。',
+        tip: '每次下按都配合一次深呼气，想象把浊气从脚底排出；起身时吸气，保持身法不散。',
+        hint: '步骤5 · 屈膝下按 · 气归丹田',
+        force: 'M100 88 Q122 104 142 118'
+      }
+    ];
+
+    var currentStep = 0;
+
+    function renderSteps() {
+      var container = document.getElementById('steps');
+      container.innerHTML = '';
+      steps.forEach(function(step, i) {
+        if (i > 0) {
+          var arrow = document.createElement('div');
+          arrow.className = 'step-arrow';
+          arrow.textContent = '›';
+          container.appendChild(arrow);
+        }
+        var stepDiv = document.createElement('div');
+        stepDiv.className = 'step';
+        stepDiv.innerHTML =
+          '<div class="step-num' + (i < currentStep ? ' done' : '') + (i === currentStep ? ' current' : '') + '">' +
+          (i < currentStep ? '✓' : (i + 1)) + '</div>' +
+          '<div class="step-label' + (i === currentStep ? ' active' : '') + '">步骤' + (i + 1) + '</div>';
+        container.appendChild(stepDiv);
+      });
+    }
+
+    function renderStep() {
+      var step = steps[currentStep];
+      document.getElementById('step-title').textContent = step.title;
+      document.getElementById('step-kp-text').textContent = step.kp;
+      document.getElementById('step-desc').innerHTML = step.desc;
+      document.getElementById('step-error-text').textContent = step.error;
+      document.getElementById('step-tip').textContent = step.tip;
+      document.getElementById('viewer-hint').textContent = step.hint;
+      document.getElementById('viewer-step-label').textContent = '步骤 ' + (currentStep + 1) + ' / ' + steps.length;
+      document.getElementById('step-force').setAttribute('d', step.force);
+
+      var tagsEl = document.getElementById('step-tags');
+      tagsEl.innerHTML = '';
+      step.tags.forEach(function(tagText) {
+        var tag = document.createElement('span');
+        tag.className = tagText === '重点步骤' ? 'tag tag-learning' : 'tag tag-default';
+        tag.textContent = tagText;
+        tagsEl.appendChild(tag);
+      });
+
+      renderSteps();
+    }
+
+    function goStep(dir) {
+      currentStep = Math.max(0, Math.min(steps.length - 1, currentStep + dir));
+      renderStep();
+    }
+
+    renderStep();
+  </script>
+</body>
+</html>

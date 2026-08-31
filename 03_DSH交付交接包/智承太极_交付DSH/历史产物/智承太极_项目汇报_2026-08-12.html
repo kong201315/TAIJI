@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  /* ============ NAV / CHROME STYLES ============ */
+  #nav-controls {
+    position: absolute;
+    z-index: 50;
+  }
+  /* progress bar */
+  #progress-track {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 5px;
+    background: #1b1b1f;
+    z-index: 60;
+  }
+  #progress-fill {
+    position: absolute;
+    top: 0; left: 0; height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #B8312F, #C4A35A);
+  }
+  /* counter */
+  #counter {
+    position: absolute;
+    bottom: 24px; right: 34px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: #C4A35A;
+    background: #141418;
+    border: 1px solid #2a2a30;
+    padding: 8px 18px;
+    border-radius: 14px;
+    z-index: 60;
+  }
+  /* dot indicators */
+  #dots {
+    position: absolute;
+    bottom: 32px; left: 40px;
+    display: flex;
+    gap: 12px;
+    z-index: 60;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #2c2c33;
+    transition: background .3s, transform .3s;
+  }
+  .dot.on {
+    background: #C4A35A;
+    transform: scale(1.35);
+  }
+
+  /* ============ DESIGN SYSTEM ============ */
+  .slide {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    color: #e8e8ec;
+    background: #121216;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .accent-red { color: #e0645f; }
+  .accent-gold { color: #C4A35A; }
+
+  /* shared content-slide scaffold */
+  .content-slide {
+    padding: 64px 0 0 0; /* handled by inner wrap */
+  }
+  .wrap {
+    position: absolute;
+    top: 64px; left: 90px; right: 90px;
+    height: 960px;
+  }
+  .slide-head {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 46px;
+  }
+  .head-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: #121216;
+    background: #C4A35A;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+  .head-title {
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #f0f0f3;
+    margin: 0;
+  }
+  .head-title .accent-red { color: #e0645f; }
+  .head-line {
+    flex: 0 0 auto;
+    width: 200px; height: 3px;
+    background: linear-gradient(90deg, #B8312F, #C4A35A);
+    border-radius: 3px;
+  }
+
+  /* generic card */
+  .card {
+    background: #1a1a20;
+    border: 1px solid #2a2a32;
+    border-radius: 18px;
+    padding: 30px 34px;
+    box-sizing: border-box;
+  }
+  .card-title {
+    font-size: 26px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .card-title::before {
+    content: "";
+    width: 6px; height: 24px;
+    background: #B8312F;
+    border-radius: 3px;
+  }
+  .kpi-card {
+    background: linear-gradient(150deg, #1c1c24 0%, #17171c 100%);
+    border: 1px solid #2c2c36;
+    border-radius: 18px;
+    padding: 26px 30px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #B8312F, #C4A35A);
+  }
+  .kpi-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 66px;
+    font-weight: 800;
+    color: #C4A35A;
+    line-height: 1;
+  }
+  .kpi-label {
+    margin-top: 12px;
+    font-size: 24px;
+    color: #c4c4cc;
+  }
+
+/* ================= 增强动画系统 (zhitaiji deck) ================= */
+/* ---- 页面切换过渡 ---- */
+.slide { transition: opacity .55s ease; }
+.slide.active { animation: slideReveal .72s cubic-bezier(.16,1,.3,1) both; }
+@keyframes slideReveal {
+  0%   { opacity: 0; transform: scale(.985) translateY(10px); filter: blur(9px); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* ---- 页内元素入场（stagger） ---- */
+.slide .fx { opacity: 0; }
+.slide.active .fx {
+  animation: riseIn .8s cubic-bezier(.16,1,.3,1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes riseIn { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: none; } }
+
+.slide.active .fx-head-tag { animation-name: popIn; }
+@keyframes popIn { from { opacity: 0; transform: scale(.55); } to { opacity: 1; transform: none; } }
+
+.slide.active .fx-head-title { animation-name: blurIn; }
+@keyframes blurIn { from { opacity: 0; transform: translateY(22px); filter: blur(12px); } to { opacity: 1; transform: none; filter: blur(0); } }
+
+.slide.active .fx-head-line { animation-name: lineGrow; transform-origin: left center; }
+@keyframes lineGrow { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+
+/* ---- 卡片悬浮效果 ---- */
+.fx-card { transition: transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s, border-color .5s; }
+.fx-card:hover { transform: translateY(-7px); box-shadow: 0 24px 60px rgba(0,0,0,.55); }
+.fx-card:hover { border-color: rgba(196,163,90,.6); }
+
+/* ---- 进度条平滑 ---- */
+#progress-fill { transition: width .6s cubic-bezier(.16,1,.3,1); }
+
+/* ---- 封面/尾页装饰环呼吸 ---- */
+@keyframes ringPulse { 0%,100% { opacity:.16; } 50% { opacity:.5; } }
+.slide[style*="radial-gradient"] div[style*="border-radius:50%"] { animation: ringPulse 5.5s ease-in-out infinite; }
+
+/* ---- KPI 数字高亮呼吸 ---- */
+@keyframes kpiGlow { 0%,100% { text-shadow: 0 0 0 rgba(196,163,90,0); } 50% { text-shadow: 0 0 26px rgba(196,163,90,.45); } }
+.slide.active .kpi-num { animation: kpiGlow 3s ease-in-out .6s infinite; }
+
+/* ---- 全局微光粒子背景（fixed，置于 slide 之下） ---- */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(900px 600px at 12% 88%, rgba(184,49,47,.10), transparent 60%),
+    radial-gradient(1000px 700px at 92% 10%, rgba(196,163,90,.09), transparent 60%);
+  animation: bgDrift 20s ease-in-out infinite alternate;
+}
+@keyframes bgDrift { from { transform: translate(-1.5%, -1%) scale(1); } to { transform: translate(1.5%, 1.5%) scale(1.06); } }
+.slide { z-index: 1; }
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================= -->
+<!-- SLIDE 1 : COVER -->
+<!-- ============================================================= -->
+<section class="slide active" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;background:radial-gradient(1100px 700px at 72% 18%, #241a1c 0%, #141216 45%, #0f0f13 100%);">
+  <!-- decorative ring belts -->
+  <div style="position:absolute;top:-160px;right:-160px;width:720px;height:720px;border-radius:50%;border:1px solid rgba(184,49,47,0.28);"></div>
+  <div style="position:absolute;top:-70px;right:-70px;width:540px;height:540px;border-radius:50%;border:1px solid rgba(196,163,90,0.22);"></div>
+  <div style="position:absolute;bottom:-200px;left:-200px;width:640px;height:640px;border-radius:50%;border:1px solid rgba(184,49,47,0.16);"></div>
+
+  <!-- kicker -->
+  <div style="position:absolute;top:150px;left:170px;">
+    <div style="display:inline-flex;align-items:center;gap:16px;">
+      <div style="width:56px;height:3px;background:#B8312F;border-radius:3px;"></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:6px;color:#e0645f;">PROJECT · WORK REPORT</div>
+    </div>
+  </div>
+
+  <!-- main title block -->
+  <div style="position:absolute;top:300px;left:170px;right:170px;">
+    <div style="font-size:150px;font-weight:900;letter-spacing:18px;color:#f5f5f7;line-height:1;">智承太极</div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:26px;">
+      <div style="width:120px;height:4px;background:linear-gradient(90deg,#B8312F,#C4A35A);border-radius:3px;"></div>
+      <div style="font-size:46px;font-weight:500;color:#C4A35A;letter-spacing:6px;">数字教学与交互展示系统</div>
+    </div>
+
+    <div style="margin-top:66px;font-size:28px;color:#a9a9b2;letter-spacing:1px;">
+      全国建模精英联赛参赛项目 &nbsp;·&nbsp; 项目开发工作汇报
+    </div>
+  </div>
+
+  <!-- date + footer line -->
+  <div style="position:absolute;bottom:120px;left:170px;right:170px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;color:#70707c;letter-spacing:2px;">2026 / 08 / 12</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#4a4a52;">TAIJI · DIGITAL · INTERACTION</div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 2 : PROJECT OVERVIEW -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">01</div>
+      <div class="head-title">项目概览 <span class="accent-red">OVERVIEW</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <!-- two-line delivery cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+      <div class="card">
+        <div class="card-title">双线交付</div>
+        <div style="font-size:30px;line-height:1.7;color:#d6d6dd;">
+          <span class="accent-gold">Figma 可点击高保真原型</span><br>
+          <span style="color:#8b8b95;">交互展示 · 设计先行</span>
+        </div>
+        <div style="margin-top:20px;font-size:30px;line-height:1.7;color:#d6d6dd;">
+          <span class="accent-gold">可运行 Web 应用</span><br>
+          <span style="color:#8b8b95;">真实教学 · 全链路闭环</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">技术栈升级</div>
+        <div style="font-size:26px;line-height:1.75;color:#cfcfd6;">
+          由<span style="color:#8b8b95;">纯前端单页</span>升级为
+        </div>
+        <div style="margin-top:8px;font-size:30px;line-height:1.5;">
+          <span class="mono accent-gold">Node 原生后端</span>
+          <span class="accent-red">+</span>
+          <span class="mono accent-gold">REST API</span>
+        </div>
+        <div style="margin-top:8px;font-size:26px;color:#cfcfd6;">
+          <span class="mono accent-gold">data.json</span> 持久化 · 全页面实时联动
+        </div>
+      </div>
+    </div>
+
+    <!-- top key data -->
+    <div style="margin-top:34px;height:330px;">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;height:100%;">
+        <div class="kpi-card" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="kpi-num">4055</div>
+          <div class="kpi-label" style="margin-top:auto;">前端代码量 / 行</div>
+        </div>
+        <div class="kpi-card" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="kpi-num">16</div>
+          <div class="kpi-label" style="margin-top:auto;">杨氏太极拳招式</div>
+        </div>
+        <div class="kpi-card" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="kpi-num">100</div>
+          <div class="kpi-label" style="margin-top:auto;">总分制 / 满分</div>
+        </div>
+        <div class="kpi-card" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="kpi-num">6</div>
+          <div class="kpi-label" style="margin-top:auto;">级境界体系</div>
+        </div>
+        <div class="kpi-card" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="kpi-num">22</div>
+          <div class="kpi-label" style="margin-top:auto;">后端 API 测试全过</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 3 : FIGMA INTEGRATION PROCESS -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">02</div>
+      <div class="head-title">Figma 接入过程 <span class="accent-red">INTEGRATION</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <!-- three route cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;">
+      <div class="card" style="padding-bottom:26px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:1px;color:#8b8b95;" class="accent-red">ROUTE 1</div>
+        <div style="font-size:30px;font-weight:700;margin:10px 0 16px;" class="mono">figma-developer-mcp</div>
+        <div style="font-size:24px;line-height:1.65;color:#c2c2ca;">
+          先接入<span class="accent-gold">只读</span>模式
+        </div>
+        <div style="margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.8;background:#0f0f13;border:1px solid #26262e;border-radius:12px;padding:16px 18px;color:#cfcfd6;">
+          claude mcp add<br>+ FIGMA_API_KEY
+        </div>
+      </div>
+
+      <div class="card" style="padding-bottom:26px;border-style:dashed;border-color:#3a2a2a;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:1px;color:#8b8b95;" class="accent-red">ROUTE 2</div>
+        <div style="font-size:30px;font-weight:700;margin:10px 0 16px;" class="mono">html.to.design MCP</div>
+        <div style="font-size:24px;line-height:1.65;color:#8f8f99;">
+          解析到<span class="accent-red">海外 IP</span>
+        </div>
+        <div style="margin-top:16px;font-size:24px;line-height:1.6;background:#1a1418;border:1px solid #3a2a2a;border-radius:12px;padding:16px 18px;color:#d99992;">
+          ❌ 被墙弃用
+        </div>
+      </div>
+
+      <div class="card" style="padding-bottom:26px;border:1px solid #C4A35A;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:1px;" class="accent-gold">ROUTE 3 · 主用</div>
+        <div style="font-size:30px;font-weight:700;margin:10px 0 16px;" class="mono">figma-designer-mcp<span style="color:#C4A35A;">+ AI Plugin</span></div>
+        <div style="font-size:24px;line-height:1.65;color:#d6d6dd;">
+          <span class="accent-gold">44+</span> 写入工具
+        </div>
+        <div style="margin-top:16px;font-size:22px;line-height:1.6;color:#c2c2ca;">
+          插件经 <span class="mono accent-gold">WebSocket</span> 桥接本地
+          <span class="mono">3055</span> 端口，直接写入当前打开的 Figma 文件
+        </div>
+      </div>
+    </div>
+
+    <!-- connection chain -->
+    <div style="margin-top:36px;background:#1a1a20;border:1px solid #2a2a32;border-radius:16px;padding:26px 40px;display:flex;align-items:center;gap:34px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;" class="accent-gold">CLAUDE CODE</div>
+      <div style="font-size:34px;color:#C4A35A;">→</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#e0645f;">PLUGIN 桥</div>
+      <div style="font-size:34px;color:#C4A35A;">→</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#f0f0f3;">FIGMA 文件</div>
+      <div style="margin-left:auto;font-size:22px;color:#8b8b95;">接入链示意</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 4 : HOMEPAGE DRAWING PROCESS -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">03</div>
+      <div class="head-title">首页绘制过程 <span class="accent-red">PROCESS</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <!-- steps -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;">
+      <div class="card">
+        <div class="card-title">① 分析提取画稿规格</div>
+        <div style="font-size:24px;line-height:1.7;color:#d6d6dd;">
+          分析 <span class="mono accent-gold">index.html</span> 首页 frame
+          <span class="mono">1440 × 1040</span>
+        </div>
+        <div style="margin-top:14px;font-size:24px;line-height:1.7;color:#bdbdc6;">
+          侧边栏 <span class="mono">232px</span> + 主内容区
+        </div>
+        <div style="margin-top:14px;font-size:24px;line-height:1.7;color:#bdbdc6;">
+          锁定<span class="accent-gold">深色科技武术风</span>色板
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">② 整体清空重画</div>
+        <div style="font-size:24px;line-height:1.7;color:#d6d6dd;">
+          采用<span class="accent-gold">训练进行中</span>演示状态
+        </div>
+        <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:12px;">
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 16px;font-size:22px;color:#e0645f;">已掌握 3/16</span>
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 16px;font-size:22px;color:#e0645f;">得分 19</span>
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 16px;font-size:22px;color:#e0645f;">境界 · 入门</span>
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 16px;font-size:22px;color:#e0645f;">本周 3/5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- drawn-content list -->
+    <div class="card" style="margin-top:30px;">
+      <div class="card-title" style="color:#C4A35A;">绘制内容</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;font-size:24px;line-height:1.6;color:#d6d6dd;">
+        <div><span class="accent-gold">●</span> 侧边栏 <span class="mono">4 组 11 项</span>导航</div>
+        <div><span class="accent-gold">●</span> 深色渐变 Banner</div>
+        <div><span class="accent-gold">●</span> <span class="mono">3</span> 张环形进度 Stat 卡</div>
+        <div><span class="accent-gold">●</span> Quick 快捷区</div>
+        <div><span class="accent-gold">●</span> 本周目标</div>
+        <div><span class="accent-gold">●</span> 教师反馈</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 5 : DRAWING PITFALLS -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">04</div>
+      <div class="head-title">绘制踩坑记录 <span class="accent-red">PITFALLS</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <!-- pitfalls as mono/source-style list -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px;">
+      <div class="card" style="background:#16161c;border:1px solid #2a2a32;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="mono" style="font-size:22px;color:#B8312F;padding-top:4px;">01</div>
+          <div style="font-size:24px;line-height:1.6;color:#d6d6dd;">
+            <span class="accent-red">容器必须用 FRAME</span>，不能用 RECTANGLE —— 否则子节点挂不上
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:#16161c;border:1px solid #2a2a32;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="mono" style="font-size:22px;color:#B8312F;padding-top:4px;">02</div>
+          <div style="font-size:24px;line-height:1.6;color:#d6d6dd;">
+            <span class="mono accent-red">add_text → not a function</span> 是<span class="accent-gold">假错误</span>，文本实际已创建
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:#16161c;border:1px solid #2a2a32;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="mono" style="font-size:22px;color:#B8312F;padding-top:4px;">03</div>
+          <div style="font-size:24px;line-height:1.6;color:#d6d6dd;">
+            环形部分弧旋转 <span class="mono">-90°</span> 后必须 <span class="mono accent-gold">set_position</span> 复位，否则偏移 <span class="mono">100px</span>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:#16161c;border:1px solid #2a2a32;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="mono" style="font-size:22px;color:#B8312F;padding-top:4px;">04</div>
+          <div style="font-size:24px;line-height:1.6;color:#d6d6dd;">
+            插件<span class="accent-gold">字体顺序 bug</span>：<span class="mono">fontName</span> 需放 <span class="mono">characters</span> 之前
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:#16161c;border:1px solid #2a2a32;grid-column:span 2;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="mono" style="font-size:22px;color:#B8312F;padding-top:4px;">05</div>
+          <div style="font-size:24px;line-height:1.6;color:#d6d6dd;">
+            桥接断开时，以 <span class="mono accent-gold">figma_bridge_status → connected</span> 为准判断可用状态
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 6 : HOMEPAGE RESULT -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">05</div>
+      <div class="head-title">第一页成品 <span class="accent-red">RESULT</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <!-- two-column: mockup frame + detail spec -->
+    <div style="display:grid;grid-template-columns:620px 1fr;gap:34px;height:790px;">
+      <!-- mockup mini frame -->
+      <div style="border-radius:18px;overflow:hidden;border:1px solid #2a2a32;display:flex;background:#0e0e10;">
+        <!-- mini sidebar -->
+        <div style="width:150px;background:#101014;padding:18px 14px;box-sizing:border-box;border-right:1px solid #232327;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;">
+            <div style="width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#B8312F,#C4A35A);"></div>
+            <div style="font-size:14px;font-weight:800;color:#f0f0f3;">智承太极</div>
+          </div>
+          <div style="width:100%;height:6px;background:linear-gradient(135deg,#B8312F,#C4A35A);border-radius:3px;margin-bottom:16px;"></div>
+          <div style="display:grid;gap:10px;">
+            <div style="height:11px;background:#B8312F;border-radius:4px;opacity:.9;"></div>
+            <div style="height:10px;background:#25252c;border-radius:4px;"></div>
+            <div style="height:10px;background:#25252c;border-radius:4px;"></div>
+            <div style="height:10px;background:#25252c;border-radius:4px;"></div>
+            <div style="height:10px;background:#2a2a32;border-radius:4px;"></div>
+            <div style="height:10px;background:#2a2a32;border-radius:4px;"></div>
+            <div style="height:10px;background:#2a2a32;border-radius:4px;"></div>
+          </div>
+          <div style="position:absolute;bottom:20px;left:0;right:0;display:flex;align-items:center;gap:8px;padding:0 14px;">
+            <div style="width:20px;height:20px;border-radius:50%;border:1px solid #C4A35A;"></div>
+            <div style="width:60px;height:8px;background:#2a2a32;border-radius:4px;"></div>
+          </div>
+        </div>
+        <!-- mini content -->
+        <div style="flex:1;padding:16px;box-sizing:border-box;">
+          <div style="height:52px;border-radius:10px;background:linear-gradient(120deg,#1d1d24,#0f0f13);border:1px solid #2a2a32;display:flex;align-items:center;padding:0 14px;">
+            <div style="width:120px;height:12px;background:#33333c;border-radius:5px;"></div>
+            <div style="margin-left:auto;width:40px;height:12px;border-radius:5px;background:#C4A35A;"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;">
+            <div style="height:70px;border-radius:10px;border:1px solid #2a2a32;background:#16161c;padding:10px;">
+              <div style="width:50%;height:8px;background:#2c2c36;border-radius:4px;"></div>
+              <div style="width:70%;height:12px;background:#C4A35A;border-radius:4px;margin-top:8px;"></div>
+            </div>
+            <div style="height:70px;border-radius:10px;border:1px solid #2a2a32;background:#16161c;padding:10px;">
+              <div style="width:50%;height:8px;background:#2c2c36;border-radius:4px;"></div>
+              <div style="width:70%;height:12px;background:#C4A35A;border-radius:4px;margin-top:8px;"></div>
+            </div>
+            <div style="height:70px;border-radius:10px;border:1px solid #2a2a32;background:#16161c;padding:10px;">
+              <div style="width:50%;height:8px;background:#2c2c36;border-radius:4px;"></div>
+              <div style="width:70%;height:12px;background:#C4A35A;border-radius:4px;margin-top:8px;"></div>
+            </div>
+          </div>
+          <div style="margin-top:12px;height:70px;border-radius:10px;border:1px solid #2a2a32;background:#16161c;">
+            <div style="height:20px;border-bottom:1px solid #2a2a32;padding:6px 10px;color:#C4A35A;font-size:10px;font-weight:700;">QUICK</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- spec column -->
+      <div style="display:flex;flex-direction:column;gap:22px;">
+        <div style="background:#1a1a20;border:1px solid #2a2a32;border-radius:16px;padding:24px 28px;">
+          <div class="card-title" style="color:#C4A35A;margin-bottom:14px;">布局规格</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;font-size:24px;line-height:1.6;color:#d6d6dd;">
+            <div><span class="accent-gold">fileKey</span> <span class="mono">kJbQQa5AIqT41fiNON90QQ</span></div>
+            <div><span class="accent-gold">frame</span> <span class="mono">4 : 2</span></div>
+            <div>左侧深色侧边栏 · Logo + 4组导航 + 用户信息</div>
+            <div>右侧米色内容区 · Banner + 3张环形 Stat + Quick</div>
+          </div>
+        </div>
+        <div style="background:#1a1a20;border:1px solid #C4A35A;border-radius:16px;padding:24px 28px;">
+          <div class="card-title" style="color:#C4A35A;margin-bottom:14px;">视觉要点</div>
+          <div style="font-size:24px;line-height:1.7;color:#d6d6dd;">
+            深色科技武术风 · 米/金/朱红双层表达<br>本周目标<span class="accent-gold">金环</span> + 教师反馈<span class="accent-gold">金色提示框</span>
+          </div>
+        </div>
+        <div style="background:#16161c;border:1px solid #2a2a32;border-radius:16px;padding:20px 28px;margin-top:auto;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#8b8b95;">→ 完整首页见 Figma 文件 · 可点击交互</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 7 : WEB APP UPGRADE -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">06</div>
+      <div class="head-title">Web 应用升级 <span class="accent-red">BACKEND</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <!-- API list -->
+    <div class="card">
+      <div class="card-title" style="color:#C4A35A;">新增 Node 后端 <span class="mono" style="font-size:24px;color:#e0645f;">server.js</span> · 5 个 API</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:20px;">
+        <div style="background:#0f0f13;border:1px solid #2a2a32;border-radius:12px;padding:18px;text-align:center;">
+          <div class="mono accent-gold" style="font-size:24px;font-weight:700;">/api/user</div>
+          <div style="font-size:20px;color:#8f8f99;margin-top:8px;">登录层 · 姓名班级持久化</div>
+        </div>
+        <div style="background:#0f0f13;border:1px solid #2a2a32;border-radius:12px;padding:18px;text-align:center;">
+          <div class="mono accent-gold" style="font-size:24px;font-weight:700;">/api/dashboard</div>
+          <div style="font-size:20px;color:#8f8f99;margin-top:8px;">数据看板</div>
+        </div>
+        <div style="background:#0f0f13;border:1px solid #2a2a32;border-radius:12px;padding:18px;text-align:center;">
+          <div class="mono accent-gold" style="font-size:24px;font-weight:700;">/api/records</div>
+          <div style="font-size:20px;color:#8f8f99;margin-top:8px;">训练记录</div>
+        </div>
+        <div style="background:#0f0f13;border:1px solid #2a2a32;border-radius:12px;padding:18px;text-align:center;">
+          <div class="mono accent-gold" style="font-size:24px;font-weight:700;">/api/forms</div>
+          <div style="font-size:20px;color:#8f8f99;margin-top:8px;">表单数据</div>
+        </div>
+        <div style="background:#0f0f13;border:1px solid #2a2a32;border-radius:12px;padding:18px;text-align:center;">
+          <div class="mono accent-gold" style="font-size:24px;font-weight:700;">/api/training</div>
+          <div style="font-size:20px;color:#8f8f99;margin-top:8px;">训练评分</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+      <!-- training loop -->
+      <div class="card">
+        <div class="card-title">训练闭环</div>
+        <div style="font-size:24px;line-height:1.75;color:#d6d6dd;">
+          完成训练 → 后端<span class="accent-gold">评分加分</span> → <span class="accent-gold">实时刷新</span>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;">
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 14px;font-size:20px;color:#C4A35A;">每式均分 6.25</span>
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 14px;font-size:20px;color:#C4A35A;">16 式满分 100</span>
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 14px;font-size:20px;color:#e0645f;">不重复加分</span>
+          <span class="mono" style="background:#1f1f26;border:1px solid #2c2c36;border-radius:10px;padding:8px 14px;font-size:20px;color:#e0645f;">不扣分 · 从零累积</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">境界体系 · 全局联动</div>
+        <div style="font-size:24px;line-height:1.75;color:#d6d6dd;">
+          <span class="accent-gold">6 级境界</span>随总分自动推进
+        </div>
+        <div style="margin-top:18px;font-size:24px;line-height:1.7;color:#bdbdc6;">
+          <span class="accent-gold">全页面实时联动</span> · 训练、看板、记录同步更新
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 8 : QA & TESTING -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">07</div>
+      <div class="head-title">质量保障与测试 <span class="accent-red">QA</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;">
+      <!-- left: three test pillars -->
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div class="mono" style="font-size:46px;color:#C4A35A;line-height:1;">22</div>
+            <div style="font-size:26px;font-weight:700;">后端 API 全过</div>
+          </div>
+          <div style="margin-top:10px;font-size:22px;color:#8f8f99;">全量接口回归通过</div>
+        </div>
+        <div class="card">
+          <div style="font-size:26px;font-weight:700;">headless 前端渲染验证</div>
+          <div style="margin-top:10px;font-size:22px;color:#bdbdc6;">无头浏览器渲染核验页面完整性</div>
+        </div>
+        <div class="card">
+          <div style="font-size:26px;font-weight:700;">重启持久化验证</div>
+          <div style="margin-top:10px;font-size:22px;color:#bdbdc6;">
+            <span class="mono accent-gold">data.json</span> 落盘不丢数据
+          </div>
+        </div>
+      </div>
+
+      <!-- right: real data sample -->
+      <div style="background:#121218;border:1px solid #C4A35A;border-radius:18px;padding:34px;">
+        <div class="card-title" style="color:#C4A35A;">真实数据落盘示例</div>
+        <!-- terminal-like block -->
+        <div style="background:#0c0c10;border:1px solid #26262e;border-radius:14px;padding:22px 26px;font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.9;">
+          <div><span style="color:#8f8f99;">// data.json</span></div>
+          <div>{</div>
+          <div style="padding-left:26px;">"user": <span style="color:#C4A35A;">"金润山"</span>,</div>
+          <div style="padding-left:26px;">"form": <span style="color:#C4A35A;">"起势"</span>,</div>
+          <div style="padding-left:26px;">"score": <span style="color:#e0645f;">6</span>,</div>
+          <div style="padding-left:26px;">"realm": <span style="color:#C4A35A;">"入门"</span></div>
+          <div>}</div>
+        </div>
+        <div style="margin-top:20px;font-size:22px;color:#bdbdc6;">
+          <span class="accent-gold">用户金润山</span> 训练「起势」后得分
+          <span class="mono accent-red">6</span>、境界「入门」
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 9 : NEXT STEPS -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;">
+  <div class="wrap">
+    <div class="slide-head">
+      <div class="head-tag">08</div>
+      <div class="head-title">后续计划 <span class="accent-red">ROADMAP</span></div>
+      <div class="head-line"></div>
+    </div>
+
+    <!-- three priority tiers -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px;">
+      <div class="card" style="border:1px solid #C4A35A;">
+        <div style="display:inline-flex;align-items:center;gap:12px;">
+          <div class="mono" style="background:#C4A35A;color:#12141a;font-size:26px;font-weight:700;border-radius:10px;padding:6px 16px;">P0</div>
+          <div style="font-size:26px;font-weight:700;color:#C4A35A;">最高优先级</div>
+        </div>
+        <div style="margin-top:24px;font-size:24px;line-height:1.8;color:#d6d6dd;">
+          <div class="accent-gold">●</div> 确认 Figma 首页效果<br>
+          <div class="accent-gold" style="margin-top:14px;">●</div> 铺开数字教案库页面<br>
+          <div class="accent-gold" style="margin-top:14px;">●</div> B 方案真实 AI 评分替换给分逻辑
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:inline-flex;align-items:center;gap:12px;">
+          <div class="mono" style="background:#B8312F;color:#f2f2f5;font-size:26px;font-weight:700;border-radius:10px;padding:6px 16px;">P1</div>
+          <div style="font-size:26px;font-weight:700;color:#e0645f;">次优先级</div>
+        </div>
+        <div style="margin-top:24px;font-size:24px;line-height:1.8;color:#d6d6dd;">
+          <div class="accent-red">●</div> <span style="color:#e0645f;">3D 动作素材</span>嵌入<br>
+          <div class="accent-red" style="margin-top:14px;">●</div> 视觉设计师高保真输出
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:inline-flex;align-items:center;gap:12px;">
+          <div class="mono" style="background:#2c2c36;color:#cfcfd6;font-size:26px;font-weight:700;border-radius:10px;padding:6px 16px;">P2</div>
+          <div style="font-size:26px;font-weight:700;color:#cfcfd6;">后续</div>
+        </div>
+        <div style="margin-top:24px;font-size:24px;line-height:1.8;color:#d6d6dd;">
+          <div>●</div> html.to.design 批量导入<br>
+          <div style="margin-top:14px;font-size:20px;color:#8f8f99;">打通 Web 应用与 Figma 设计还原</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SLIDE 10 : THANK YOU -->
+<!-- ============================================================= -->
+<section class="slide" style="position:absolute;top:0;left:0;width:1920px;height:1080px;overflow:hidden;box-sizing:border-box;background:radial-gradient(1100px 700px at 28% 82%, #241a1c 0%, #141216 45%, #0f0f13 100%);">
+  <!-- decorative ring -->
+  <div style="position:absolute;top:-180px;left:-180px;width:760px;height:760px;border-radius:50%;border:1px solid rgba(196,163,90,0.18);"></div>
+  <div style="position:absolute;bottom:-160px;right:-160px;width:640px;height:640px;border-radius:50%;border:1px solid rgba(184,49,47,0.22);"></div>
+
+  <div style="position:absolute;top:300px;left:0;right:0;text-align:center;">
+    <div style="font-size:120px;font-weight:900;letter-spacing:14px;color:#f5f5f7;">感谢观看</div>
+    <div style="margin:40px auto 0;width:140px;height:4px;background:linear-gradient(90deg,#B8312F,#C4A35A);border-radius:3px;"></div>
+    <div style="margin-top:52px;font-size:34px;color:#C4A35A;letter-spacing:4px;">智承太极 · 数字教学与交互展示系统</div>
+    <div style="margin-top:20px;font-size:26px;color:#9a9aa3;letter-spacing:2px;">全国建模精英联赛参赛项目</div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- NAV / RUNTIME -->
+<!-- ============================================================= -->
+<div id="progress-track"><div id="progress-fill"></div></div>
+<div id="counter" class="mono">01 / 10</div>
+<div id="dots"></div>
+
+<div data-gjs-type="custom-code">
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var current = 0;
+
+  // restore from localStorage
+  try {
+    var s = localStorage.getItem('zhitanji_current');
+    if (s !== null) {
+      current = parseInt(s, 10);
+      if (isNaN(current) || current < 0 || current >= total) current = 0;
+    }
+  } catch(e) { current = 0; }
+
+  var counter = document.getElementById('counter');
+  var fill = document.getElementById('progress-fill');
+  var dotsWrap = document.getElementById('dots');
+
+  // build dots
+  slides.forEach(function(s, i){
+    var d = document.createElement('span');
+    d.className = 'dot' + (i === current ? ' on' : '');
+    d.style.cursor = 'pointer';
+    d.title = '第 ' + (i+1) + ' 页';
+    (function(idx){
+      d.addEventListener('click', function(){ go(idx); });
+    })(i);
+    dotsWrap.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function go(idx){
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total - 1;
+    if (idx === current) return;
+    slides[current].style.opacity = 0;
+    slides[current].classList.remove('active');
+    slides[current].style.zIndex = 1;
+    slides[idx].style.opacity = 1;
+    slides[idx].classList.add('active');
+    slides[idx].style.zIndex = 2;
+    current = idx;
+    updateChrome();
+    try { localStorage.setItem('zhitanji_current', String(current)); } catch(e) {}
+  }
+
+  function next(){ go(current + 1); }
+  function prev(){ go(current - 1); }
+
+  function updateChrome(){
+    counter.textContent = String(current + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+    fill.style.width = ((current + 1) / total * 100) + '%';
+    dots.forEach(function(d, i){ d.classList.toggle('on', i === current); });
+  }
+
+  // keyboard
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(total - 1); }
+  });
+
+  // click edges
+  document.addEventListener('click', function(e){
+    if (e.target.closest('.dot')) return;
+    var x = e.clientX;
+    var w = window.innerWidth;
+    if (x > w * 0.85) next();
+    else if (x < w * 0.15) prev();
+  });
+
+  // deck scaling
+  function scaleDeck(){
+    var stage = document.querySelector('body');
+    var pw = 1920, ph = 1080;
+    var sx = window.innerWidth / pw;
+    var sy = window.innerHeight / ph;
+    var s = Math.min(sx, sy);
+    var cw = pw * s, ch = ph * s;
+    var ox = (window.innerWidth - cw) / 2;
+    var oy = (window.innerHeight - ch) / 2;
+    slides.forEach(function(sl){
+      sl.style.transformOrigin = '0 0';
+      sl.style.transform = 'scale(' + s + ') translate(' + ox / s + 'px,' + oy / s + 'px)';
+    });
+  }
+  window.addEventListener('resize', scaleDeck);
+
+  // position slide 0 on load
+  slides.forEach(function(sl, i){
+    if (i === 0) { sl.style.opacity = 1; sl.style.zIndex = 2; }
+    else { sl.style.opacity = 0; sl.style.zIndex = 1; }
+  });
+  updateChrome();
+  scaleDeck();
+  go(current);
+})();
+</script>
+</div>
+
+
+<script>
+/* ================= 增强动画系统 (zhitaiji deck) ================= */
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+
+  function tag(el, delay){
+    if (!el || el.dataset.fx) return;
+    el.dataset.fx = '1';
+    el.classList.add('fx');
+    el.style.setProperty('--d', delay + 'ms');
+  }
+
+  // 1) 给页头 + 卡片/KPI 标注入场动画（stagger 顺序延迟）
+  slides.forEach(function(s, si){
+    var i = 0;
+    var head = s.querySelector('.slide-head');
+    if (head) {
+      ['head-tag', 'head-title', 'head-line'].forEach(function(sel){
+        var el = head.querySelector('.' + sel);
+        if (el) { tag(el, i * 100); el.classList.add('fx-' + sel); i++; }
+      });
+    }
+    s.querySelectorAll('.card, .kpi-card').forEach(function(el){
+      tag(el, i * 85);
+      el.classList.add('fx-card');
+      i++;
+    });
+    // 封面：大标题 / 副标题 / 说明 / 底部日期 分层入场
+    if (si === 0) {
+      s.querySelectorAll('div[style*="font-size:150px"], div[style*="font-size:46px"], div[style*="font-size:28px"], div[style*="bottom:120px"]').forEach(function(el){
+        tag(el, i * 130); i++;
+      });
+    }
+    // 尾页：感谢观看
+    if (si === slides.length - 1) {
+      s.querySelectorAll('div[style*="font-size:120px"], div[style*="font-size:34px"], div[style*="font-size:26px"]').forEach(function(el){
+        tag(el, i * 130); i++;
+      });
+    }
+  });
+
+  // 2) KPI 数字滚动（count-up）
+  function countUp(el){
+    if (el.dataset.cu === '1') return;
+    el.dataset.cu = '1';
+    var txt = el.textContent;
+    var m = txt.match(/(\d+(?:\.\d+)?)/);
+    if (!m) return;
+    var target = parseFloat(m[1]);
+    var pre = txt.slice(0, m.index), post = txt.slice(m.index + m[0].length);
+    var dur = 1300, t0 = null;
+    function tick(ts){
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = pre + (Math.round(target * e)) + post;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  function runNums(slide){
+    slide.querySelectorAll('.kpi-num').forEach(countUp);
+  }
+
+  // 3) 监听页激活，触发该页数字滚动
+  var mo = new MutationObserver(function(ms){
+    ms.forEach(function(m){
+      if (m.type === 'attributes' && m.target.classList && m.target.classList.contains('active')) {
+        runNums(m.target);
+      }
+    });
+  });
+  slides.forEach(function(s){ mo.observe(s, { attributes: true, attributeFilter: ['class'] }); });
+
+  var act = document.querySelector('.slide.active');
+  if (act) runNums(act);
+})();
+</script>
+
+</body>
+</html>

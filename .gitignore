@@ -1,0 +1,14 @@
+# 运行时日志
+*.log
+
+# CDP 自动化测试残留
+_cdp_test.js
+_cleanup.ps1
+_edge_cdp/
+
+# 依赖
+node_modules/
+
+# 系统文件
+.DS_Store
+Thumbs.db

@@ -1,0 +1,1737 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智承太极 — 标准动作 3D 查看器</title>
+  <style>/* ============================================================
+   智承太极 · 数字教案库（Figma 导入版）
+   共享设计系统样式 — Ink-Tech Fusion
+   ============================================================ */
+
+/* ---------- Design Tokens ---------- */
+:root {
+  --bg: #F5F2ED;
+  --bg-warm: #EDE9E3;
+  --card: #FFFFFF;
+  --border: #D5D0C8;
+  --border-light: #E8E4DE;
+  --text: #1A1A1A;
+  --text-secondary: #3A3632;
+  --text-muted: #7A756D;
+  --accent: #B8312F;
+  --accent-hover: #9E2A28;
+  --accent-light: #FBF0F0;
+  --gold: #C4A35A;
+  --gold-light: #F5EDDA;
+  --nav-bg: #0F1419;
+  --nav-bg-subtle: #161D25;
+  --nav-text: #C8C2B8;
+  --nav-text-dim: #6B6560;
+  --success: #3D8B37;
+  --success-light: #EBF5EA;
+  --warning: #D4850A;
+  --warning-light: #FEF6E6;
+  --danger: #C62828;
+  --tag-bg: #EDE9E3;
+  --shadow-sm: 0 1px 3px rgba(26,26,26,0.06);
+  --shadow-md: 0 4px 16px rgba(26,26,26,0.08);
+  --shadow-lg: 0 8px 32px rgba(26,26,26,0.10);
+  --shadow-card: 0 2px 8px rgba(180,170,155,0.12);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --font-ui: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  --font-serif: 'Noto Serif SC', 'SimSun', serif;
+  --font-mono: 'SF Mono', 'Consolas', 'Courier New', monospace;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Paper grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ---------- App Layout ---------- */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  background: var(--nav-bg);
+  background-image: linear-gradient(180deg, var(--nav-bg) 0%, var(--nav-bg-subtle) 100%);
+  color: var(--nav-text);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 100;
+}
+
+.sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
+}
+
+.sidebar-logo {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 8px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+}
+
+.logo-accent { color: var(--accent); }
+
+.logo-sub {
+  font-size: 10px;
+  color: var(--nav-text-dim);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.nav-group { margin-bottom: 4px; }
+
+.nav-group-title {
+  padding: 16px 24px 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--nav-text-dim);
+  font-weight: 600;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--nav-text);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: color 150ms ease-out;
+  position: relative;
+  user-select: none;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.04);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 150ms ease-out;
+  pointer-events: none;
+}
+
+.nav-item:hover { color: #FFFFFF; }
+.nav-item:hover::before { transform: scaleX(1); }
+
+.nav-item.active {
+  background: rgba(184,49,47,0.08);
+  border-left-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.nav-item.active .nav-icon { color: var(--accent); }
+
+.nav-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 24px 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, #D4544F 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.sidebar-user-info { flex: 1; min-width: 0; }
+.sidebar-user-name {
+  font-size: 13px;
+  color: #FFFFFF;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-user-role { font-size: 11px; color: var(--nav-text-dim); }
+
+.sidebar-settings {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--nav-text-dim);
+  transition: all 150ms;
+  flex-shrink: 0;
+}
+.sidebar-settings:hover { background: rgba(255,255,255,0.06); color: var(--nav-text); }
+
+/* ---------- Mobile Topbar ---------- */
+.mobile-topbar { display: none; }
+
+/* ---------- Main Content ---------- */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 36px 48px 60px;
+  position: relative;
+}
+
+.page-section {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: pageFadeIn 280ms ease-out forwards;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Breadcrumb ---------- */
+.breadcrumb {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.breadcrumb a { color: var(--text-muted); cursor: pointer; transition: color 150ms; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb .sep { color: var(--border); }
+
+/* ---------- Page Title & Desc ---------- */
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-clickable { cursor: pointer; }
+.card-clickable:active { transform: translateY(0); }
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ---------- Grids ---------- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-2-1 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+.grid-2-1 > div { min-width: 0; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(184,49,47,0.2);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 8px 16px;
+}
+.btn-ghost:hover { color: var(--accent); background: var(--accent-light); }
+
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+
+.btn-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* ---------- Tabs ---------- */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 200ms ease-out;
+  position: relative;
+  user-select: none;
+  background: transparent;
+  border: none;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: transparent;
+  transition: all 200ms ease-out;
+  border-radius: 1px 1px 0 0;
+}
+
+.tab:hover { color: var(--text-secondary); }
+
+.tab.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tab.active::after {
+  background: var(--accent);
+  left: 0;
+  right: 0;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeInUp 280ms ease-out; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Tags & Badges ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tag-default { background: var(--tag-bg); color: var(--text-muted); }
+.tag-mastered { background: var(--success-light); color: var(--success); }
+.tag-learning { background: var(--gold-light); color: #8B6914; }
+.tag-locked { background: var(--bg-warm); color: var(--text-muted); }
+
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.difficulty-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.difficulty-dot.filled { background: var(--accent); }
+
+/* ---------- Search & Filter ---------- */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 220px;
+  padding: 9px 16px 9px 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: border-color 200ms, box-shadow 200ms;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A756D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184,49,47,0.08);
+}
+
+.search-input::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+.filter-select {
+  padding: 9px 32px 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  background: var(--card);
+  color: var(--text-secondary);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A756D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 200ms;
+}
+
+.filter-select:focus { border-color: var(--accent); }
+
+.filter-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 180ms ease-out;
+  user-select: none;
+}
+
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.chip .chip-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  font-size: 10px;
+  background: var(--bg-warm);
+  color: var(--text-muted);
+}
+.chip.active .chip-count { background: rgba(255,255,255,0.2); color: #fff; }
+
+/* ---------- Course Hero ---------- */
+.course-hero {
+  background: linear-gradient(135deg, var(--nav-bg) 0%, #1C2530 60%, #233040 100%);
+  border-radius: var(--radius-lg);
+  padding: 32px 32px 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+  min-height: 180px;
+}
+
+.course-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -20px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,49,47,0.15) 0%, transparent 70%);
+}
+
+.course-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: 40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,163,90,0.12) 0%, transparent 70%);
+}
+
+.course-hero-taiji {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.07;
+  animation: taiji-spin 30s linear infinite;
+  pointer-events: none;
+}
+
+.course-hero-taiji path,
+.course-hero-taiji circle { fill: #FFFFFF; stroke: none; }
+
+@keyframes taiji-spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+.course-hero-sub { font-size: 13px; color: var(--nav-text); margin-bottom: 6px; }
+.course-hero-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.course-hero-desc { font-size: 12px; color: var(--nav-text); max-width: 620px; }
+
+.course-hero-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--nav-text);
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.stat-dot { width: 6px; height: 6px; border-radius: 50%; }
+.stat-dot.accent { background: var(--accent); }
+.stat-dot.gold { background: var(--gold); }
+.stat-dot.success { background: var(--success); }
+
+/* ---------- Course Cards ---------- */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.form-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  cursor: pointer;
+  transition: all 200ms ease-out;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(184,49,47,0.25);
+}
+
+.form-card:active { transform: translateY(0); }
+
+.form-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.form-index {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-light) 0%, #FDE8E8 100%);
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.form-title { font-size: 15px; font-weight: 600; color: var(--text); }
+
+.form-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.form-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.form-progress { margin-top: auto; }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.progress-track {
+  height: 6px;
+  background: var(--bg-warm);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 400ms ease-out;
+}
+
+.progress-fill.gold { background: var(--gold); }
+.progress-fill.success { background: var(--success); }
+.progress-fill.warning { background: var(--warning); }
+
+/* ---------- Overview ---------- */
+.overview-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.course-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.fact-item {
+  background: var(--bg-warm);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.fact-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.fact-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.objective-list { list-style: none; }
+.objective-list li {
+  display: flex;
+  gap: 8px;
+  padding: 7px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-bottom: 1px dashed var(--border-light);
+}
+.objective-list li:last-child { border-bottom: none; }
+.objective-list li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 1.8; }
+
+.ring-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.progress-ring { position: relative; width: 128px; height: 128px; flex-shrink: 0; }
+.progress-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.progress-ring .ring-bg { fill: none; stroke: var(--bg-warm); stroke-width: 9; }
+.progress-ring .ring-fg {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1);
+}
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ring-value { font-size: 24px; font-weight: 700; font-family: var(--font-serif); color: var(--text); }
+.ring-label { font-size: 11px; color: var(--text-muted); }
+
+.ring-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 140px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legend-dot.mastered { background: var(--success); }
+.legend-dot.learning { background: var(--gold); }
+.legend-dot.locked { background: var(--border); }
+
+/* ---------- Form Overview List ---------- */
+.form-overview-list { display: flex; flex-direction: column; gap: 10px; }
+
+.overview-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 180ms ease-out;
+  box-shadow: var(--shadow-card);
+}
+
+.overview-item:hover {
+  transform: translateX(3px);
+  border-color: rgba(184,49,47,0.3);
+  box-shadow: var(--shadow-md);
+}
+
+.overview-index {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-warm);
+  color: var(--text-muted);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.overview-info { flex: 1; min-width: 0; }
+.overview-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.overview-meta { font-size: 11px; color: var(--text-muted); }
+.overview-arrow { color: var(--border); font-size: 18px; transition: transform 180ms; }
+.overview-item:hover .overview-arrow { transform: translateX(3px); color: var(--accent); }
+
+/* ---------- Viewer ---------- */
+.viewer-3d {
+  background: linear-gradient(160deg, #0D1117 0%, #161B22 40%, #1A2332 100%);
+  border-radius: var(--radius-md);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 340px;
+}
+
+.viewer-3d.large { min-height: 460px; }
+
+.viewer-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+}
+
+.viewer-3d::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,49,47,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.viewer-3d-hint {
+  color: rgba(255,255,255,0.4);
+  font-size: 13px;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.viewer-3d-hint svg { display: block; margin: 0 auto 8px; opacity: 0.5; }
+
+.viewer-status {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+}
+
+.viewer-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+}
+
+.rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #EF4444;
+  animation: recBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes recBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.model-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  perspective: 1000px;
+}
+
+.pose-svg {
+  width: 220px;
+  height: 300px;
+  transition: transform 500ms ease;
+  transform-style: preserve-3d;
+}
+
+.pose-svg.side { transform: rotateY(-28deg); }
+.pose-svg.back { transform: rotateY(180deg) scaleX(-1); }
+
+.pose-svg .bone {
+  stroke: rgba(255,255,255,0.65);
+  stroke-width: 4;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.pose-svg .bone.subtle { stroke: rgba(255,255,255,0.3); }
+.pose-svg .joint {
+  fill: var(--accent);
+}
+.pose-svg .force-line {
+  fill: none;
+  stroke: rgba(196,163,90,0.65);
+  stroke-width: 1.6;
+  stroke-dasharray: 5 4;
+  animation: dashMove 1s linear infinite;
+}
+
+@keyframes dashMove { to { stroke-dashoffset: -18; } }
+
+.pose-svg.animating .arm-l { animation: armL 1.6s ease-in-out infinite; }
+.pose-svg.animating .arm-r { animation: armR 1.6s ease-in-out infinite; }
+.pose-svg.animating .leg-l { animation: legL 1.6s ease-in-out infinite; }
+.pose-svg.animating .leg-r { animation: legR 1.6s ease-in-out infinite; }
+
+@keyframes armL {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-6deg); }
+}
+@keyframes armR {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg); }
+}
+@keyframes legL {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+@keyframes legR {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.viewer-controls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.viewer-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+.viewer-btn:hover { background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9); }
+.viewer-btn.active { background: rgba(184,49,47,0.35); border-color: rgba(184,49,47,0.5); color: #fff; }
+
+/* ---------- Control Bar ---------- */
+.control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-label { font-size: 11px; color: var(--text-muted); margin-right: 2px; }
+
+.seg-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms;
+}
+.seg-btn:hover { border-color: var(--accent); color: var(--accent); }
+.seg-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.separator { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+
+/* ---------- Action List ---------- */
+.action-list { display: flex; flex-direction: column; gap: 10px; }
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  cursor: pointer;
+  transition: all 180ms ease-out;
+  box-shadow: var(--shadow-card);
+}
+.action-item:hover { transform: translateX(3px); border-color: rgba(184,49,47,0.3); }
+.action-item.active { border-color: var(--accent); background: var(--accent-light); }
+.action-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.action-meta { font-size: 11px; color: var(--text-muted); }
+.action-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.action-item.active .action-thumb { background: var(--accent); color: #fff; }
+
+/* ---------- Step Indicator ---------- */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
+  overflow-x: auto;
+}
+
+.step { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all 200ms;
+}
+.step-num.done { background: var(--success); color: #fff; }
+.step-num.current {
+  background: var(--accent);
+  color: #fff;
+  animation: stepPulse 2s ease-in-out infinite;
+}
+
+@keyframes stepPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,49,47,0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(184,49,47,0); }
+}
+
+.step-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.step-label.active { color: var(--text); font-weight: 600; }
+.step-arrow { margin: 0 12px; color: var(--border); font-size: 16px; flex-shrink: 0; }
+
+/* ---------- Info Box ---------- */
+.info-box {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.info-box-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-box.gold { background: var(--gold-light); border-left-color: var(--gold); }
+.info-box.gold .info-box-title { color: #8B6914; }
+.info-box.warning { background: var(--warning-light); border-left-color: var(--warning); }
+.info-box.warning .info-box-title { color: var(--warning); }
+.info-box.danger { background: var(--accent-light); border-left-color: var(--danger); }
+.info-box.danger .info-box-title { color: var(--danger); }
+
+/* ---------- Key Points ---------- */
+.kp-item {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 8px;
+  background: var(--card);
+}
+
+.kp-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.kp-header .feedback-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.kp-header .feedback-dot.good { background: var(--success); }
+.kp-header .feedback-dot.warn { background: var(--warning); }
+.kp-header .feedback-dot.bad { background: var(--accent); }
+
+.kp-toggle { margin-left: auto; color: var(--text-muted); font-size: 10px; transition: transform 200ms; }
+
+.kp-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 300ms ease, padding 300ms ease;
+  padding: 0 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  background: var(--bg);
+  border-top: 0 solid transparent;
+}
+
+.kp-item.open .kp-detail {
+  max-height: 240px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-light);
+}
+
+.kp-item.open .kp-toggle { transform: rotate(180deg); }
+
+/* ---------- Feedback Items ---------- */
+.feedback-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.feedback-item:last-child { margin-bottom: 0; }
+.feedback-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.feedback-dot.good { background: var(--success); }
+.feedback-dot.warn { background: var(--warning); }
+.feedback-dot.bad { background: var(--accent); }
+
+/* ---------- Data Row ---------- */
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+  gap: 16px;
+}
+.data-row:last-child { border-bottom: none; }
+.data-row-label { color: var(--text-muted); flex-shrink: 0; }
+.data-row-value { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; text-align: right; }
+
+/* ---------- Table ---------- */
+.table-wrap { overflow-x: auto; }
+table.criteria {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+table.criteria th {
+  text-align: left;
+  padding: 8px 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+table.criteria td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+table.criteria td.center { text-align: center; }
+
+/* ---------- Utility ---------- */
+.text-accent { color: var(--accent); }
+.text-gold { color: var(--gold); }
+.text-success { color: var(--success); }
+.text-muted { color: var(--text-muted); }
+.font-serif { font-family: var(--font-serif); }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .overview-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  body { overflow: auto; }
+  .app { display: block; height: auto; width: 100%; }
+  .sidebar { display: none; }
+
+  .mobile-topbar {
+    display: block;
+    background: var(--nav-bg);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .mobile-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 14px 16px 8px;
+  }
+  .mobile-brand .logo-text { font-size: 17px; }
+  .mobile-brand .logo-sub { font-size: 9px; letter-spacing: 2px; }
+  .mobile-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 16px 12px;
+  }
+  .mobile-nav a {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: rgba(255,255,255,0.07);
+    color: var(--nav-text);
+    transition: all 150ms;
+  }
+  .mobile-nav a.active { background: var(--accent); color: #fff; }
+
+  .main { padding: 24px 16px 48px; overflow: visible; }
+  .grid-2, .grid-3, .grid-4, .grid-2-1, .course-facts { grid-template-columns: 1fr; }
+  .course-hero { padding: 24px 20px; }
+  .course-hero-taiji { opacity: 0.04; }
+  .steps { padding: 14px; }
+  .control-bar { justify-content: flex-start; }
+  .viewer-3d.large { min-height: 340px; }
+  .pose-svg { width: 180px; height: 250px; }
+}
+
+</style>
+  <style>
+    /* 页面内补充：SVG 骨骼动画的变换基准 */
+    .pose-svg .arm-l,
+    .pose-svg .arm-r,
+    .pose-svg .leg-l,
+    .pose-svg .leg-r {
+      transform-box: fill-box;
+      transform-origin: top center;
+    }
+    .pose-svg.bones-off .force-line,
+    .pose-svg.bones-off .joint { opacity: 0; transition: opacity 200ms; }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- 移动端顶栏 -->
+    <div class="mobile-topbar">
+      <div class="mobile-brand">
+        <span class="logo-text">智承<span class="logo-accent">太极</span></span>
+        <span class="logo-sub">数字教案库</span>
+      </div>
+      <nav class="mobile-nav">
+        <a href="00-课程列表.html">课程列表</a>
+        <a href="01-课程概览.html">课程概览</a>
+        <a href="02-招式详情.html">招式详情</a>
+        <a href="03-3D查看器.html" class="active">3D查看器</a>
+        <a href="04-分步教学.html">分步教学</a>
+      </nav>
+    </div>
+
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-text">智承<span class="logo-accent">太极</span></div>
+        <div class="logo-sub">数字教学系统</div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">一 / 数字教案库</div>
+        <a class="nav-item" href="00-课程列表.html">
+          <span class="nav-icon">★</span> 课程列表
+        </a>
+        <a class="nav-item" href="01-课程概览.html">
+          <span class="nav-icon">◉</span> 课程概览
+        </a>
+        <a class="nav-item" href="02-招式详情.html">
+          <span class="nav-icon">◉</span> 招式详情
+        </a>
+        <a class="nav-item active" href="03-3D查看器.html">
+          <span class="nav-icon">⊙</span> 3D动作查看器
+        </a>
+        <a class="nav-item" href="04-分步教学.html">
+          <span class="nav-icon">▶</span> 分步教学
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-avatar">金</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">金润山</div>
+          <div class="sidebar-user-role">计算机科学与技术2504班</div>
+        </div>
+        <div class="sidebar-settings" title="设置">⚙</div>
+      </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
+      <div class="breadcrumb">
+        <a href="00-课程列表.html">首页</a>
+        <span class="sep">/</span>
+        <a href="00-课程列表.html">数字教案库</a>
+        <span class="sep">/</span>
+        标准动作 3D 查看器
+      </div>
+
+      <div class="page-title">标准动作 3D 查看器</div>
+      <div class="page-desc">拖拽旋转查看各角度、切换动作与可视化图层</div>
+
+      <div class="grid-2-1">
+        <!-- 左：3D 视口 + 控制条 -->
+        <div>
+          <div class="viewer-3d large">
+            <div class="viewer-status">
+              <div class="viewer-status-badge">
+                <span class="rec-dot"></span>
+                <span id="play-status">演示中</span>
+              </div>
+            </div>
+            <div class="viewer-controls">
+              <button class="viewer-btn" type="button" title="重置视角">↻</button>
+              <button class="viewer-btn" type="button" title="全屏">⛶</button>
+            </div>
+            <div class="model-stage">
+              <svg id="pose-svg" class="pose-svg" width="220" height="300" viewBox="0 0 200 280" fill="none">
+                <circle cx="100" cy="42" r="17" class="bone subtle" fill="none"></circle>
+                <line x1="100" y1="59" x2="100" y2="150" class="bone"></line>
+                <g class="arm-l"><line x1="100" y1="90" x2="56" y2="118" class="bone"></line></g>
+                <g class="arm-r"><line x1="100" y1="90" x2="144" y2="118" class="bone"></line></g>
+                <g class="leg-l"><line x1="100" y1="150" x2="70" y2="224" class="bone"></line></g>
+                <g class="leg-r"><line x1="100" y1="150" x2="130" y2="224" class="bone"></line></g>
+                <circle cx="100" cy="59" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="100" cy="90" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="56" cy="118" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="144" cy="118" r="4" class="joint" fill="#B8312F"></circle>
+                <circle cx="100" cy="150" r="4" class="joint" fill="#B8312F"></circle>
+                <path class="force-line" d="M100 90 Q108 74 118 62"></path>
+                <circle cx="118" cy="62" r="3" fill="#C4A35A"></circle>
+              </svg>
+            </div>
+            <div class="viewer-3d-hint" id="viewer-hint">起势 · 正面视角 · 拖拽旋转 / 滚轮缩放</div>
+          </div>
+
+          <!-- 控制条 -->
+          <div class="control-bar">
+            <div class="control-group">
+              <button class="btn btn-outline btn-sm" id="play-btn" type="button" onclick="togglePlay()">▮▮ 暂停</button>
+            </div>
+            <span class="separator"></span>
+            <div class="control-group">
+              <span class="control-label">速度</span>
+              <button class="seg-btn" type="button" onclick="setSpeed(0.25)">0.25x</button>
+              <button class="seg-btn" type="button" onclick="setSpeed(0.5)">0.5x</button>
+              <button class="seg-btn active" type="button" onclick="setSpeed(1)">1x</button>
+            </div>
+            <span class="separator"></span>
+            <div class="control-group">
+              <span class="control-label">视角</span>
+              <button class="seg-btn active" type="button" onclick="setView('front')">正面</button>
+              <button class="seg-btn" type="button" onclick="setView('side')">侧面</button>
+              <button class="seg-btn" type="button" onclick="setView('back')">背面</button>
+            </div>
+            <span class="separator"></span>
+            <div class="control-group">
+              <button class="seg-btn active" id="bone-toggle" type="button" onclick="toggleBones()">骨骼线 开</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右：动作列表 + 关键数据 -->
+        <div>
+          <div class="card">
+            <div class="card-title mb-12">动作列表</div>
+            <div class="action-list" id="action-list">
+              <button class="action-item active" data-index="0" type="button" onclick="setPose(0)">
+                <span class="action-thumb">01</span>
+                <span style="flex:1;text-align:left;">
+                  <span class="action-name">起势</span>
+                  <div class="action-meta">基础 · 预备调息</div>
+                </span>
+                <span class="tag tag-mastered">已掌握</span>
+              </button>
+              <button class="action-item" data-index="1" type="button" onclick="setPose(1)">
+                <span class="action-thumb">02</span>
+                <span style="flex:1;text-align:left;">
+                  <span class="action-name">右野马分鬃</span>
+                  <div class="action-meta">基础 · 分手弓步</div>
+                </span>
+                <span class="tag tag-mastered">已掌握</span>
+              </button>
+              <button class="action-item" data-index="2" type="button" onclick="setPose(2)">
+                <span class="action-thumb">03</span>
+                <span style="flex:1;text-align:left;">
+                  <span class="action-name">白鹤亮翅</span>
+                  <div class="action-meta">基础 · 亮翅虚步</div>
+                </span>
+                <span class="tag tag-learning">学习中</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title mb-12">关键数据</div>
+            <div class="data-row"><span class="data-row-label">当前动作</span><span class="data-row-value" id="current-action">起势</span></div>
+            <div class="data-row"><span class="data-row-label">帧编号</span><span class="data-row-value" id="frame-counter">24 / 86</span></div>
+            <div class="data-row"><span class="data-row-label">前腿膝盖角度</span><span class="data-row-value" id="knee-angle">128°</span></div>
+            <div class="data-row"><span class="data-row-label">重心分布</span><span class="data-row-value" id="weight-dist">前脚 62%</span></div>
+            <div class="data-row"><span class="data-row-label">身体偏转</span><span class="data-row-value" id="body-rotation">15°</span></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title mb-12">当前帧动作要点</div>
+            <div class="feedback-item"><div class="feedback-dot good"></div><div id="frame-tip-1">双脚平行开立与肩同宽，重心平稳过渡</div></div>
+            <div class="feedback-item"><div class="feedback-dot warn"></div><div id="frame-tip-2">沉肩坠肘，力量源自腰部旋转，保持中正</div></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ============================================================
+    // 3D 查看器交互 — 本地 SVG 人体骨架示意
+    // ============================================================
+    var poses = [
+      {
+        name: '起势',
+        hint: '起势 · 正面视角 · 拖拽旋转 / 滚轮缩放',
+        svg: '<circle cx="100" cy="42" r="17" class="bone subtle" fill="none"></circle>' +
+             '<line x1="100" y1="59" x2="100" y2="150" class="bone"></line>' +
+             '<g class="arm-l"><line x1="100" y1="90" x2="56" y2="118" class="bone"></line></g>' +
+             '<g class="arm-r"><line x1="100" y1="90" x2="144" y2="118" class="bone"></line></g>' +
+             '<g class="leg-l"><line x1="100" y1="150" x2="70" y2="224" class="bone"></line></g>' +
+             '<g class="leg-r"><line x1="100" y1="150" x2="130" y2="224" class="bone"></line></g>' +
+             '<circle cx="100" cy="59" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="90" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="56" cy="118" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="144" cy="118" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="150" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<path class="force-line" d="M100 90 Q108 74 118 62"></path>' +
+             '<circle cx="118" cy="62" r="3" fill="#C4A35A"></circle>',
+        kp: ['双脚平行开立与肩同宽，重心平稳过渡', '沉肩坠肘，力量源自腰部旋转，保持中正'],
+        frames: 60
+      },
+      {
+        name: '右野马分鬃',
+        hint: '右野马分鬃 · 侧面视角 · 拖拽旋转 / 滚轮缩放',
+        svg: '<circle cx="96" cy="42" r="17" class="bone subtle" fill="none"></circle>' +
+             '<line x1="96" y1="59" x2="96" y2="148" class="bone"></line>' +
+             '<g class="arm-l"><line x1="96" y1="86" x2="54" y2="112" class="bone"></line></g>' +
+             '<g class="arm-r"><line x1="96" y1="86" x2="142" y2="64" class="bone"></line></g>' +
+             '<g class="leg-l"><line x1="96" y1="148" x2="62" y2="220" class="bone"></line></g>' +
+             '<g class="leg-r"><line x1="96" y1="148" x2="136" y2="222" class="bone"></line></g>' +
+             '<circle cx="96" cy="59" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="96" cy="86" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="54" cy="112" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="142" cy="64" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="96" cy="148" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<path class="force-line" d="M96 86 Q118 72 142 64"></path>' +
+             '<circle cx="142" cy="64" r="3" fill="#C4A35A"></circle>',
+        kp: ['转体以腰为轴，分手时两臂保持弧形', '弓步与分手同时完成，重心平稳过渡'],
+        frames: 86
+      },
+      {
+        name: '白鹤亮翅',
+        hint: '白鹤亮翅 · 正面视角 · 拖拽旋转 / 滚轮缩放',
+        svg: '<circle cx="100" cy="40" r="17" class="bone subtle" fill="none"></circle>' +
+             '<line x1="100" y1="57" x2="100" y2="146" class="bone"></line>' +
+             '<g class="arm-l"><line x1="100" y1="84" x2="50" y2="52" class="bone"></line></g>' +
+             '<g class="arm-r"><line x1="100" y1="84" x2="148" y2="118" class="bone"></line></g>' +
+             '<g class="leg-l"><line x1="100" y1="146" x2="66" y2="222" class="bone"></line></g>' +
+             '<g class="leg-r"><line x1="100" y1="146" x2="132" y2="220" class="bone"></line></g>' +
+             '<circle cx="100" cy="57" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="84" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="50" cy="52" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="148" cy="118" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<circle cx="100" cy="146" r="4" class="joint" fill="#B8312F"></circle>' +
+             '<path class="force-line" d="M100 84 Q80 68 50 52"></path>' +
+             '<circle cx="50" cy="52" r="3" fill="#C4A35A"></circle>',
+        kp: ['含胸拔背，上手与下手对拔伸展', '虚步重心在后腿，身法中正'],
+        frames: 74
+      }
+    ];
+
+    var currentPose = 0;
+    var currentFrame = 1;
+    var playing = true;
+    var speed = 1;
+    var view = 'front';
+    var bonesOn = true;
+    var playTimer = null;
+
+    function setPose(index) {
+      currentPose = index;
+      currentFrame = 1;
+      var pose = poses[index];
+      document.getElementById('pose-svg').innerHTML = pose.svg;
+      document.getElementById('current-action').textContent = pose.name;
+      document.getElementById('viewer-hint').textContent = pose.hint;
+      document.getElementById('frame-tip-1').textContent = pose.kp[0];
+      document.getElementById('frame-tip-2').textContent = pose.kp[1];
+
+      document.querySelectorAll('#action-list .action-item').forEach(function(item) {
+        item.classList.toggle('active', parseInt(item.getAttribute('data-index'), 10) === index);
+      });
+
+      var total = pose.frames;
+      document.getElementById('frame-counter').textContent = currentFrame + ' / ' + total;
+      updateKeyData();
+    }
+
+    function updateFrameDisplay() {
+      var pose = poses[currentPose];
+      var total = pose.frames;
+      currentFrame++;
+      if (currentFrame > total) currentFrame = 1;
+      document.getElementById('frame-counter').textContent = currentFrame + ' / ' + total;
+      updateKeyData();
+    }
+
+    function updateKeyData() {
+      var pose = poses[currentPose];
+      var progress = currentFrame / pose.frames;
+      var knee = Math.round(118 + Math.sin(progress * Math.PI * 2) * 12) + '°';
+      var weight = Math.round(48 + Math.sin(progress * Math.PI * 2) * 16) + '%';
+      var rotation = Math.round(6 + Math.abs(Math.sin(progress * Math.PI * 2)) * 12) + '°';
+      document.getElementById('knee-angle').textContent = knee;
+      document.getElementById('weight-dist').textContent = '前脚 ' + weight;
+      document.getElementById('body-rotation').textContent = rotation;
+    }
+
+    function togglePlay() {
+      playing = !playing;
+      var btn = document.getElementById('play-btn');
+      var status = document.getElementById('play-status');
+      if (playing) {
+        btn.textContent = '▮▮ 暂停';
+        status.textContent = '演示中';
+        startTimer();
+      } else {
+        btn.textContent = '▶ 播放';
+        status.textContent = '已暂停';
+        stopTimer();
+      }
+      document.getElementById('pose-svg').classList.toggle('animating', playing);
+    }
+
+    function startTimer() {
+      stopTimer();
+      var delay = speed === 1 ? 160 : speed === 0.5 ? 320 : 640;
+      playTimer = setInterval(updateFrameDisplay, delay);
+    }
+
+    function stopTimer() {
+      if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    }
+
+    function setSpeed(value) {
+      speed = value;
+      document.querySelectorAll('.control-group .seg-btn').forEach(function(btn) {
+        var label = btn.textContent;
+        btn.classList.toggle('active', label === value + 'x' || label === (value === 0.25 ? '0.25x' : value === 0.5 ? '0.5x' : '1x'));
+      });
+      if (playing) startTimer();
+    }
+
+    function setView(v) {
+      view = v;
+      var svg = document.getElementById('pose-svg');
+      svg.classList.remove('side', 'back');
+      if (v === 'side') svg.classList.add('side');
+      if (v === 'back') svg.classList.add('back');
+      document.querySelectorAll('.control-group .seg-btn').forEach(function(btn) {
+        if (btn.textContent === '正面' || btn.textContent === '侧面' || btn.textContent === '背面') {
+          btn.classList.toggle('active', (btn.textContent === '正面' && v === 'front') || (btn.textContent === '侧面' && v === 'side') || (btn.textContent === '背面' && v === 'back'));
+        }
+      });
+      var hints = ['正面', '侧面', '背面'];
+      document.getElementById('viewer-hint').textContent = poses[currentPose].name + ' · ' + hints[v === 'front' ? 0 : v === 'side' ? 1 : 2] + '视角 · 拖拽旋转 / 滚轮缩放';
+    }
+
+    function toggleBones() {
+      bonesOn = !bonesOn;
+      var svg = document.getElementById('pose-svg');
+      var btn = document.getElementById('bone-toggle');
+      svg.classList.toggle('bones-off', !bonesOn);
+      btn.textContent = bonesOn ? '骨骼线 开' : '骨骼线 关';
+      btn.classList.toggle('active', bonesOn);
+    }
+
+    // 初始化
+    setPose(0);
+    startTimer();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,3673 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智承太极 — 数字教学与交互展示系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES — "Ink-Tech Fusion" Design System
+   ============================================================ */
+:root {
+  --bg: #F5F2ED;
+  --bg-warm: #EDE9E3;
+  --card: #FFFFFF;
+  --border: #D5D0C8;
+  --border-light: #E8E4DE;
+  --text: #1A1A1A;
+  --text-secondary: #3A3632;
+  --text-muted: #7A756D;
+  --accent: #B8312F;
+  --accent-hover: #9E2A28;
+  --accent-light: #FBF0F0;
+  --gold: #C4A35A;
+  --gold-light: #F5EDDA;
+  --nav-bg: #0F1419;
+  --nav-bg-subtle: #161D25;
+  --nav-text: #C8C2B8;
+  --nav-text-dim: #6B6560;
+  --nav-active: #B8312F;
+  --success: #3D8B37;
+  --success-light: #EBF5EA;
+  --warning: #D4850A;
+  --warning-light: #FEF6E6;
+  --danger: #C62828;
+  --tag-bg: #EDE9E3;
+  --shadow-sm: 0 1px 3px rgba(26,26,26,0.06);
+  --shadow-md: 0 4px 16px rgba(26,26,26,0.08);
+  --shadow-lg: 0 8px 32px rgba(26,26,26,0.10);
+  --shadow-card: 0 2px 8px rgba(180,170,155,0.12);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --font-ui: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  --font-serif: 'Noto Serif SC', 'SimSun', serif;
+  --font-mono: 'SF Mono', 'Consolas', 'Courier New', monospace;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Paper texture grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ============================================================
+   SIDEBAR NAVIGATION
+   ============================================================ */
+.sidebar {
+  width: 232px;
+  background: var(--nav-bg);
+  background-image: linear-gradient(180deg, var(--nav-bg) 0%, var(--nav-bg-subtle) 100%);
+  color: var(--nav-text);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 100;
+}
+
+.sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+}
+
+/* Sidebar Logo */
+.sidebar-logo {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 8px;
+}
+
+.sidebar-logo .logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+}
+
+.sidebar-logo .logo-text .logo-accent {
+  color: var(--accent);
+}
+
+.sidebar-logo .logo-sub {
+  font-size: 10px;
+  color: var(--nav-text-dim);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* Nav Group */
+.nav-group {
+  margin-bottom: 4px;
+}
+
+.nav-group-title {
+  padding: 16px 24px 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--nav-text-dim);
+  font-weight: 600;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  font-size: 13px;
+  color: var(--nav-text);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: color 150ms ease-out;
+  position: relative;
+  user-select: none;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.04);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 150ms ease-out;
+  pointer-events: none;
+}
+
+.nav-item:hover {
+  color: #FFFFFF;
+}
+
+.nav-item:hover::before {
+  transform: scaleX(1);
+}
+
+.nav-item.active {
+  background: rgba(184,49,47,0.08);
+  border-left-color: var(--accent);
+  color: #FFFFFF;
+}
+
+.nav-item.active .nav-icon {
+  color: var(--accent);
+}
+
+.nav-item .nav-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 24px 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, #D4544F 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-user-name {
+  font-size: 13px;
+  color: #FFFFFF;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+  font-size: 11px;
+  color: var(--nav-text-dim);
+}
+
+.sidebar-settings {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--nav-text-dim);
+  transition: all 150ms;
+  flex-shrink: 0;
+}
+
+.sidebar-settings:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--nav-text);
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 36px 48px 60px;
+  position: relative;
+}
+
+/* ============================================================
+   PAGE SECTIONS & TRANSITIONS
+   ============================================================ */
+.page-section {
+  display: none;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-section.active {
+  display: block;
+  animation: pageFadeIn 280ms ease-out forwards;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   BREADCRUMB
+   ============================================================ */
+.breadcrumb {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent);
+}
+
+.breadcrumb .sep {
+  color: var(--border);
+}
+
+/* ============================================================
+   PAGE TITLE & DESCRIPTION
+   ============================================================ */
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-clickable {
+  cursor: pointer;
+}
+
+.card-clickable:active {
+  transform: translateY(0);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   GRID LAYOUTS
+   ============================================================ */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-2-1 {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+.grid-2-1 > div { min-width: 0; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-ui);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 180ms ease-out;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(184,49,47,0.2);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 8px 16px;
+}
+
+.btn-ghost:hover {
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.btn-sm {
+  padding: 7px 14px;
+  font-size: 12px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 200ms ease-out;
+  position: relative;
+  user-select: none;
+}
+
+.move-tab-panel {
+  display: none;
+}
+
+.move-tab-panel.active {
+  display: block;
+  animation: fadeInUp 280ms ease-out;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: transparent;
+  transition: all 200ms ease-out;
+  border-radius: 1px 1px 0 0;
+}
+
+.tab:hover {
+  color: var(--text-secondary);
+}
+
+.tab.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tab.active::after {
+  background: var(--accent);
+  left: 0;
+  right: 0;
+}
+
+/* ============================================================
+   TAGS & BADGES
+   ============================================================ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tag-default {
+  background: var(--tag-bg);
+  color: var(--text-muted);
+}
+
+.tag-mastered {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.tag-learning {
+  background: var(--gold-light);
+  color: #8B6914;
+}
+
+.tag-locked {
+  background: var(--bg-warm);
+  color: var(--text-muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-success {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.badge-warning {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.badge-danger {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.difficulty-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.difficulty-dot.filled {
+  background: var(--accent);
+}
+
+/* ============================================================
+   SEARCH BAR
+   ============================================================ */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  padding: 9px 16px 9px 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: border-color 200ms, box-shadow 200ms;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237A756D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184,49,47,0.08);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.filter-select {
+  padding: 9px 32px 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-ui);
+  background: var(--card);
+  color: var(--text-secondary);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A756D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 200ms;
+}
+
+.filter-select:focus {
+  border-color: var(--accent);
+}
+
+/* ============================================================
+   STAT CARDS WITH SVG PROGRESS RINGS
+   ============================================================ */
+.stat-card {
+  text-align: center;
+  padding: 24px 20px;
+}
+
+.stat-ring {
+  margin: 0 auto 14px;
+}
+
+.stat-ring-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ============================================================
+   QUICK ACTION CARDS (Home Page)
+   ============================================================ */
+.quick-action-card {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 200ms ease-out;
+  box-shadow: var(--shadow-card);
+}
+
+.quick-action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.quick-action-card:active {
+  transform: translateY(0);
+}
+
+.quick-action-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.quick-action-icon.continue {
+  background: linear-gradient(135deg, var(--accent-light) 0%, #FDE8E8 100%);
+  color: var(--accent);
+  font-size: 22px;
+}
+
+.quick-action-icon.train {
+  background: linear-gradient(135deg, var(--gold-light) 0%, #F9F0D6 100%);
+  color: var(--gold);
+  font-size: 22px;
+}
+
+.quick-action-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-action-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.quick-action-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.quick-action-arrow {
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: transform 200ms;
+}
+
+.quick-action-card:hover .quick-action-arrow {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+/* ============================================================
+   INFO BOX / ALERT BOX
+   ============================================================ */
+.info-box {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.info-box .info-box-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-box.gold {
+  background: var(--gold-light);
+  border-left-color: var(--gold);
+}
+
+.info-box.gold .info-box-title {
+  color: #8B6914;
+}
+
+/* ============================================================
+   WELCOME BANNER (Home)
+   ============================================================ */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--nav-bg) 0%, #1C2530 60%, #233040 100%);
+  border-radius: var(--radius-lg);
+  padding: 32px 32px 28px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+  min-height: 180px;
+}
+
+.welcome-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -20px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,49,47,0.15) 0%, transparent 70%);
+}
+
+.welcome-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: 40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,163,90,0.1) 0%, transparent 70%);
+}
+
+.welcome-taiji {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.07;
+  animation: taiji-spin 30s linear infinite;
+  pointer-events: none;
+}
+
+.welcome-taiji path,
+.welcome-taiji circle {
+  fill: #FFFFFF;
+  stroke: none;
+}
+
+@keyframes taiji-spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+.welcome-ink-splash {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+  opacity: 0.06;
+}
+
+.welcome-ink-splash svg {
+  width: 100%;
+  height: 100%;
+}
+
+.welcome-greeting {
+  font-size: 13px;
+  color: var(--nav-text);
+  margin-bottom: 4px;
+}
+
+.welcome-name {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.welcome-stats {
+  display: flex;
+  gap: 24px;
+  font-size: 12px;
+  color: var(--nav-text);
+}
+
+.welcome-stats .stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.welcome-stats .stat-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.welcome-stats .stat-dot.accent { background: var(--accent); }
+.welcome-stats .stat-dot.gold { background: var(--gold); }
+.welcome-stats .stat-dot.success { background: var(--success); }
+
+/* ============================================================
+   WEEKLY PROGRESS RING (Home)
+   ============================================================ */
+.weekly-progress-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.weekly-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.weekly-progress-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.weekly-progress-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.weekly-ring-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.weekly-ring-labels {
+  flex: 1;
+}
+
+.weekly-ring-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.weekly-ring-item:last-child { margin-bottom: 0; }
+
+.weekly-ring-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   COURSE CARDS (Lesson List)
+   ============================================================ */
+.course-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 200ms ease-out;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  gap: 16px;
+}
+
+.course-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.course-card:active {
+  transform: translateY(0);
+}
+
+.course-card-thumb {
+  width: 100px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.course-card-thumb-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #E8E4DE 0%, #D5D0C8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.course-card-thumb-icon {
+  font-size: 28px;
+  opacity: 0.4;
+}
+
+.course-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.course-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.course-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.course-card-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.course-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   STEP INDICATOR
+   ============================================================ */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 28px;
+  padding: 16px 24px;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg-warm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: all 200ms;
+}
+
+.step-num.done {
+  background: var(--success);
+  color: #FFFFFF;
+}
+
+.step-num.current {
+  background: var(--accent);
+  color: #FFFFFF;
+  animation: stepPulse 2s ease-in-out infinite;
+}
+
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes stepPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,49,47,0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(184,49,47,0); }
+}
+
+.step-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.step-label.active {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.step-arrow {
+  margin: 0 12px;
+  color: var(--border);
+  font-size: 16px;
+}
+
+/* ============================================================
+   FEEDBACK ITEMS
+   ============================================================ */
+.feedback-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  transition: background 150ms;
+}
+
+.feedback-item:hover {
+  background: var(--bg);
+}
+
+.feedback-item:last-child { margin-bottom: 0; }
+
+.feedback-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.feedback-dot.good { background: var(--success); }
+.feedback-dot.warn { background: var(--warning); }
+.feedback-dot.bad { background: var(--accent); }
+
+/* ============================================================
+   3D VIEWER PLACEHOLDER
+   ============================================================ */
+.viewer-3d {
+  background: linear-gradient(160deg, #0D1117 0%, #161B22 40%, #1A2332 100%);
+  border-radius: var(--radius-md);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.viewer-3d::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,49,47,0.06) 0%, transparent 70%);
+}
+
+.viewer-3d-hint {
+  color: rgba(255,255,255,0.35);
+  font-size: 13px;
+  position: relative;
+  z-index: 1;
+}
+
+.viewer-3d-hint svg {
+  opacity: 0.25;
+  margin-bottom: 12px;
+}
+
+.viewer-3d-controls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.viewer-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.viewer-btn:hover {
+  background: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.9);
+}
+
+/* Status overlay for viewer */
+.viewer-status {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+}
+
+.viewer-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+}
+
+.viewer-status-badge .rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #EF4444;
+  animation: recBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes recBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ============================================================
+   SCORE CIRCLES (AI Score Page)
+   ============================================================ */
+.score-ring {
+  margin: 0 auto 12px;
+  position: relative;
+}
+
+.score-ring .score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.score-ring .score-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.score-ring .score-unit {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.score-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Score ring animation */
+.score-ring .progress-circle {
+  transition: stroke-dashoffset 1.2s ease-out;
+}
+
+/* ============================================================
+   RADAR CHART (SVG)
+   ============================================================ */
+.radar-chart {
+  display: block;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+.progress-bar-track {
+  background: var(--bg-warm);
+  border-radius: 4px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 400ms ease-out;
+}
+
+.progress-bar-fill.accent { background: var(--accent); }
+.progress-bar-fill.gold { background: var(--gold); }
+.progress-bar-fill.success { background: var(--success); }
+
+/* ============================================================
+   TIMELINE (Museum)
+   ============================================================ */
+.timeline {
+  position: relative;
+  padding-left: 36px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--gold) 50%, var(--border) 100%);
+  border-radius: 1px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+.timeline-item:last-child { margin-bottom: 0; }
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 0 3px rgba(184,49,47,0.12);
+  transition: all 200ms;
+}
+
+.timeline-item:nth-child(2)::before { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(196,163,90,0.12); }
+.timeline-item:nth-child(3)::before { border-color: var(--success); box-shadow: 0 0 0 3px rgba(61,139,55,0.12); }
+.timeline-item:nth-child(4)::before { border-color: var(--text-muted); box-shadow: 0 0 0 3px rgba(122,117,109,0.12); }
+
+.timeline-year {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.timeline-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.timeline-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.timeline-visual {
+  width: 100%;
+  height: 100px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--bg-warm) 0%, var(--border-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* ============================================================
+   TRAINING RECORD CARDS
+   ============================================================ */
+.record-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 200ms ease-out;
+  cursor: pointer;
+}
+
+.record-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.record-score {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.record-score.high {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.record-score.mid {
+  background: var(--gold-light);
+  color: #8B6914;
+}
+
+.record-score.low {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.record-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.record-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.record-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.record-trend {
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   DATA ROW (Key Metrics)
+   ============================================================ */
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.data-row:last-child { border-bottom: none; }
+
+.data-row-label { color: var(--text-muted); }
+
+.data-row-value {
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   PLAYBACK CONTROLS
+   ============================================================ */
+.playback-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   SKELETON SHIMMER
+   ============================================================ */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skel-line {
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--bg) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+
+.skel-line.w80 { width: 80%; }
+.skel-line.w60 { width: 60%; }
+.skel-line.w40 { width: 40%; }
+.skel-line.w100 { width: 100%; }
+
+/* ============================================================
+   CALIBRATION PAGE
+   ============================================================ */
+.calibration-viewport {
+  width: 100%;
+  height: 440px;
+  background: linear-gradient(160deg, #0D1117 0%, #161B22 40%, #1A2332 100%);
+  border-radius: var(--radius-lg);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.calibration-viewport::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.calibration-body-outline {
+  width: 180px;
+  height: 380px;
+  border: 2px dashed rgba(255,255,255,0.15);
+  border-radius: 90px 90px 40px 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calibration-body-outline .head-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.2);
+  position: absolute;
+  top: -10px;
+}
+
+.calibration-crosshair {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(184,49,47,0.6);
+  border-radius: 50%;
+  position: relative;
+}
+
+.calibration-crosshair::before,
+.calibration-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(184,49,47,0.6);
+}
+
+.calibration-crosshair::before {
+  width: 1px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.calibration-crosshair::after {
+  width: 20px;
+  height: 1px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.calibration-overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calibration-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+}
+
+.calibration-status .cal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: recBlink 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
+   ERROR HEATMAP PLACEHOLDER
+   ============================================================ */
+.heatmap-placeholder {
+  width: 100%;
+  height: 200px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(160deg, #0D1117 0%, #161B22 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heatmap-placeholder .heat-body {
+  position: relative;
+}
+
+.heatmap-placeholder .heat-joint {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+}
+
+/* ============================================================
+   TACTICS SCENE PLACEHOLDER
+   ============================================================ */
+.tactics-scene {
+  width: 100%;
+  height: 440px;
+  background: linear-gradient(160deg, #0D1117 0%, #161B22 40%, #1A2332 100%);
+  border-radius: var(--radius-lg);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tactics-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(196,163,90,0.04) 0%, transparent 60%);
+}
+
+.tactics-arena {
+  width: 300px;
+  height: 200px;
+  border: 2px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
+.tactics-arena::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+.tactics-arena::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+.tactics-figure {
+  width: 20px;
+  height: 40px;
+  border-radius: 10px 10px 5px 5px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tactics-figure.left {
+  left: 30%;
+  background: rgba(184,49,47,0.5);
+  border: 1px solid rgba(184,49,47,0.7);
+}
+
+.tactics-figure.right {
+  right: 30%;
+  background: rgba(196,163,90,0.4);
+  border: 1px solid rgba(196,163,90,0.6);
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+.text-accent { color: var(--accent); }
+.text-gold { color: var(--gold); }
+.text-success { color: var(--success); }
+.text-muted { color: var(--text-muted); }
+.font-serif { font-family: var(--font-serif); }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ===================== APP SHELL ===================== -->
+<div class="app">
+
+<!-- ===================== SIDEBAR NAV ===================== -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">智承<span class="logo-accent">太极</span></div>
+    <div class="logo-sub">数字教学系统</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-item active" onclick="showPage('home', this)">
+      <span class="nav-icon">☉</span> 首页总览
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">一 / 数字教案库</div>
+    <div class="nav-item" onclick="showPage('lesson-list', this)">
+      <span class="nav-icon">★</span> 课程列表
+    </div>
+    <div class="nav-item" onclick="showPage('move-detail', this)">
+      <span class="nav-icon">◉</span> 招式详情
+    </div>
+    <div class="nav-item" onclick="showPage('move-3d', this)">
+      <span class="nav-icon">⊙</span> 3D动作查看器
+    </div>
+    <div class="nav-item" onclick="goStepTeach()">
+      <span class="nav-icon">▶</span> 分步教学
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">二 / AI训练系统</div>
+    <div class="nav-item" onclick="showPage('ai-calibrate', this)">
+      <span class="nav-icon">◯</span> 摄像头校准
+    </div>
+    <div class="nav-item" onclick="showPage('ai-training', this)">
+      <span class="nav-icon">●</span> 实时跟练
+    </div>
+    <div class="nav-item" onclick="showPage('ai-score', this)">
+      <span class="nav-icon">★</span> 评分结果
+    </div>
+    <div class="nav-item" onclick="showPage('ai-history', this)">
+      <span class="nav-icon">☰</span> 训练记录
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">三 / 战术模拟</div>
+    <div class="nav-item" onclick="showPage('tactics', this)">
+      <span class="nav-icon">⚔</span> 推手对战
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title">四 / 数字校史馆</div>
+    <div class="nav-item" onclick="showPage('museum', this)">
+      <span class="nav-icon">⏲</span> 时间轴入口
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-avatar">金</div>
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-name">金润山</div>
+      <div class="sidebar-user-role">计算机科学与技术2504班</div>
+    </div>
+    <div class="sidebar-settings" title="设置">⚙</div>
+  </div>
+</aside>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<main class="main">
+
+<!-- Back Button -->
+<div id="back-btn" style="display:none;position:fixed;top:16px;left:248px;z-index:999;width:32px;height:32px;border-radius:50%;background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-md);cursor:pointer;align-items:center;justify-content:center;color:var(--text-secondary);font-size:16px;transition:all 150ms;" onclick="goBack()" title="返回上一页">←</div>
+
+<!-- ===== PAGE: HOME (首页总览) ===== -->
+<div id="page-home" class="page-section active">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <!-- Taiji SVG watermark -->
+    <svg class="welcome-taiji" width="160" height="160" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="96" fill="#FFFFFF"></circle>
+      <path d="M100 4 A96 96 0 0 1 100 196 A48 48 0 0 1 100 100 A48 48 0 0 0 100 4" fill="#1C2530"></path>
+      <circle cx="100" cy="52" r="14" fill="#FFFFFF"></circle>
+      <circle cx="100" cy="148" r="14" fill="#1C2530"></circle>
+    </svg>
+    <!-- Ink splash decoration at bottom -->
+    <div class="welcome-ink-splash">
+      <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+        <path d="M0 40 Q100 20 200 35 T400 30 T600 38 T800 25 T1000 35 T1200 40 V60 H0 Z" fill="#FFFFFF"></path>
+        <path d="M0 50 Q150 35 300 45 T600 42 T900 48 T1200 50 V60 H0 Z" fill="#FFFFFF" opacity="0.5"></path>
+      </svg>
+    </div>
+    <div class="welcome-greeting">早上好</div>
+    <div class="welcome-name">欢迎回来，金润山</div>
+    <div class="welcome-stats">
+      <div class="stat-item"><span class="stat-dot accent"></span> 连续训练 12 天</div>
+      <div class="stat-item"><span class="stat-dot gold"></span> 本周 3/5 次已完成</div>
+      <div class="stat-item"><span class="stat-dot success"></span> 已掌握 12 个招式</div>
+    </div>
+  </div>
+
+  <!-- 3 Stat Cards -->
+  <div class="grid-3 mb-24">
+    <!-- Stat 1: 本周训练得分 -->
+    <div class="card stat-card">
+      <div class="stat-ring">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#EDE9E3" stroke-width="6"></circle>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#B8312F" stroke-width="6" stroke-dasharray="264" stroke-dashoffset="58" stroke-linecap="round" transform="rotate(-90 50 50)" class="progress-circle"></circle>
+          <text x="50" y="47" text-anchor="middle" font-size="26" font-weight="700" fill="#1A1A1A" font-family="var(--font-ui)">78</text>
+          <text x="50" y="62" text-anchor="middle" font-size="10" fill="#7A756D">分</text>
+        </svg>
+      </div>
+      <div class="stat-label">本周训练得分 <span style="color:var(--success);font-size:11px;font-weight:600;margin-left:4px;">+5</span></div>
+    </div>
+
+    <!-- Stat 2: 已掌握招式 -->
+    <div class="card stat-card">
+      <div class="stat-ring">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#EDE9E3" stroke-width="6"></circle>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#3D8B37" stroke-width="6" stroke-dasharray="264" stroke-dashoffset="132" stroke-linecap="round" transform="rotate(-90 50 50)" class="progress-circle"></circle>
+          <text x="50" y="47" text-anchor="middle" font-size="26" font-weight="700" fill="#1A1A1A" font-family="var(--font-ui)">12</text>
+          <text x="50" y="62" text-anchor="middle" font-size="10" fill="#7A756D">/26</text>
+        </svg>
+      </div>
+      <div class="stat-label">已掌握招式 <span style="color:var(--success);font-size:11px;font-weight:600;margin-left:4px;">+2 本周</span></div>
+    </div>
+
+    <!-- Stat 3: 待纠正动作 -->
+    <div class="card stat-card">
+      <div class="stat-ring">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#EDE9E3" stroke-width="6"></circle>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#D4850A" stroke-width="6" stroke-dasharray="264" stroke-dashoffset="220" stroke-linecap="round" transform="rotate(-90 50 50)" class="progress-circle"></circle>
+          <text x="50" y="47" text-anchor="middle" font-size="26" font-weight="700" fill="#1A1A1A" font-family="var(--font-ui)">3</text>
+          <text x="50" y="62" text-anchor="middle" font-size="10" fill="#7A756D">项</text>
+        </svg>
+      </div>
+      <div class="stat-label">待纠正动作 <span style="color:var(--success);font-size:11px;font-weight:600;margin-left:4px;">-1 较上周</span></div>
+    </div>
+  </div>
+
+  <!-- Quick Actions + Weekly Progress -->
+  <div class="grid-2-1 mb-24">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <!-- Quick Action: 继续学习 -->
+      <div class="quick-action-card" onclick="showPage('lesson-list', this)">
+        <div class="quick-action-icon continue">➔</div>
+        <div class="quick-action-content">
+          <div class="quick-action-title">继续学习</div>
+          <div class="quick-action-desc">上次停在：第三式 —— 单鞭 · 要点3/5</div>
+        </div>
+        <div class="quick-action-arrow">›</div>
+      </div>
+
+      <!-- Quick Action: 开始训练 -->
+      <div class="quick-action-card" onclick="showPage('ai-calibrate', this)">
+        <div class="quick-action-icon train">▶</div>
+        <div class="quick-action-content">
+          <div class="quick-action-title">开始训练</div>
+          <div class="quick-action-desc">推荐练习："右野马分鬃"（上次得分 71，需加强）</div>
+        </div>
+        <div class="quick-action-arrow">›</div>
+      </div>
+    </div>
+
+    <!-- Weekly Progress Ring -->
+    <div class="weekly-progress-card">
+      <div class="weekly-progress-header">
+        <div>
+          <div class="weekly-progress-title">本周目标</div>
+          <div class="weekly-progress-subtitle">训练进度 3/5 次</div>
+        </div>
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#EDE9E3" stroke-width="5"></circle>
+          <circle cx="32" cy="32" r="26" fill="none" stroke="#C4A35A" stroke-width="5" stroke-dasharray="163" stroke-dashoffset="65" stroke-linecap="round" transform="rotate(-90 32 32)" class="progress-circle"></circle>
+          <text x="32" y="35" text-anchor="middle" font-size="14" font-weight="700" fill="#1A1A1A" font-family="var(--font-ui)">3/5</text>
+        </svg>
+      </div>
+      <div class="weekly-ring-labels">
+        <div class="weekly-ring-item"><span class="weekly-ring-dot" style="background:var(--success)"></span> 周一 · 单鞭 — 82分</div>
+        <div class="weekly-ring-item"><span class="weekly-ring-dot" style="background:var(--success)"></span> 周三 · 野马分鬃 — 71分</div>
+        <div class="weekly-ring-item"><span class="weekly-ring-dot" style="background:var(--gold)"></span> 周五 · 右拧缪 — 88分</div>
+        <div class="weekly-ring-item"><span class="weekly-ring-dot" style="background:var(--border)"></span> 周六 — 待完成</div>
+        <div class="weekly-ring-item"><span class="weekly-ring-dot" style="background:var(--border)"></span> 周日 — 待完成</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teacher Feedback -->
+  <div class="info-box gold">
+    <div class="info-box-title">★ 教师反馈</div>
+    王老师评价：你的"摸膝"动作进步较大，重心下沉到位。建议本周重点练习"野马分鬃"的力量传导，注意腰胯协调。<a onclick="showPage('ai-history', this)" style="color:var(--accent);cursor:pointer;text-decoration:none;"> 查看详情 ›</a>
+  </div>
+</div>
+
+<!-- ===== PAGE: LESSON LIST (课程列表) ===== -->
+<div id="page-lesson-list" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    数字教案库
+    <span class="sep">/</span>
+    课程列表
+  </div>
+  <div class="page-title">数字教案库</div>
+  <div class="page-desc">杨氏十六式太极拳精编套路 · 点击进入课程查看全部16式详细教学</div>
+
+  <!-- Search & Filters -->
+  <div class="search-bar">
+    <input class="search-input" id="lesson-search" type="text" placeholder="搜索招式名称、关键词...">
+    <select class="filter-select" id="category-filter">
+      <option>全部套路</option>
+      <option>杨氏16式</option>
+      <option>陈式太极拳二十六式</option>
+    </select>
+    <select class="filter-select" id="difficulty-filter">
+      <option>全部难度</option>
+      <option>基础</option>
+      <option>进阶</option>
+      <option>高级</option>
+    </select>
+  </div>
+
+  <!-- Course Cards Grid -->
+  <div id="course-grid">
+  </div>
+</div>
+
+<!-- ===== PAGE: COURSE YANG16 (杨氏十六式太极拳课程) ===== -->
+<div id="page-course-yang16" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    <a onclick="showPage('lesson-list', this)">数字教案库</a>
+    <span class="sep">/</span>
+    杨氏十六式太极拳
+  </div>
+  <div class="page-title font-serif">杨氏十六式太极拳</div>
+  <div class="page-desc">中国武术研究院1997年创编 · 全套约3-4分钟 · 含掤捋挤按采挒肘靠八种劲法</div>
+
+  <!-- Course Banner -->
+  <div class="welcome-banner" style="background:linear-gradient(135deg, #1a2332 0%, #2a3a4a 60%, #3a4a5a 100%);margin-bottom:24px;">
+    <svg class="welcome-taiji" width="120" height="120" viewBox="0 0 200 200" style="opacity:0.06;">
+      <circle cx="100" cy="100" r="96" fill="#FFFFFF"></circle>
+      <path d="M100 4 A96 96 0 0 1 100 196 A48 48 0 0 1 100 100 A48 48 0 0 0 100 4" fill="#1C2530"></path>
+      <circle cx="100" cy="52" r="14" fill="#FFFFFF"></circle>
+      <circle cx="100" cy="148" r="14" fill="#1C2530"></circle>
+    </svg>
+    <div class="welcome-greeting" style="color:rgba(255,255,255,0.6);">杨氏太极拳 · 十六式精编套路</div>
+    <div class="welcome-name" style="font-size:18px;margin-bottom:4px;">课程概览</div>
+    <div class="welcome-stats" id="course-stats">
+      <div class="stat-item"><span class="stat-dot accent"></span> <span id="stat-mastered">0</span> 式已掌握</div>
+      <div class="stat-item"><span class="stat-dot gold"></span> <span id="stat-learning">0</span> 式学习中</div>
+      <div class="stat-item"><span class="stat-dot success"></span> 共16式 · 杨氏套路</div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="card mb-16">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;color:var(--text-muted);">
+      <span>课程总进度</span>
+      <span id="course-progress-text">0%</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill accent" id="course-progress-bar" style="width:0%;"></div>
+    </div>
+  </div>
+
+  <!-- 16 Forms Grid -->
+  <div class="grid-2" id="yang16-grid">
+  </div>
+</div>
+
+<!-- ===== PAGE: MOVE DETAIL (招式详情) ===== -->
+<div id="page-move-detail" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    <a onclick="showPage('lesson-list', this)">数字教案库</a>
+    <span class="sep">/</span>
+    第三式 — 单鞭
+  </div>
+  <div class="page-title">第三式 — 单鞭</div>
+  <div class="page-desc">陈式太极拳二十六式 · 进阶难度 · 5个动作要点</div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchMoveTab(this, 'overview')">概览</div>
+    <div class="tab" onclick="goTo3DView()">标准动作 3D</div>
+    <div class="tab" onclick="goStepTeach()">分步教学</div>
+    <div class="tab" onclick="switchMoveTab(this, 'errors')">常见错误</div>
+    <div class="tab" onclick="switchMoveTab(this, 'criteria')">考核标准</div>
+  </div>
+
+  <!-- Tab Panel: 概览 -->
+  <div id="move-tab-overview" class="move-tab-panel active">
+  <!-- Content Grid -->
+  <div class="grid-2-1">
+    <!-- Left: Video/3D Placeholder -->
+    <div>
+      <div class="viewer-3d" style="height:380px;">
+        <div class="viewer-3d-hint">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="24" r="8" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"></circle>
+            <path d="M16 56 Q32 36 48 56" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"></path>
+            <line x1="32" y1="32" x2="32" y2="48" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"></line>
+            <line x1="32" y1="36" x2="20" y2="44" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"></line>
+            <line x1="32" y1="36" x2="44" y2="44" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"></line>
+          </svg>
+          <div>招式完整演示 · 正面+侧面</div>
+        </div>
+        <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:2;">
+          <div class="btn-group">
+            <button class="btn btn-outline btn-sm" id="prev-move-btn">◀ 上一式</button>
+            <button class="btn btn-primary btn-sm" onclick="goTo3DView()">进入 3D 查看 ➔</button>
+            <button class="btn btn-outline btn-sm" id="next-move-btn">下一式 ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Action Points & Info -->
+    <div>
+      <div class="card mb-16" id="kp-card">
+        <div class="card-title mb-12">动作要点 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">点击要点查看详解</span></div>
+      </div>
+
+      <div class="card" id="info-card">
+        <div class="card-title mb-12">招式信息</div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Tab Panel: 常见错误 -->
+  <div id="move-tab-errors" class="move-tab-panel">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title mb-12" style="color:var(--danger);">错误 1：重心过高</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">
+          单鞭要求前腿弓步膝盖弯曲至约 120°-135°。初学者常见问题是膝盖弯曲不足，导致重心偏高、下盘不稳。
+        </div>
+        <div class="info-box danger" style="margin-bottom:0;">
+          <div style="font-weight:600;margin-bottom:4px;">纠正方法</div>
+          练习时关注前膝不超过脚尖，后腿蹬直但不过伸。可以面对镜子检查臀部高度是否低于膝盖。
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title mb-12" style="color:var(--danger);">错误 2：手臂打弯</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">
+          单鞭定式要求左手前推、右手勾手，双臂均应伸直但不僵直。常见问题是肘部明显弯曲，力量无法充分传导。
+        </div>
+        <div class="info-box danger" style="margin-bottom:0;">
+          <div style="font-weight:600;margin-bottom:4px;">纠正方法</div>
+          专注于"沉肩坠肘"，手臂伸展时感受从腰部到指尖的连贯力量线。可做慢速分解练习。
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title mb-12" style="color:var(--warning);">错误 3：躯干正面偏移</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">
+          单鞭转身时躯干应保持中正面与出掌方向一致。许多练习者转身不充分，导致发力方向偏离。
+        </div>
+        <div class="info-box warning" style="margin-bottom:0;">
+          <div style="font-weight:600;margin-bottom:4px;">纠正方法</div>
+          转身时以腰为轴，带动上身整体旋转。可先分解练习"转腰"动作，再配合手部动作。
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title mb-12" style="color:var(--warning);">错误 4：呼吸节奏混乱</div>
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">
+          单鞭包含转身、出掌、沉胯三个关键发力点，每个点的呼吸配合不同。呼吸混乱会导致动作僵硬、力量中断。
+        </div>
+        <div class="info-box warning" style="margin-bottom:0;">
+          <div style="font-weight:600;margin-bottom:4px;">纠正方法</div>
+          转身时吸气、出掌时呼气、沉胯时短促吸气。先单独练习呼吸节奏，再结合动作。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Panel: 考核标准 -->
+  <div id="move-tab-criteria" class="move-tab-panel">
+    <div class="card mb-16">
+      <div class="card-title mb-12">单鞭考核评分标准</div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="text-align:left;padding:8px 12px;color:var(--text-muted);font-weight:600;">考核项</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600;">权重</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600;">优秀 (90+)</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600;">良好 (75-89)</th>
+              <th style="text-align:center;padding:8px 12px;color:var(--text-muted);font-weight:600;">及格 (60-74)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border-light);">
+              <td style="padding:10px 12px;">步型规范</td>
+              <td style="text-align:center;padding:10px 12px;font-weight:600;">25%</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--success);">弓步角度 125°±5°</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--gold);">角度偏差 ≤10°</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--warning);">基本弓步形态</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light);">
+              <td style="padding:10px 12px;">力量传导</td>
+              <td style="text-align:center;padding:10px 12px;font-weight:600;">25%</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--success);">腰-肩-肘-手连贯</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--gold);">力量路径基本完整</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--warning);">有明显断点</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light);">
+              <td style="padding:10px 12px;">身体中正</td>
+              <td style="text-align:center;padding:10px 12px;font-weight:600;">20%</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--success);">躯干无偏斜</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--gold);">轻微偏斜 ≤5°</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--warning);">偏斜 ≤15°</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border-light);">
+              <td style="padding:10px 12px;">节奏匹配</td>
+              <td style="text-align:center;padding:10px 12px;font-weight:600;">15%</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--success);">与标准节奏误差 &lt;0.3s</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--gold);">误差 &lt;0.8s</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--warning);">误差 &lt;1.5s</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 12px;">呼吸配合</td>
+              <td style="text-align:center;padding:10px 12px;font-weight:600;">15%</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--success);">3个发力点均配合</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--gold);">≥2个发力点配合</td>
+              <td style="text-align:center;padding:10px 12px;color:var(--warning);">≥1个发力点配合</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="info-box accent">
+        <div class="info-box-title">考核须知</div>
+        考核采用 AI 实时评分 + 教师复核的双评模式。AI 评分即时生成，教师复核在 24 小时内完成。最终成绩取两者加权平均（AI 60% + 教师 40%）。
+      </div>
+      <div class="info-box gold">
+        <div class="info-box-title">补考规则</div>
+        单次招式考核不及格（&lt;60分）可申请补考，每人每学期最多 3 次补考机会。补考需间隔至少 3 天练习期。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: 3D MOVE VIEWER ===== -->
+<div id="page-move-3d" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    <a onclick="showPage('lesson-list', this)">数字教案库</a>
+    <span class="sep">/</span>
+    <a onclick="showPage('move-detail', this)">第三式</a>
+    <span class="sep">/</span>
+    标准动作 3D
+  </div>
+  <div class="page-title">标准动作 3D 查看器</div>
+  <div class="page-desc">拖拽旋转查看各角度、切换可视化图层</div>
+
+  <!-- 3D Viewport -->
+  <div class="viewer-3d" style="height:420px; margin-bottom:16px;">
+    <div class="viewer-3d-hint">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="18" r="10" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"></circle>
+        <line x1="40" y1="28" x2="40" y2="52" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"></line>
+        <line x1="40" y1="34" x2="24" y2="46" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+        <line x1="40" y1="34" x2="56" y2="46" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+        <line x1="40" y1="52" x2="28" y2="68" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+        <line x1="40" y1="52" x2="52" y2="68" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+        <!-- Force line -->
+        <path d="M40 34 Q50 20 56 12" stroke="rgba(184,49,47,0.4)" stroke-width="1" stroke-dasharray="4 3" fill="none"></path>
+        <circle cx="56" cy="12" r="3" fill="rgba(184,49,47,0.4)"></circle>
+      </svg>
+      <div>3D 人体模型 · 拖拽旋转 / 滚轮缩放</div>
+    </div>
+    <div class="viewer-3d-controls">
+      <div class="viewer-btn">↻</div>
+      <div class="viewer-btn">◓</div>
+      <div class="viewer-btn">□</div>
+    </div>
+  </div>
+
+  <!-- View Mode Tabs -->
+  <div class="tabs">
+    <div class="tab active">全身视图</div>
+    <div class="tab">力量传导线</div>
+    <div class="tab">骨节角度</div>
+    <div class="tab">重心轨迹</div>
+    <div class="tab">步型视图</div>
+  </div>
+
+  <!-- Info Cards -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">当前帧动作要点</div>
+      <div class="mt-12">
+        <div class="feedback-item"><div class="feedback-dot good"></div><div>右脚迈出与肩同宽，重心平稳过渡</div></div>
+        <div class="feedback-item"><div class="feedback-dot warn"></div><div>左手前推力量源自腰部旋转，保持沉肩坠肘</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title mb-12">关键数据</div>
+      <div class="data-row"><span class="data-row-label">前腿膝盖角度</span><span class="data-row-value" id="knee-angle">128°</span></div>
+      <div class="data-row"><span class="data-row-label">重心偏移</span><span class="data-row-value" id="weight-dist">前脚 62%</span></div>
+      <div class="data-row"><span class="data-row-label">身体偏转</span><span class="data-row-value">15°</span></div>
+      <div class="data-row"><span class="data-row-label">帧编号</span><span class="data-row-value" id="frame-counter">24 / 86</span></div>
+    </div>
+  </div>
+
+  <!-- Playback Controls -->
+  <div class="playback-bar">
+    <button class="btn btn-outline btn-sm">◀ 上一帧</button>
+    <button class="btn btn-primary btn-sm">▮▮ 播放动画</button>
+    <button class="btn btn-outline btn-sm">下一帧 ▶</button>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 8px;"></div>
+    <button class="btn btn-outline btn-sm" onclick="showPage('ai-calibrate', this)">进入 AI 训练 ➔</button>
+  </div>
+</div>
+
+<!-- ===== PAGE: STEP TEACHING (分步教学) ===== -->
+<div id="page-step-teach" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    <a onclick="showPage('lesson-list', this)">数字教案库</a>
+    <span class="sep">/</span>
+    <a onclick="showPage('move-detail', this)">第三式</a>
+    <span class="sep">/</span>
+    分步教学
+  </div>
+  <div class="page-title font-serif">分步教学 — 单鞭</div>
+
+  <!-- Step Indicator -->
+  <div class="steps"></div>
+
+  <!-- Step Content -->
+  <div class="grid-2-1">
+    <!-- Left: 3D Viewport -->
+    <div>
+      <div class="viewer-3d" style="height:340px;">
+        <div class="viewer-3d-hint">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="18" r="8" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"></circle>
+            <line x1="32" y1="26" x2="32" y2="48" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"></line>
+            <line x1="32" y1="32" x2="18" y2="42" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <line x1="32" y1="32" x2="46" y2="42" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <line x1="32" y1="48" x2="22" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <line x1="32" y1="48" x2="42" y2="60" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <!-- Force line for step 3 -->
+            <path d="M32 32 Q42 22 52 14" stroke="rgba(196,163,90,0.5)" stroke-width="1.5" stroke-dasharray="4 3" fill="none"></path>
+            <circle cx="52" cy="14" r="3" fill="rgba(196,163,90,0.5)"></circle>
+            <text x="52" y="8" fill="rgba(196,163,90,0.6)" font-size="8" text-anchor="middle">力</text>
+          </svg>
+          <div>步骤3 · 力量传导线可视化</div>
+        </div>
+      </div>
+      <!-- Prev / Next Buttons -->
+      <div class="flex-center mt-16">
+        <button class="btn btn-outline">◀ 上一步</button>
+        <button class="btn btn-primary" style="margin:0 12px;">下一步 ▶</button>
+      </div>
+    </div>
+
+    <!-- Right: Description -->
+    <div class="card">
+      <div class="card-title mb-8" id="step-title">要点3：右手前伸 + 左转腰</div>
+      <div class="info-box gold mb-12" id="step-kp-box">
+        <div class="info-box-title">拳理要点</div>
+        <span id="step-kp-text">"圆裆圆发"，腰部是力量转换的枢纽。转腰时注意保持身体中正，不可歪斜。</span>
+      </div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text-secondary);" id="step-desc">
+        <p style="margin-bottom:12px;">在完成要点2的基础上，右手从胸前开始向前伸展。与此同时，腰部向左旋转，将重心逐渐从双腿过渡到右腿。</p>
+        <p style="margin-bottom:12px;">此步骤的核心是<strong style="color:var(--accent);">腰臂联动</strong>：右手的前伸力量不应来源于手臂的推力，而是来自腰部旋转所传导的整劲。</p>
+        <p>注意观察3D视图中金色虚线所标示的力量传导路径，从腰部出发，经肩、肘、最终到达指尖。</p>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;" id="step-tags">
+        <span class="tag tag-learning">重点要点</span>
+        <span class="tag tag-default">腰臂联动</span>
+        <span class="tag tag-default">力量传导</span>
+      </div>
+      <!-- Training Tips -->
+      <div class="info-box mt-16" style="margin-bottom:0;">
+        <div class="info-box-title">练习建议</div>
+        <span id="step-tip">建议先分解练习，放慢速度体会每个动作的力量传导路径。每天重复练习5-10遍，配合深呼吸，逐步提升熟练度。</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: AI CALIBRATION (摄像头校准) ===== -->
+<div id="page-ai-calibrate" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    AI训练系统
+    <span class="sep">/</span>
+    摄像头校准
+  </div>
+  <div class="page-title">摄像头校准</div>
+  <div class="page-desc">请站在摄像头可见范围内，穿着便于动作捕捉的服装</div>
+
+  <!-- Camera Viewport -->
+  <div class="calibration-viewport">
+    <div class="calibration-overlay">
+      <div class="calibration-status">
+        <span class="cal-dot"></span>
+        校准中... 请保持正面站立
+      </div>
+    </div>
+    <div class="calibration-body-outline">
+      <div class="head-circle"></div>
+      <div class="calibration-crosshair"></div>
+    </div>
+    <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:2;">
+      <div style="background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);padding:8px 20px;border-radius:20px;color:rgba(255,255,255,0.6);font-size:12px;">
+        请确保全身在画面范围内
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips -->
+  <div class="info-box gold mt-16">
+    <div class="info-box-title">温馨提示</div>
+    确保全身在画面中，光线充足，背景简洁。着装建议：紧身或合身的深色运动服装，避免宽松衣物遮挡骨骼关键点。如校准失败，点击下方重试按钮。
+  </div>
+
+  <div class="flex-center mt-16">
+    <button class="btn btn-outline" onclick="startCalibration()">↻ 重新校准</button>
+    <button class="btn btn-primary" id="cal-done-btn" style="margin-left:12px;">校准完成，开始训练 ➔</button>
+  </div>
+</div>
+
+<!-- ===== PAGE: AI TRAINING (实时跟练) ===== -->
+<div id="page-ai-training" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    AI训练系统
+    <span class="sep">/</span>
+    实时跟练
+  </div>
+  <div class="page-title">实时跟练 — 单鞭</div>
+
+  <div class="grid-2-1">
+    <!-- Left: Camera View -->
+    <div>
+      <div class="viewer-3d" style="height:400px;">
+        <!-- Recording badge -->
+        <div class="viewer-status">
+          <div class="viewer-status-badge">
+            <span class="rec-dot"></span>
+            录制中
+          </div>
+        </div>
+        <div class="viewer-3d-hint">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+            <circle cx="28" cy="14" r="7" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"></circle>
+            <line x1="28" y1="21" x2="28" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"></line>
+            <line x1="28" y1="28" x2="16" y2="36" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <line x1="28" y1="28" x2="40" y2="36" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <line x1="28" y1="40" x2="18" y2="52" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <line x1="28" y1="40" x2="38" y2="52" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"></line>
+            <!-- Real-time force overlay -->
+            <path d="M28 28 Q38 18 46 10" stroke="rgba(184,49,47,0.5)" stroke-width="1.5" stroke-dasharray="3 2" fill="none">
+              <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"></animate>
+            </path>
+          </svg>
+          <div>摄像头画面 · 骨骼叠加 · 力量线实时绘制</div>
+        </div>
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="btn-group mt-16">
+        <button class="btn btn-outline btn-sm">↻ 重录本步</button>
+        <button class="btn btn-primary btn-sm" id="train-btn">▶ 开始训练</button>
+        <button class="btn btn-outline btn-sm" onclick="showPage('ai-score', this)">完成并查看评分 ➔</button>
+      </div>
+    </div>
+
+    <!-- Right: Real-time Feedback -->
+    <div>
+      <div class="card mb-16">
+        <div class="card-title mb-12">实时反馈</div>
+        <div class="feedback-item"><div class="feedback-dot good"></div><div>前腿膝盖角度：126°（标准 128°）偏差 2°</div></div>
+        <div class="feedback-item"><div class="feedback-dot good"></div><div>重心位置：前脚 58%（标准 62%）偏差 4%</div></div>
+        <div class="feedback-item"><div class="feedback-dot warn"></div><div>身体偏转：20°（标准 15°）偏差偏大，注意回正</div></div>
+        <div class="feedback-item"><div class="feedback-dot bad"></div><div>发力时身体正面偏移，建议面向正前方</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title mb-12">当前进度</div>
+        <div class="progress-bar-track mb-8">
+          <div class="progress-bar-fill accent" style="width:60%;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);">
+          <span>要点 3/5 完成</span>
+          <span>用时 <span id="train-time">00:00</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: AI SCORE (评分结果) ===== -->
+<div id="page-ai-score" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    AI训练系统
+    <span class="sep">/</span>
+    评分结果
+  </div>
+  <div class="page-title">训练评分报告</div>
+  <div class="page-desc">单鞭 · 2026年7月25日 · 用时 2分38秒</div>
+
+  <!-- 3 Score Cards -->
+  <div class="grid-3 mb-24">
+    <!-- Overall Score -->
+    <div class="card stat-card">
+      <div class="score-ring">
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="46" fill="none" stroke="#EDE9E3" stroke-width="7"></circle>
+          <circle cx="55" cy="55" r="46" fill="none" stroke="#B8312F" stroke-width="7" stroke-dasharray="289" stroke-dashoffset="52" stroke-linecap="round" transform="rotate(-90 55 55)" class="progress-circle score-circle-anim"></circle>
+          <text x="55" y="52" text-anchor="middle" font-size="30" font-weight="700" fill="#1A1A1A" font-family="var(--font-ui)">82</text>
+          <text x="55" y="66" text-anchor="middle" font-size="10" fill="#7A756D">综合得分</text>
+        </svg>
+      </div>
+      <div class="stat-label">综合评分</div>
+    </div>
+
+    <!-- Overall Rating -->
+    <div class="card stat-card">
+      <div class="score-ring">
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="46" fill="none" stroke="#EDE9E3" stroke-width="7"></circle>
+          <circle cx="55" cy="55" r="46" fill="none" stroke="#3D8B37" stroke-width="7" stroke-dasharray="289" stroke-dashoffset="87" stroke-linecap="round" transform="rotate(-90 55 55)" class="progress-circle"></circle>
+          <text x="55" y="52" text-anchor="middle" font-size="22" font-weight="700" fill="#3D8B37" font-family="var(--font-ui)">良好</text>
+          <text x="55" y="66" text-anchor="middle" font-size="10" fill="#7A756D" font-family="var(--font-ui)">等级</text>
+        </svg>
+      </div>
+      <div class="stat-label">整体评价</div>
+    </div>
+
+    <!-- Next Practice -->
+    <div class="card stat-card">
+      <div class="score-ring">
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="46" fill="none" stroke="#EDE9E3" stroke-width="7"></circle>
+          <circle cx="55" cy="55" r="46" fill="none" stroke="#C4A35A" stroke-width="7" stroke-dasharray="289" stroke-dashoffset="144" stroke-linecap="round" transform="rotate(-90 55 55)" class="progress-circle"></circle>
+          <text x="55" y="52" text-anchor="middle" font-size="16" font-weight="700" fill="#C4A35A" font-family="var(--font-ui)">进阶</text>
+          <text x="55" y="66" text-anchor="middle" font-size="10" fill="#7A756D" font-family="var(--font-ui)">建议方向</text>
+        </svg>
+      </div>
+      <div class="stat-label">下次练习方向</div>
+    </div>
+  </div>
+
+  <!-- Radar Chart + Heatmap -->
+  <div class="grid-2 mb-24">
+    <!-- Radar Chart -->
+    <div class="card">
+      <div class="card-title mb-12">分项评分</div>
+      <svg class="radar-chart" width="280" height="260" viewBox="0 0 280 260">
+        <!-- Background rings -->
+        <polygon points="140,30 232,95 207,205 73,205 48,95" fill="none" stroke="#EDE9E3" stroke-width="1"></polygon>
+        <polygon points="140,55 210,102 193,188 87,188 70,102" fill="none" stroke="#EDE9E3" stroke-width="1"></polygon>
+        <polygon points="140,80 188,110 179,171 101,171 92,110" fill="none" stroke="#EDE9E3" stroke-width="1"></polygon>
+        <polygon points="140,105 166,117 165,154 115,154 114,117" fill="none" stroke="#EDE9E3" stroke-width="1"></polygon>
+        <!-- Axis lines -->
+        <line x1="140" y1="30" x2="140" y2="205" stroke="#EDE9E3" stroke-width="1"></line>
+        <line x1="48" y1="95" x2="232" y2="95" stroke="#EDE9E3" stroke-width="1"></line>
+        <line x1="73" y1="205" x2="207" y2="205" stroke="none"></line>
+        <line x1="140" y1="30" x2="48" y2="95" stroke="#EDE9E3" stroke-width="1"></line>
+        <line x1="48" y1="95" x2="73" y2="205" stroke="#EDE9E3" stroke-width="1"></line>
+        <line x1="73" y1="205" x2="207" y2="205" stroke="#EDE9E3" stroke-width="1"></line>
+        <line x1="207" y1="205" x2="232" y2="95" stroke="#EDE9E3" stroke-width="1"></line>
+        <line x1="232" y1="95" x2="140" y2="30" stroke="#EDE9E3" stroke-width="1"></line>
+        <!-- Data polygon (力量传导88 节奏匹配75 关节活动82 步型规范78 身体中正85) -->
+        <polygon points="140,38 222,99 198,191 82,180 56,101" fill="rgba(184,49,47,0.08)" stroke="#B8312F" stroke-width="2" stroke-linejoin="round"></polygon>
+        <!-- Data points -->
+        <circle cx="140" cy="38" r="4" fill="#B8312F"></circle>
+        <circle cx="222" cy="99" r="4" fill="#B8312F"></circle>
+        <circle cx="198" cy="191" r="4" fill="#B8312F"></circle>
+        <circle cx="82" cy="180" r="4" fill="#B8312F"></circle>
+        <circle cx="56" cy="101" r="4" fill="#B8312F"></circle>
+        <!-- Labels -->
+        <text x="140" y="20" text-anchor="middle" font-size="11" fill="#7A756D" font-family="var(--font-ui)">力量传导</text>
+        <text x="140" y="13" text-anchor="middle" font-size="10" fill="#B8312F" font-weight="600" font-family="var(--font-ui)">88</text>
+        <text x="248" y="93" text-anchor="start" font-size="11" fill="#7A756D" font-family="var(--font-ui)">节奏匹配</text>
+        <text x="248" y="105" text-anchor="start" font-size="10" fill="#D4850A" font-weight="600" font-family="var(--font-ui)">75</text>
+        <text x="215" y="218" text-anchor="middle" font-size="11" fill="#7A756D" font-family="var(--font-ui)">关节活动</text>
+        <text x="215" y="230" text-anchor="middle" font-size="10" fill="#B8312F" font-weight="600" font-family="var(--font-ui)">82</text>
+        <text x="65" y="218" text-anchor="middle" font-size="11" fill="#7A756D" font-family="var(--font-ui)">步型规范</text>
+        <text x="65" y="230" text-anchor="middle" font-size="10" fill="#D4850A" font-weight="600" font-family="var(--font-ui)">78</text>
+        <text x="32" y="93" text-anchor="end" font-size="11" fill="#7A756D" font-family="var(--font-ui)">身体中正</text>
+        <text x="32" y="105" text-anchor="end" font-size="10" fill="#3D8B37" font-weight="600" font-family="var(--font-ui)">85</text>
+      </svg>
+    </div>
+
+    <!-- Error Heatmap -->
+    <div class="card">
+      <div class="card-title mb-12">错误热力图</div>
+      <div class="heatmap-placeholder">
+        <!-- Simplified heatmap body -->
+        <svg width="120" height="180" viewBox="0 0 120 180" fill="none">
+          <!-- Body outline -->
+          <circle cx="60" cy="20" r="12" stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="rgba(255,255,255,0.03)"></circle>
+          <line x1="60" y1="32" x2="60" y2="90" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"></line>
+          <line x1="60" y1="50" x2="30" y2="70" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"></line>
+          <line x1="60" y1="50" x2="90" y2="70" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"></line>
+          <line x1="60" y1="90" x2="40" y2="140" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"></line>
+          <line x1="60" y1="90" x2="80" y2="140" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"></line>
+          <!-- Error heat points -->
+          <circle cx="60" cy="50" r="16" fill="rgba(184,49,47,0.25)"></circle>
+          <circle cx="60" cy="50" r="10" fill="rgba(184,49,47,0.4)"></circle>
+          <text x="60" y="53" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.8)">腰</text>
+          <circle cx="90" cy="70" r="12" fill="rgba(212,133,10,0.3)"></circle>
+          <circle cx="90" cy="70" r="7" fill="rgba(212,133,10,0.45)"></circle>
+          <text x="90" y="73" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.8)">肩</text>
+          <circle cx="40" cy="110" r="10" fill="rgba(212,133,10,0.2)"></circle>
+          <circle cx="40" cy="110" r="6" fill="rgba(212,133,10,0.35)"></circle>
+          <text x="40" y="113" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.7)">膝</text>
+        </svg>
+      </div>
+      <div class="mt-12" style="display:flex;gap:12px;justify-content:center;font-size:11px;">
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:rgba(184,49,47,0.5);"></span> 高频错误</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:rgba(212,133,0,0.4);"></span> 中频提醒</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:rgba(61,139,55,0.3);"></span> 表现良好</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actionable Feedback -->
+  <div class="card">
+    <div class="card-title mb-12">针对性纠正建议</div>
+    <div class="info-box mb-16">
+      <div class="info-box-title">最大失分项</div>
+      你的发力时<strong style="color:var(--accent);">身体正面偏移</strong>是最大失分项（节奏匹配 75分），占综合失分的 40%。核心问题是腰部旋转时上身随转，导致力量传导路径偏移。
+    </div>
+    <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;">
+      <strong>建议练习方案：</strong>进入"单鞭 — 要点3"分步教学页面，开启力量传导线可视化模式，重点练习腰部旋转与身体方向的协调。配合3D查看器的慢速回放（0.25x）观察标准动作的躯干朝向变化。
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="showPage('step-teach', this)">前往分步教学 ➔</button>
+      <button class="btn btn-outline" onclick="showPage('ai-calibrate', this)">↻ 再练一次</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: AI HISTORY (训练记录) ===== -->
+<div id="page-ai-history" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    AI训练系统
+    <span class="sep">/</span>
+    训练记录
+  </div>
+  <div class="page-title">训练记录</div>
+
+  <div class="tabs">
+    <div class="tab active">按时间</div>
+    <div class="tab">按招式</div>
+    <div class="tab">成长轨迹</div>
+  </div>
+
+  <!-- Record 1 -->
+  <div class="record-card" onclick="showPage('ai-score', this)">
+    <div class="record-score high">82</div>
+    <div class="record-body">
+      <div class="record-title">单鞭 — 练习记录 #12</div>
+      <div class="record-meta">2026-07-25 14:30 · 用时 2分38秒</div>
+    </div>
+    <div class="record-trend">
+      <span class="badge badge-success">▲ +6</span>
+    </div>
+  </div>
+
+  <!-- Record 2 -->
+  <div class="record-card" onclick="showPage('ai-score', this)">
+    <div class="record-score high">76</div>
+    <div class="record-body">
+      <div class="record-title">单鞭 — 练习记录 #11</div>
+      <div class="record-meta">2026-07-24 16:15 · 用时 3分12秒</div>
+    </div>
+    <div class="record-trend">
+      <span class="badge badge-success">▲ +5</span>
+    </div>
+  </div>
+
+  <!-- Record 3 -->
+  <div class="record-card" onclick="showPage('ai-score', this)">
+    <div class="record-score mid">71</div>
+    <div class="record-body">
+      <div class="record-title">右野马分鬃 — 练习记录 #8</div>
+      <div class="record-meta">2026-07-23 10:00 · 用时 4分05秒</div>
+    </div>
+    <div class="record-trend">
+      <span class="badge badge-warning">▬ 持平</span>
+    </div>
+  </div>
+
+  <!-- Record 4 -->
+  <div class="record-card" onclick="showPage('ai-score', this)">
+    <div class="record-score mid">68</div>
+    <div class="record-body">
+      <div class="record-title">单鞭 — 练习记录 #10</div>
+      <div class="record-meta">2026-07-22 09:45 · 用时 3分50秒</div>
+    </div>
+    <div class="record-trend">
+      <span class="badge badge-success">▲ +3</span>
+    </div>
+  </div>
+
+  <!-- Record 5 -->
+  <div class="record-card" onclick="showPage('ai-score', this)">
+    <div class="record-score low">58</div>
+    <div class="record-body">
+      <div class="record-title">右野马分鬃 — 练习记录 #7</div>
+      <div class="record-meta">2026-07-21 15:20 · 用时 5分10秒</div>
+    </div>
+    <div class="record-trend">
+      <span class="badge badge-danger">▼ -4</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: TACTICS (推手对战 - 精简版) ===== -->
+<div id="page-tactics" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    战术模拟
+    <span class="sep">/</span>
+    推手对战
+  </div>
+  <div class="page-title">推手对战模拟</div>
+  <div class="page-desc">双人物理引擎 + 角度/力度实时可视化</div>
+
+  <div class="info-box mb-16">
+    <div class="info-box-title">演示说明</div>
+    此模块为轻量级演示框架。完整版本将支持 AI 对手、战术回放和力度/角度可视化分析。详细功能在后续迭代中完善。
+  </div>
+
+  <div class="tactics-scene">
+    <div class="tactics-arena">
+      <div class="tactics-figure left"></div>
+      <div class="tactics-figure right"></div>
+    </div>
+    <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:2;color:rgba(255,255,255,0.35);font-size:12px;">
+      推手对战场景 · 双人物理引擎占位
+    </div>
+  </div>
+
+  <div class="flex-center mt-16">
+    <button class="btn btn-primary">▶ 开始对战模拟</button>
+    <button class="btn btn-outline" style="margin-left:12px;">观看回放</button>
+  </div>
+</div>
+
+<!-- ===== PAGE: MUSEUM (数字校史馆) ===== -->
+<div id="page-museum" class="page-section">
+  <div class="breadcrumb">
+    <a onclick="showPage('home', this)">首页</a>
+    <span class="sep">/</span>
+    数字校史馆
+  </div>
+  <div class="page-title">数字校史馆</div>
+  <div class="page-desc">河南理工大学太极拳学科发展历程</div>
+
+  <div class="timeline">
+    <!-- Milestone 1 -->
+    <div class="timeline-item">
+      <div class="timeline-year">2010</div>
+      <div class="timeline-title">太极拳学院成立</div>
+      <div class="timeline-desc">河南理工大学正式成立太极拳学院，标志着太极拳从民间传承走向高等教育体系化建设的里程碑。学院以"传承、研究、推广"为使命，开设太极拳相关专业课程。</div>
+      <div class="timeline-visual">
+        <svg width="200" height="40" viewBox="0 0 200 40" fill="none">
+          <rect x="20" y="8" width="60" height="24" rx="4" fill="rgba(184,49,47,0.12)" stroke="rgba(184,49,47,0.2)" stroke-width="1"></rect>
+          <text x="50" y="24" text-anchor="middle" font-size="10" fill="rgba(184,49,47,0.6)" font-family="var(--font-serif)">建院典礼</text>
+          <rect x="100" y="8" width="80" height="24" rx="4" fill="rgba(122,117,109,0.08)" stroke="rgba(122,117,109,0.15)" stroke-width="1"></rect>
+          <text x="140" y="24" text-anchor="middle" font-size="10" fill="rgba(122,117,109,0.5)">历史影像</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Milestone 2 -->
+    <div class="timeline-item">
+      <div class="timeline-year" style="color:var(--gold);">2018</div>
+      <div class="timeline-title">首个太极拳学科 + 国家级实验室</div>
+      <div class="timeline-desc">获批设立全国首个太极拳学科，同时建成太极拳运动机能分析与康复国家级重点实验室，将运动生物力学、肌电分析与太极拳教学深度结合。</div>
+      <div class="timeline-visual">
+        <svg width="200" height="40" viewBox="0 0 200 40" fill="none">
+          <rect x="10" y="8" width="70" height="24" rx="4" fill="rgba(196,163,90,0.12)" stroke="rgba(196,163,90,0.2)" stroke-width="1"></rect>
+          <text x="45" y="24" text-anchor="middle" font-size="10" fill="rgba(196,163,90,0.6)" font-family="var(--font-serif)">实验室场景</text>
+          <rect x="100" y="8" width="90" height="24" rx="4" fill="rgba(122,117,109,0.08)" stroke="rgba(122,117,109,0.15)" stroke-width="1"></rect>
+          <text x="145" y="24" text-anchor="middle" font-size="10" fill="rgba(122,117,109,0.5)">学科批准文件</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Milestone 3 -->
+    <div class="timeline-item">
+      <div class="timeline-year" style="color:var(--success);">2026</div>
+      <div class="timeline-title">全国首个太极拳本科专业获批</div>
+      <div class="timeline-desc">教育部正式批准河南理工大学设立全国首个太极拳本科专业（四年制），面向全国招生。该专业融合传统武术、运动科学、数字技术三大方向，培养复合型太极拳专业人才。</div>
+      <div class="timeline-visual">
+        <svg width="200" height="40" viewBox="0 0 200 40" fill="none">
+          <rect x="10" y="8" width="80" height="24" rx="4" fill="rgba(61,139,55,0.12)" stroke="rgba(61,139,55,0.2)" stroke-width="1"></rect>
+          <text x="50" y="24" text-anchor="middle" font-size="10" fill="rgba(61,139,55,0.6)" font-family="var(--font-serif)">教育部批文</text>
+          <rect x="110" y="8" width="80" height="24" rx="4" fill="rgba(122,117,109,0.08)" stroke="rgba(122,117,109,0.15)" stroke-width="1"></rect>
+          <text x="150" y="24" text-anchor="middle" font-size="10" fill="rgba(122,117,109,0.5)">招生新闻</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Milestone 4 -->
+    <div class="timeline-item">
+      <div class="timeline-year">2026</div>
+      <div class="timeline-title">智承太极 — 数字化教学新范式</div>
+      <div class="timeline-desc">作为太极拳本科专业教学数字化转型的核心项目，"智承太极"系统将 AI 动作捕捉、3D 标准动作库、智能评分与战术模拟融为一体，构建面向未来的太极拳数字教学新范式。</div>
+      <div class="timeline-visual" style="background:linear-gradient(135deg, rgba(184,49,47,0.06) 0%, rgba(196,163,90,0.06) 100%);">
+        <svg width="200" height="40" viewBox="0 0 200 40" fill="none">
+          <rect x="20" y="8" width="70" height="24" rx="4" fill="rgba(184,49,47,0.1)" stroke="rgba(184,49,47,0.2)" stroke-width="1"></rect>
+          <text x="55" y="24" text-anchor="middle" font-size="10" fill="rgba(184,49,47,0.6)" font-family="var(--font-serif)">系统截图</text>
+          <rect x="110" y="8" width="70" height="24" rx="4" fill="rgba(196,163,90,0.1)" stroke="rgba(196,163,90,0.2)" stroke-width="1"></rect>
+          <text x="145" y="24" text-anchor="middle" font-size="10" fill="rgba(196,163,90,0.6)" font-family="var(--font-serif)">未来规划</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main><!-- /main -->
+</div><!-- /app -->
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+// ============================================================
+// 智承太极 — Enhanced Interactive System
+// ============================================================
+
+// ============================================================
+// 杨氏16式太极拳 — 完整课程数据
+// ============================================================
+var courseData = [
+  { id: 1, name: '起势', subtitle: '太极起势', category: '杨氏16式', difficulty: '基础', points: 4, status: 'mastered', desc: '太极拳预备动作，站桩调息，进入练功状态。包含起势调息、马步开立、意念集中等基础要领，为全套动作奠定基础。', keyPoints: ['双脚平行开立与肩同宽', '沉肩坠肘含胸拔背', '虚领顶劲尾闾中正', '呼吸自然意守丹田'] },
+  { id: 2, name: '右野马分鬃', subtitle: '右野马分鬃', category: '杨氏16式', difficulty: '基础', points: 4, status: 'mastered', desc: '左转体收脚抱球，右转体迈步分手。双手如分鬃之势，一上一下形成对拔之力，体现太极拳"掤"劲的运用。', keyPoints: ['转体时以腰为轴带动四肢', '分手时两臂保持弧形', '弓步与分手同时完成', '重心平稳过渡不断劲'] },
+  { id: 3, name: '白鹤亮翅', subtitle: '白鹤亮翅', category: '杨氏16式', difficulty: '基础', points: 4, status: 'learning', desc: '白鹤亮翅为太极拳典型亮翅动作，一手上举一手下按，两臂展开如白鹤展翅。此势既可用于防守也可用于进攻。', keyPoints: ['含胸拔背腋下虚空', '上手与下手对拔伸展', '虚步重心在后腿', '身法中正不前倾后仰'] },
+  { id: 4, name: '搂膝拗步', subtitle: '搂膝拗步', category: '杨氏16式', difficulty: '基础', points: 5, status: 'learning', desc: '搂膝拗步是太极拳核心步伐之一，一手搂膝一手推出，拗步身法要求手脚对开、腰胯带动、力从脊发。', keyPoints: ['搂膝时手不超过膝盖', '前推掌与弓步一合俱合', '身子中正不前俯', '手臂微屈以意导气'] },
+  { id: 5, name: '手挥琵琶', subtitle: '手挥琵琶', category: '杨氏16式', difficulty: '进阶', points: 4, status: 'locked', desc: '手挥琵琶模仿弹奏琵琶之态，双手前后展开如抱琵琶。此势要求裆劲下沉、双臂撑圆、气沉丹田。', keyPoints: ['后坐时重心平稳后移', '双手如抱球撑圆', '目视前手指尖方向', '身体保持中正安舒'] },
+  { id: 6, name: '倒卷肱', subtitle: '倒卷肱', category: '杨氏16式', difficulty: '进阶', points: 5, status: 'locked', desc: '倒卷肱是太极拳唯一的连续后退动作，退步中保持身体稳定。手臂如卷肱般翻转化解，体现太极拳以退为进的战术思想。', keyPoints: ['退步时脚尖先着地', '手臂回卷与推掌连贯', '重心不要上下起伏', '上下肢协调一致'] },
+  { id: 7, name: '揽雀尾', subtitle: '揽雀尾', category: '杨氏16式', difficulty: '进阶', points: 6, status: 'locked', desc: '揽雀尾包含掤、捋、挤、按四正手，是太极拳最具代表性的技法组合。一揽一推之间蕴含太极阴阳变化之理。', keyPoints: ['掤臂撑圆不耸肩', '捋手含胸引进落空', '挤势前弓后蹬发力', '按掌沉腕松腰沉胯'] },
+  { id: 8, name: '单鞭', subtitle: '单鞭', category: '杨氏16式', difficulty: '进阶', points: 5, status: 'learning', desc: '单鞭是太极拳经典招式，一手勾手一手推掌，两臂对拔拉长。要求含胸拔背、松腰沉胯，体现"一身备五弓"的整劲。', keyPoints: ['勾手时五指自然捏拢', '推掌与转腰协调一致', '弓步膝盖不超脚尖', '力量传导起于脚终于手'] },
+  { id: 9, name: '云手', subtitle: '云手', category: '杨氏16式', difficulty: '进阶', points: 5, status: 'locked', desc: '云手为太极拳重要手法，双手如行云流水般交替运转。配合侧行步法，训练腰胯灵活性和身体协调性。', keyPoints: ['以腰带动手臂运转', '眼神随主动手移动', '侧行步保持身体平稳', '双手交替划立圆'] },
+  { id: 10, name: '高探马', subtitle: '高探马', category: '杨氏16式', difficulty: '高级', points: 4, status: 'locked', desc: '高探马为探掌前刺之势，探马寓意策马前行。虚步探掌身形挺拔，需要极好的平衡能力和腰腿功夫。', keyPoints: ['虚步后坐重心稳定', '探掌与弓腿上下相随', '身体微向前探保持中正', '眼神注视前方'] },
+  { id: 11, name: '右蹬脚', subtitle: '右蹬脚', category: '杨氏16式', difficulty: '高级', points: 5, status: 'locked', desc: '右蹬脚为腿法攻击动作，蹬脚高度与腰平。单腿支撑要求全身协调配合，是太极拳平衡能力的集中体现。', keyPoints: ['蹬脚时支撑腿微屈', '分手与蹬脚同时完成', '蹬脚高度不低于腰', '身体保持正直不歪斜'] },
+  { id: 12, name: '双峰贯耳', subtitle: '双峰贯耳', category: '杨氏16式', difficulty: '高级', points: 4, status: 'locked', desc: '双峰贯耳以双拳同时贯击对方耳门，势如双峰并峙。此势要求劲力完整、步法扎实、出手快速。', keyPoints: ['双拳贯耳与弓步一致', '力量发自腰腿', '双臂保持弧形不伸直', '沉肩坠肘含胸拔背'] },
+  { id: 13, name: '转身左蹬脚', subtitle: '转身左蹬脚', category: '杨氏16式', difficulty: '高级', points: 5, status: 'locked', desc: '转身左蹬脚在转身后完成左蹬脚动作，对身体的旋转控制和单腿平衡能力要求更高，是难度较大的综合动作。', keyPoints: ['转身时以脚跟为轴', '转身后身体迅速稳定', '蹬脚发力短促干脆', '保持呼吸不憋气'] },
+  { id: 14, name: '左下势独立', subtitle: '左下势独立', category: '杨氏16式', difficulty: '高级', points: 6, status: 'locked', desc: '左下势独立由扑步下势和独立步组成，下势要求身体低伏贴近地面，独立步则单腿直立，起落之间反差强烈。', keyPoints: ['仆步时身体前俯贴腿', '重心由低到高过渡流畅', '独立步支撑腿微屈站稳', '提膝与举手上下对拔'] },
+  { id: 15, name: '十字手', subtitle: '十字手', category: '杨氏16式', difficulty: '进阶', points: 3, status: 'locked', desc: '十字手为太极拳常见过渡与收束动作，双手腕部交叉成十字形。既是防守之势，也是收势前的重要衔接动作。', keyPoints: ['两腕交叉与胸同高', '身体中正安舒', '重心平稳过渡到预备', '呼吸自然深长'] },
+  { id: 16, name: '收势', subtitle: '收势', category: '杨氏16式', difficulty: '基础', points: 3, status: 'locked', desc: '收势为全套动作的结束，通过双手下落、气息归元、并步还原等动作，使气血回归丹田，完成从动到静的收功过程。', keyPoints: ['双手下落与呼气配合', '意念随手下行归丹田', '并步时身体保持中正', '收式后稍作静立调息'] }
+];
+
+var selectedForm = 0; // currently selected form index
+
+function selectForm(index) {
+  selectedForm = index;
+  showPage('move-detail', null);
+  showMoveDetail(index);
+}
+
+function renderCourseList() {
+  var grid = document.getElementById('course-grid');
+  if (!grid) return;
+
+  // Count progress
+  var mastered = 0, learning = 0;
+  courseData.forEach(function(f) {
+    if (f.status === 'mastered') mastered++;
+    else if (f.status === 'learning') learning++;
+  });
+  var progress = Math.round((mastered + learning * 0.5) / 16 * 100);
+
+  grid.innerHTML =
+    '<div class="quick-action-card" onclick="showPage(\'course-yang16\', this)" style="margin-bottom:0;">' +
+      '<div class="quick-action-icon train" style="background:linear-gradient(135deg, var(--accent-light) 0%, #FDE8E8 100%);color:var(--accent);font-size:20px;">☯</div>' +
+      '<div class="quick-action-content">' +
+        '<div class="quick-action-title">杨氏十六式太极拳</div>' +
+        '<div class="quick-action-desc">共16式 · ' + mastered + '式已掌握 · ' + learning + '式学习中</div>' +
+        '<div class="progress-bar-track mt-8" style="height:4px;">' +
+          '<div class="progress-bar-fill accent" style="width:' + progress + '%;height:4px;"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="quick-action-arrow">›</div>' +
+    '</div>';
+
+  if (typeof filterLessons === 'function') filterLessons();
+}
+
+function renderYang16Grid() {
+  var grid = document.getElementById('yang16-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  courseData.forEach(function(form, i) {
+    var statusClass = form.status === 'mastered' ? 'tag-mastered' : form.status === 'learning' ? 'tag-learning' : 'tag-default';
+    var statusText = form.status === 'mastered' ? '已掌握' : form.status === 'learning' ? '学习中' : '未开始';
+    var diffDots = '';
+    var diffLevel = form.difficulty === '基础' ? 1 : form.difficulty === '进阶' ? 2 : 3;
+    for (var d = 0; d < 3; d++) {
+      diffDots += '<span class="difficulty-dot' + (d < diffLevel ? ' filled' : '') + '"></span>';
+    }
+
+    grid.innerHTML += '<div class="course-card" onclick="selectForm(' + i + ')">' +
+      '<div class="course-card-thumb">' +
+        '<div class="course-card-thumb-bg">' +
+          '<div class="course-card-thumb-icon" style="font-size:20px;font-weight:700;color:var(--accent);opacity:0.7;">' + (i+1) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="course-card-body">' +
+        '<div class="course-card-header">' +
+          '<div class="course-card-title">' + form.name + '</div>' +
+          '<span class="tag ' + statusClass + '">' + statusText + '</span>' +
+        '</div>' +
+        '<div class="course-card-meta">' +
+          '<span>' + form.points + '个要诀</span>' +
+          '<span class="difficulty-badge">' + diffDots + ' ' + form.difficulty + '</span>' +
+        '</div>' +
+        '<div style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-top:4px;">' + form.desc.slice(0, 50) + '...' + '</div>' +
+      '</div>' +
+    '</div>';
+  });
+
+  // Update stats
+  var mastered = 0, learning = 0;
+  courseData.forEach(function(f) {
+    if (f.status === 'mastered') mastered++;
+    else if (f.status === 'learning') learning++;
+  });
+  var progress = Math.round((mastered + learning * 0.5) / 16 * 100);
+  document.getElementById('stat-mastered').textContent = mastered;
+  document.getElementById('stat-learning').textContent = learning;
+  document.getElementById('course-progress-text').textContent = progress + '%';
+  document.getElementById('course-progress-bar').style.width = progress + '%';
+}
+
+function toChineseNum(n) {
+  var nums = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六'];
+  return nums[n] || n;
+}
+
+// --- Key point detailed explanations ---
+var keyPointDetails = {
+  '起势': [
+    '双脚平行开立，距离与肩同宽，十趾微抓地。重心落于涌泉穴，膝盖微屈不过脚尖。此为基础桩功，稳固下盘方能使气机沉入丹田。',
+    '沉肩坠肘时，肩关节放松下沉，肘关节微屈下垂，腋下虚空如含一鸡蛋。此势能打通手三阴经，使气血通达指端。',
+    '虚领顶劲是头部如被绳悬提，下颚微收，颈椎拔直但不僵挺。尾闾中正则尾骨向前微收，使脊柱形成自然的"弓"形，贯通任督二脉。',
+    '呼吸自然深长，用腹式呼吸法。吸气时意想清气从丹田升至膻中，呼气时气沉丹田。意念守于丹田而非头顶，避免气浮于上。'
+  ]
+};
+
+function getKeyPointExplanations(formName) {
+  var exps = keyPointDetails[formName];
+  if (exps) return exps;
+  // Generate generic explanations based on form name
+  var generic = [];
+  var count = courseData.find(function(f) { return f.name === formName; });
+  var n = count ? count.points : 4;
+  for (var i = 0; i < n; i++) {
+    generic.push('要领' + (i+1) + '：此要点是"' + formName + '"式的核心技术环节。练习时需反复体会身体各部位的协调配合，由慢到快、由松到整，逐步形成正确的肌肉记忆。建议对照标准视频反复练习，每次练习不少于5遍。');
+  }
+  return generic;
+}
+
+// --- Update move detail page ---
+function showMoveDetail(index) {
+  var form = courseData[index];
+  if (!form) return;
+
+  // Update breadcrumb
+  var breadcrumb = document.querySelector('#page-move-detail .breadcrumb');
+  if (breadcrumb) {
+    breadcrumb.innerHTML = '<a onclick="showPage(\'home\', this)">首页</a><span class="sep">/</span><a onclick="showPage(\'lesson-list\', this)">数字教案库</a><span class="sep">/</span>第' + toChineseNum(index+1) + '式 — ' + form.name;
+  }
+
+  // Update title
+  var titleEl = document.querySelector('#page-move-detail .page-title');
+  if (titleEl) titleEl.textContent = '第' + toChineseNum(index+1) + '式 — ' + form.name;
+
+  var descEl = document.querySelector('#page-move-detail .page-desc');
+  if (descEl) descEl.textContent = form.category + ' · ' + form.difficulty + '难度 · ' + form.points + '个动作要点';
+
+  // Update overview tab description
+  document.querySelector('#move-tab-overview .viewer-3d-hint div').textContent = form.name + ' · 完整演示';
+
+  // Update key points with expandable details
+  var kpCard = document.getElementById('kp-card');
+  if (kpCard) {
+    var explanations = getKeyPointExplanations(form.name);
+    var html = '<div class="card-title mb-12">动作要点 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">点击要点查看详解</span></div>';
+    form.keyPoints.forEach(function(kp, i) {
+      var dotClass = i < 2 ? 'good' : i < 3 ? 'warn' : 'bad';
+      var detail = explanations[i] || '详解：' + kp + '。建议配合呼吸慢练，体会"以意导气、以气运身"的内功心法。';
+      html += '<div class="kp-item" data-expanded="false">' +
+        '<div class="feedback-item kp-header" style="cursor:pointer;margin:0;border-radius:0;border-bottom:none;">' +
+          '<div class="feedback-dot ' + dotClass + '"></div>' +
+          '<div style="flex:1;font-size:12px;">要点' + (i+1) + '：' + kp + '</div>' +
+          '<span class="kp-toggle" style="color:var(--text-muted);font-size:10px;transition:transform 200ms;">▼</span>' +
+        '</div>' +
+        '<div class="kp-detail" style="max-height:0;overflow:hidden;transition:max-height 300ms;padding:0 14px;font-size:12px;color:var(--text-secondary);line-height:1.7;background:var(--bg);border-bottom:1px solid var(--border-light);">' +
+          detail +
+        '</div>' +
+      '</div>';
+    });
+    kpCard.innerHTML = html;
+
+    // Click handlers
+    kpCard.querySelectorAll('.kp-header').forEach(function(header) {
+      header.addEventListener('click', function() {
+        var item = this.closest('.kp-item');
+        if (!item) return;
+        var detail = item.querySelector('.kp-detail');
+        var toggle = item.querySelector('.kp-toggle');
+        var isExpanded = item.getAttribute('data-expanded') === 'true';
+        detail.style.maxHeight = isExpanded ? '0' : detail.scrollHeight + 100 + 'px';
+        detail.style.padding = isExpanded ? '0 14px' : '12px 14px';
+        if (toggle) { toggle.textContent = isExpanded ? '▼' : '▲'; toggle.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)'; }
+        item.setAttribute('data-expanded', isExpanded ? 'false' : 'true');
+      });
+    });
+  }
+
+  // Update form info
+  var infoCard = document.getElementById('info-card');
+  if (infoCard) {
+    infoCard.innerHTML = '<div class="card-title mb-12">招式信息</div>' +
+      '<div class="data-row"><span class="data-row-label">招式名称</span><span class="data-row-value">' + form.name + '</span></div>' +
+      '<div class="data-row"><span class="data-row-label">所属套路</span><span class="data-row-value">' + form.category + '</span></div>' +
+      '<div class="data-row"><span class="data-row-label">难度等级</span><span class="data-row-value">' + form.difficulty + '</span></div>' +
+      '<div class="data-row"><span class="data-row-label">动作要点</span><span class="data-row-value">' + form.points + '个</span></div>' +
+      '<div class="data-row"><span class="data-row-label">招式描述</span><span class="data-row-value" style="font-weight:400;font-size:11px;">' + form.desc.slice(0, 40) + '...</span></div>';
+  }
+
+  // Update prev/next buttons
+  var prevBtn = document.getElementById('prev-move-btn');
+  var nextBtn = document.getElementById('next-move-btn');
+  if (prevBtn) {
+    prevBtn.textContent = index > 0 ? '◀ ' + courseData[index-1].name : '◀ 已是第一式';
+    prevBtn.style.opacity = index > 0 ? '1' : '0.4';
+    prevBtn.onclick = index > 0 ? function() { selectForm(index - 1); } : null;
+  }
+  if (nextBtn) {
+    nextBtn.textContent = index < courseData.length - 1 ? courseData[index+1].name + ' ▶' : '已是最后一式 ▶';
+    nextBtn.style.opacity = index < courseData.length - 1 ? '1' : '0.4';
+    nextBtn.onclick = index < courseData.length - 1 ? function() { selectForm(index + 1); } : null;
+  }
+
+  // Update step teaching
+  updateStepUIForForm(index);
+}
+
+// --- Direct navigation to step teaching with form context ---
+function stepToTeaching(index) {
+  if (index >= 0 && index < courseData.length) {
+    selectedForm = index;
+  }
+  // Directly update UI first, then navigate
+  updateStepUIForForm(selectedForm);
+  showPage('step-teach', null);
+}
+
+function goTo3DView() {
+  showPage('move-3d', null);
+}
+function goStepTeach() {
+  var f = courseData[selectedForm];
+  if (!f) f = courseData[0];
+  if (!f) return;
+  showPage('step-teach', null);
+  // Update page title
+  var pageTitle = document.querySelector('#page-step-teach .page-title');
+  if (pageTitle) pageTitle.textContent = '分步教学 — ' + f.name;
+  // Update breadcrumb
+  var bc = document.querySelector('#page-step-teach .breadcrumb');
+  if (bc) bc.innerHTML = '<a onclick="showPage(\'home\', this)">首页</a><span class="sep">/</span><a onclick="showPage(\'lesson-list\', this)">数字教案库</a><span class="sep">/</span>第' + toChineseNum(selectedForm+1) + '式<span class="sep">/</span>分步教学';
+  // Update step card title
+  var titleEl = document.getElementById('step-title');
+  var descEl = document.getElementById('step-desc');
+  var kpText = document.getElementById('step-kp-text');
+  var tagsEl = document.getElementById('step-tags');
+  if (titleEl) titleEl.textContent = f.name + ' — 要诀1/' + f.keyPoints.length;
+  if (descEl) descEl.innerHTML = '<p>' + f.desc + '</p>';
+  if (kpText) kpText.textContent = f.name + '势——以腰为轴，上下相随，内外合一。';
+  if (tagsEl) tagsEl.innerHTML = '<span class="tag tag-default">' + f.difficulty + '</span><span class="tag tag-default">' + f.category + '</span>';
+  var tipEl = document.getElementById('step-tip');
+  if (tipEl) tipEl.textContent = '建议先分解练习' + f.name + '，放慢速度体会动作要领。每天重复5-10遍，配合深呼吸，逐步提升熟练度。练习时注意保持身体中正，呼吸自然。';
+}
+
+// --- Back Navigation ---
+var pageHistory = ['home'];
+function goBack() {
+  if (pageHistory.length > 1) {
+    pageHistory.pop(); // remove current
+    var prev = pageHistory[pageHistory.length - 1];
+    showPage(prev, null);
+  } else {
+    showPage('home', null);
+  }
+}
+
+// --- Toast Notification System ---
+function showToast(message, type) {
+  type = type || 'success';
+  var container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:8px;';
+    document.body.appendChild(container);
+  }
+  var toast = document.createElement('div');
+  var bgColor = type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--accent)' : 'var(--gold)';
+  toast.style.cssText = 'background:' + bgColor + ';color:#fff;padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);animation:slideIn 300ms ease-out forwards;max-width:320px;';
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(function() {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 300ms';
+    setTimeout(function(){ toast.remove(); }, 300);
+  }, 2500);
+}
+
+// --- Navigation ---
+function showPage(id, el) {
+  document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
+  var target = document.getElementById('page-' + id);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  if (el && el.classList.contains('nav-item')) {
+    el.classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-item').forEach(function(n) {
+      var onclick = n.getAttribute('onclick') || '';
+      if (onclick.indexOf("'" + id + "'") !== -1) n.classList.add('active');
+    });
+  }
+
+  // Track page history
+  if (pageHistory[pageHistory.length - 1] !== id) {
+    pageHistory.push(id);
+  }
+
+  var main = document.querySelector('.main');
+  if (main) main.scrollTop = 0;
+
+  // Show/hide back button
+  var backBtn = document.getElementById('back-btn');
+  if (backBtn) {
+    backBtn.style.display = id === 'home' ? 'none' : 'flex';
+    // Update back button hover
+    backBtn.onmouseover = function() { this.style.background = 'var(--bg-warm)'; this.style.color = 'var(--accent)'; };
+    backBtn.onmouseout = function() { this.style.background = 'var(--card)'; this.style.color = 'var(--text-secondary)'; };
+  }
+
+  if (typeof afterPageChange === 'function') afterPageChange(id);
+}
+
+// --- Tab Switching (通用) ---
+function switchTabs(el, tabPrefix) {
+  var container = el.parentElement;
+  container.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var tabId = el.getAttribute('data-tab');
+  if (!tabId) return;
+  document.querySelectorAll('.' + tabPrefix + '-panel').forEach(function(p) { p.classList.remove('active'); });
+  var panel = document.getElementById(tabPrefix + '-' + tabId);
+  if (panel) panel.classList.add('active');
+}
+
+// --- Move detail tab switching (keep backward compat) ---
+function switchMoveTab(el, tabId) {
+  var tabsContainer = el.parentElement;
+  tabsContainer.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelectorAll('.move-tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  var panel = document.getElementById('move-tab-' + tabId);
+  if (panel) panel.classList.add('active');
+}
+
+// --- Lesson Search & Filter ---
+function filterLessons() {
+  var input = document.getElementById('lesson-search');
+  var filter = input ? input.value.toLowerCase() : '';
+  var catEl = document.getElementById('category-filter');
+  var category = catEl ? catEl.value : '全部套路';
+  var diffEl = document.getElementById('difficulty-filter');
+  var difficulty = diffEl ? diffEl.value : '全部难度';
+
+  document.querySelectorAll('#page-lesson-list .quick-action-card').forEach(function(card) {
+    var text = card.textContent.toLowerCase();
+    var matchSearch = !filter || text.indexOf(filter) !== -1;
+    card.style.display = matchSearch ? 'flex' : 'none';
+  });
+  var visible = document.querySelectorAll('#page-lesson-list .quick-action-card[style*="flex"]').length;
+  if (visible === 0 && filter) showToast('未找到匹配的课程', 'warning');
+}
+
+// --- Settings Modal ---
+function openSettings() { document.getElementById('settings-modal').classList.add('active'); }
+function closeSettings() { document.getElementById('settings-modal').classList.remove('active'); }
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  localStorage.setItem('zctj-dark-mode', document.body.classList.contains('dark-mode') ? '1' : '0');
+  showToast(document.body.classList.contains('dark-mode') ? '已切换为深色模式' : '已切换为浅色模式');
+}
+
+// --- Step Teaching Navigation ---
+var currentStep = 2;
+var stepData = [
+  { title: '要点1：右脚迈步重心后移', desc: '右脚向右迈半步，左脚跟进，身体重心后移。注意保持身体中正，双膝微屈，重心平稳过渡。', tags: ['基础步法', '重心控制'] },
+  { title: '要点2：左手前推右手回收', desc: '左手前推，右手回收至胸前。力量由腰传导至手臂，保持沉肩坠肘的姿势。推动时注意呼吸配合。', tags: ['手臂动作', '沉肩坠肘'] },
+  { title: '要点3：右手前伸左转腰', desc: '右手前伸同时左转腰，重心转移至右腿。这是单鞭中力量传导的关键环节，腰部旋转带动上肢发力。', tags: ['重点要点', '腰臂联动', '力量传导'] },
+  { title: '要点4：左手前推发力完成', desc: '左手向前推出，右脚前踱，完成发力。力量从脚底经腰、肩、肘传至指尖，形成完整的力量链。', tags: ['发力技巧', '整劲传导'] },
+  { title: '要点5：松腰沉胯收势', desc: '松腰沉胯，呼吸回正，收势完成。注意调整呼吸，让气息下沉，恢复到预备姿势。', tags: ['收势', '呼吸调整'] }
+];
+
+function goStep(dir) {
+  var n = courseData[selectedForm] ? courseData[selectedForm].keyPoints.length : 5;
+  currentStep = Math.max(0, Math.min(n - 1, currentStep + dir));
+  updateStepUI();
+}
+
+function updateStepUI() {
+  // Step indicator and content are now managed by updateStepUIForForm
+  if (selectedForm >= 0) {
+    updateStepUIForForm(selectedForm);
+  }
+}
+
+function updateStepUIForForm(index) {
+  try {
+  var form = courseData[index];
+  if (!form) { console.log('updateStepUI: no form at index', index); return; }
+  var n = form.keyPoints.length;
+  // Reset currentStep if out of bounds
+  if (currentStep >= n) currentStep = Math.floor(n / 2);
+  var step = Math.min(currentStep, n - 1);
+
+  // Rebuild step indicator
+  var stepsContainer = document.querySelector('#page-step-teach .steps');
+  if (stepsContainer) {
+    stepsContainer.innerHTML = '';
+    for (var i = 0; i < n; i++) {
+      if (i > 0) {
+        var arrow = document.createElement('div');
+        arrow.className = 'step-arrow';
+        arrow.textContent = '›';
+        stepsContainer.appendChild(arrow);
+      }
+      var stepDiv = document.createElement('div');
+      stepDiv.className = 'step';
+      stepDiv.innerHTML = '<div class="step-num' + (i < step ? ' done' : '') + (i === step ? ' current' : '') + '">' + (i < step ? '✓' : (i+1)) + '</div>' +
+        '<div class="step-label' + (i === step ? ' active' : '') + '">要点' + (i+1) + '</div>';
+      stepsContainer.appendChild(stepDiv);
+    }
+    currentStep = step;
+  }
+
+  // Update step teaching page with form data
+  var titleEl = document.getElementById('step-title');
+  var descEl = document.getElementById('step-desc');
+  var tagsEl = document.getElementById('step-tags');
+  var kpBox = document.getElementById('step-kp-box');
+  var kpText = document.getElementById('step-kp-text');
+  if (titleEl) titleEl.textContent = form.name + ' — 要诀' + (step + 1) + '/' + n;
+  if (descEl) descEl.innerHTML = '<p style="margin-bottom:12px;">' + form.desc + '</p><p><strong style="color:var(--accent);">要诀' + (step + 1) + '：</strong>' + (form.keyPoints[step] || form.keyPoints[0]) + '</p>';
+  if (kpBox && kpText) {
+    var kpTips = {
+      '起势': '无极生太极，预备势中求。松静自然，意守丹田。',
+      '右野马分鬃': '野马分鬃劲，开合自有方。前手如探路，后手如拖缰。',
+      '白鹤亮翅': '白鹤展翅轻，虚实自分明。一手上举托，一手下按沉。',
+      '搂膝拗步': '搂膝护下盘，拗步走偏中。前推后拉劲，浑圆一气通。',
+      '手挥琵琶': '怀抱琵琶势，弹抖在指间。前手如按弦，后手如拨弹。',
+      '倒卷肱': '退中有进意，卷肱化敌力。退步不丢势，随时可反击。',
+      '揽雀尾': '揽雀尾含四正，掤捋挤按皆在其中。以柔克刚、四两拨千斤。',
+      '单鞭': '单鞭一势最为雄，左像箭来右似弓。松腰沉胯气下沉，力从脊发势如虹。',
+      '云手': '云手如行云流水，连绵不断。以腰为轴带动四肢，双手划圆护周全。',
+      '高探马': '高探马势探前程，虚步探掌意在先。如骑骏马踏云雾，轻灵沉着两相兼。',
+      '右蹬脚': '蹬脚如开弓，提膝再前蹬。支撑须稳固，发力要干脆。',
+      '双峰贯耳': '双拳如双峰，贯耳势如风。沉肩又坠肘，整劲自腰生。',
+      '转身左蹬脚': '转身左蹬脚，旋转生其势。脚跟为轴转，蹬脚不留情。',
+      '左下势独立': '下势如龙潜深渊，独立如鹤立鸡群。起落之间见功夫，沉稳轻灵两分明。',
+      '十字手': '双手十字交叉，护在胸前如门闩。开合有度守中正，蓄势待发静制动。',
+      '收势': '收势归元气息匀，引气归丹心神宁。太极无极归一体，动中求静是根本。'
+    };
+    kpText.textContent = kpTips[form.name] || '“' + form.name + '”势，需要细心体会其中的力量转换与节奏感。多练多思，自然掌握。';
+  }
+  if (tagsEl) {
+    tagsEl.innerHTML = '';
+    var tags = [form.difficulty, form.category, '第' + toChineseNum(index+1) + '式'];
+    tags.forEach(function(t) {
+      var tag = document.createElement('span');
+      tag.className = 'tag tag-default';
+      tag.textContent = t;
+      tagsEl.appendChild(tag);
+    });
+  }
+  } catch(e) { console.log('updateStepUI error:', e); }
+}
+
+// --- Frame Navigation for 3D Viewer ---
+var currentFrame = 24;
+var totalFrames = 86;
+var isPlaying = false;
+var playInterval = null;
+
+function updateFrameDisplay() {
+  document.getElementById('frame-counter').textContent = currentFrame + ' / ' + totalFrames;
+  var prog = document.getElementById('frame-progress');
+  if (prog) prog.style.width = (currentFrame / totalFrames * 100) + '%';
+  var angles = ['128°', '124°', '120°', '126°', '130°', '128°', '126°'];
+  var weights = ['62%', '58%', '55%', '60%', '65%', '62%', '58%'];
+  var idx = Math.floor(currentFrame / 12) % 7;
+  var ka = document.getElementById('knee-angle');
+  var wd = document.getElementById('weight-dist');
+  if (ka) ka.textContent = angles[idx];
+  if (wd) wd.textContent = weights[idx];
+}
+
+function prevFrame() { if (currentFrame > 1) { currentFrame--; updateFrameDisplay(); } }
+function nextFrame() { if (currentFrame < totalFrames) { currentFrame++; updateFrameDisplay(); } }
+function togglePlayback() {
+  var btn = document.getElementById('play-btn');
+  if (isPlaying) {
+    clearInterval(playInterval);
+    isPlaying = false;
+    if (btn) btn.textContent = '▶ 播放动画';
+    return;
+  }
+  isPlaying = true;
+  if (btn) btn.textContent = '⏸ 暂停';
+  playInterval = setInterval(function() {
+    currentFrame = currentFrame >= totalFrames ? 1 : currentFrame + 1;
+    updateFrameDisplay();
+  }, 100);
+}
+
+// --- Training Simulation ---
+var trainingTimer = null;
+var trainingSeconds = 0;
+function startTraining() {
+  var btn = document.getElementById('train-btn');
+  if (!btn) return;
+  if (trainingTimer) {
+    clearInterval(trainingTimer); trainingTimer = null;
+    btn.textContent = '▶ 继续训练';
+    showToast('训练已暂停', 'warning');
+    return;
+  }
+  var hint = document.querySelector('#page-ai-training .viewer-3d-hint');
+  if (hint) hint.innerHTML = '<div style="color:rgba(184,49,47,0.7);font-size:14px;font-weight:600;">◉ 训练进行中...</div><div style="font-size:11px;margin-top:4px;color:rgba(255,255,255,0.3);">摄像头已启动 · AI 骨骼追踪中</div>';
+  btn.textContent = '⏸ 暂停训练';
+  trainingTimer = setInterval(function() {
+    trainingSeconds++;
+    var min = Math.floor(trainingSeconds / 60);
+    var sec = trainingSeconds % 60;
+    var el = document.getElementById('train-time');
+    if (el) el.textContent = (min < 10 ? '0' : '') + min + ':' + (sec < 10 ? '0' : '') + sec;
+
+    if (trainingSeconds % 5 === 0) {
+      var fbItems = document.querySelectorAll('#page-ai-training .feedback-item');
+      if (fbItems.length) {
+        var score = 70 + Math.floor(Math.random() * 20);
+        var bodyIdx = Math.floor(Math.random() * 3);
+        var goodMsgs = ['前腿膝盖角度：' + (125 + Math.floor(Math.random() * 8)) + '°（标准 128°）偏差良好', '重心位置：前脚 ' + (55 + Math.floor(Math.random() * 10)) + '%（标准 62%）偏差可接受', '身体偏转：' + (12 + Math.floor(Math.random() * 8)) + '°（标准 15°）姿势端正'];
+        var warnMsgs = ['肩部紧张，建议放松下沉', '呼吸节奏略快，建议放慢', '腰部旋转不够充分，注意以腰为轴'];
+        if (score > 85) {
+          fbItems[0].querySelector('.feedback-dot').className = 'feedback-dot good';
+          fbItems[0].childNodes[1].textContent = goodMsgs[bodyIdx];
+        } else if (score > 70) {
+          fbItems[2].querySelector('.feedback-dot').className = 'feedback-dot warn';
+          fbItems[2].childNodes[1].textContent = warnMsgs[bodyIdx];
+        }
+      }
+    }
+  }, 1000);
+}
+
+// --- 3D Viewer Mode Switching ---
+function switchViewMode(el, mode) {
+  var container = el.parentElement;
+  container.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var hint = document.querySelector('#page-move-3d .viewer-3d-hint');
+  if (!hint) return;
+  var labels = {
+    body: '3D 人体模型 · 拖拽旋转 / 滚轮缩放',
+    force: '力量传导线可视化 · 金色虚线标示力量路径',
+    angle: '骨节角度标注 · 各关节角度实时显示',
+    gravity: '重心轨迹追踪 · 红色轨迹为重心移动路径',
+    step: '步型视图 · 从上方俯瞰脚步位置和重心分布'
+  };
+  hint.innerHTML = hint.innerHTML.replace(/<div>.*?<\/div>$/, '<div>' + (labels[mode] || '3D 人体模型') + '</div>');
+}
+
+// --- History Tab Switching ---
+function switchHistoryTab(el, tab) {
+  switchTabs(el, 'history');
+  var records = document.querySelectorAll('#page-ai-history .record-card');
+  records.forEach(function(r) {
+    if (tab === 'time') r.style.display = 'flex';
+    else if (tab === 'move') {
+      var t = r.querySelector('.record-title');
+      r.style.display = t && t.textContent.indexOf('单鞭') !== -1 ? 'flex' : 'none';
+    } else if (tab === 'growth') {
+      var b = r.querySelector('.badge');
+      r.style.display = b && b.textContent.indexOf('▲') !== -1 ? 'flex' : 'none';
+    }
+  });
+}
+
+// --- Combat Simulator ---
+var combatInterval = null;
+function startCombat() {
+  var scene = document.querySelector('.tactics-scene');
+  var btn = document.querySelector('#page-tactics .btn-primary');
+  if (!scene || !btn) return;
+  if (combatInterval) {
+    clearInterval(combatInterval); combatInterval = null;
+    btn.textContent = '▶ 开始对战模拟';
+    showToast('对战已停止', 'warning');
+    return;
+  }
+  btn.textContent = '⏹ 停止模拟';
+  showToast('对战模拟开始！双方进入推手态势', 'success');
+  var figures = scene.querySelectorAll('.tactics-figure');
+  var step = 0;
+  combatInterval = setInterval(function() {
+    step++;
+    var offset = Math.sin(step * 0.3) * 15;
+    figures.forEach(function(f, i) {
+      f.style.transform = 'translateY(-50%) translateX(' + ((i === 0 ? 1 : -1) * offset) + 'px)';
+      f.style.transition = 'transform 200ms ease-out';
+    });
+  }, 300);
+}
+
+// --- Calibration Simulation ---
+function startCalibration() {
+  var status = document.querySelector('.calibration-status');
+  if (!status) return;
+  var steps = ['校准中... 请保持正面站立', '✓ 身体轮廓识别完成', '✓ 骨骼关键点定位完成', '✓ 关节角度初始校准完成', '✓ 校准成功！可以开始训练'];
+  var i = 0;
+  var dot = status.querySelector('.cal-dot');
+  if (dot) dot.style.background = 'var(--gold)';
+  var calInt = setInterval(function() {
+    i++;
+    if (i >= steps.length) {
+      clearInterval(calInt);
+      status.innerHTML = '<span style="color:var(--success);font-size:16px;">✓</span> 校准完成';
+      status.style.background = 'rgba(61,139,37,0.8)';
+      showToast('摄像头校准成功，可以开始训练了');
+      return;
+    }
+    status.childNodes[1].textContent = steps[i];
+    if (i === 4 && dot) dot.style.background = 'var(--success)';
+  }, 1200);
+}
+
+// --- Score Circle Animation ---
+function animateScoreCircles() {
+  document.querySelectorAll('.score-circle-anim').forEach(function(circle) {
+    var totalDash = parseFloat(circle.getAttribute('stroke-dasharray'));
+    var targetOffset = circle.getAttribute('stroke-dashoffset');
+    circle.style.strokeDashoffset = totalDash;
+    setTimeout(function() { circle.style.strokeDashoffset = targetOffset; }, 100);
+  });
+}
+
+// --- After page change ---
+function afterPageChange(id) {
+  if (id === 'tactics' && combatInterval) {
+    clearInterval(combatInterval); combatInterval = null;
+    var btn = document.querySelector('#page-tactics .btn-primary');
+    if (btn) btn.textContent = '▶ 开始对战模拟';
+  }
+  if (id === 'ai-training' && trainingTimer) {
+    clearInterval(trainingTimer); trainingTimer = null;
+    var btn = document.getElementById('train-btn');
+    if (btn) btn.textContent = '▶ 开始训练';
+  }
+  if (id === 'move-detail' && selectedForm >= 0) {
+    showMoveDetail(selectedForm);
+  }
+  if (id === 'step-teach') {
+    // Handled by goStepTeach()
+  }
+  if (id === 'move-3d') {
+    document.getElementById('frame-counter').textContent = currentFrame + ' / ' + totalFrames;
+  }
+  if (id === 'course-yang16') {
+    renderYang16Grid();
+  }
+}
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+function initApp() {
+  // Render course list and 16-form grid
+  renderCourseList();
+  renderYang16Grid();
+
+  // Search bindings
+  var searchInput = document.getElementById('lesson-search');
+  if (searchInput) searchInput.addEventListener('input', filterLessons);
+  var catFilter = document.getElementById('category-filter');
+  if (catFilter) catFilter.addEventListener('change', filterLessons);
+  var diffFilter = document.getElementById('difficulty-filter');
+  if (diffFilter) diffFilter.addEventListener('change', filterLessons);
+
+  // History tabs
+  document.querySelectorAll('#page-ai-history .tabs .tab').forEach(function(t, i) {
+    var tabs = ['time', 'move', 'growth'];
+    if (i < 3) {
+      t.setAttribute('data-tab', tabs[i]);
+      t.onclick = function() { switchHistoryTab(this, tabs[i]); };
+    }
+  });
+
+  // 3D viewer mode tabs
+  document.querySelectorAll('#page-move-3d .tabs .tab').forEach(function(t, i) {
+    var modes = ['body', 'force', 'angle', 'gravity', 'step'];
+    if (i < 5) t.onclick = function() { switchViewMode(this, modes[i]); };
+  });
+
+  // Training button
+  var trainBtn = document.querySelector('#page-ai-training .btn-primary');
+  if (trainBtn && trainBtn.textContent.indexOf('完成') === -1) {
+    trainBtn.id = 'train-btn';
+    trainBtn.onclick = startTraining;
+  }
+
+  // Playback button
+  var playBtn = document.querySelector('#page-move-3d .playback-bar .btn-primary');
+  if (playBtn) { playBtn.id = 'play-btn'; playBtn.onclick = togglePlayback; }
+
+  // Frame navigation buttons
+  var frameBtns = document.querySelectorAll('#page-move-3d .playback-bar .btn-outline');
+  if (frameBtns.length >= 2) {
+    frameBtns[0].onclick = prevFrame;
+    frameBtns[1].onclick = nextFrame;
+  }
+
+  // Combat button
+  var combatBtn = document.querySelector('#page-tactics .btn-primary');
+  if (combatBtn) combatBtn.onclick = startCombat;
+
+  // Calibration buttons
+  var calBtn = document.querySelector('#page-ai-calibrate .btn-primary');
+  if (calBtn && !calBtn.id) calBtn.onclick = startCalibration;
+  var calDoneBtn = document.getElementById('cal-done-btn');
+  if (calDoneBtn) calDoneBtn.onclick = function() { showPage('ai-training', null); };
+
+  // Settings button
+  var settingsBtn = document.querySelector('.sidebar-settings');
+  if (settingsBtn) settingsBtn.onclick = openSettings;
+
+  // Step teaching buttons
+  var sp = document.querySelector('#page-step-teach .btn-outline');
+  var sn = document.querySelector('#page-step-teach .btn-primary');
+  if (sp) sp.onclick = function() { goStep(-1); showToast('上一步', 'success'); };
+  if (sn) sn.onclick = function() { goStep(1); showToast('下一步', 'success'); };
+
+  // Init UI
+  updateStepUI();
+  updateFrameDisplay();
+
+  // Frame progress bar
+  if (!document.getElementById('frame-progress')) {
+    var container = document.querySelector('#page-move-3d .playback-bar');
+    if (container) {
+      var prog = document.createElement('div');
+      prog.style.cssText = 'flex:1;height:6px;background:var(--bg-warm);border-radius:3px;overflow:hidden;';
+      prog.innerHTML = '<div id="frame-progress" style="height:100%;width:27%;background:var(--accent);border-radius:3px;transition:width 200ms;"></div>';
+      container.insertBefore(prog, container.firstChild);
+    }
+  }
+
+  // Timeline interactivity
+  document.querySelectorAll('.timeline-item').forEach(function(item) {
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', function() {
+      var desc = this.querySelector('.timeline-desc');
+      var visual = this.querySelector('.timeline-visual');
+      if (desc && visual) {
+        var isExpanded = this.getAttribute('data-expanded') === 'true';
+        if (isExpanded) {
+          desc.style.maxHeight = '60px';
+          visual.style.maxHeight = '0';
+          visual.style.marginBottom = '0';
+          visual.style.overflow = 'hidden';
+          visual.style.transition = 'all 300ms';
+          this.setAttribute('data-expanded', 'false');
+        } else {
+          desc.style.maxHeight = desc.scrollHeight + 'px';
+          visual.style.maxHeight = '120px';
+          visual.style.marginBottom = '12px';
+          visual.style.overflow = 'hidden';
+          visual.style.transition = 'all 300ms';
+          this.setAttribute('data-expanded', 'true');
+        }
+      }
+    });
+    // Set initial collapsed state
+    var descInit = item.querySelector('.timeline-desc');
+    if (descInit) { descInit.style.maxHeight = '60px'; descInit.style.overflow = 'hidden'; descInit.style.transition = 'all 300ms'; }
+    var visual = item.querySelector('.timeline-visual');
+    if (visual) {
+      visual.style.maxHeight = '0';
+      visual.style.marginBottom = '0';
+      visual.style.overflow = 'hidden';
+      visual.style.transition = 'all 300ms';
+    }
+    item.setAttribute('data-expanded', 'false');
+    // First item auto-expanded
+    if (item === document.querySelector('.timeline-item:first-child')) {
+      var desc = item.querySelector('.timeline-desc');
+      if (desc) desc.style.maxHeight = desc.scrollHeight + 'px';
+      if (visual) { visual.style.maxHeight = '120px'; visual.style.marginBottom = '12px'; }
+      item.setAttribute('data-expanded', 'true');
+    }
+    // Add hint text
+    var hint = document.createElement('div');
+    hint.style.cssText = 'font-size:10px;color:var(--text-muted);margin-top:4px;';
+    hint.textContent = '点击展开详情';
+    item.querySelector('.timeline-title').after(hint);
+  });
+
+  // Dark mode
+  if (localStorage.getItem('zctj-dark-mode') === '1') document.body.classList.add('dark-mode');
+}
+
+// --- Inject dark mode CSS ---
+var toggleStyle = document.createElement('style');
+toggleStyle.textContent = '.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--border);border-radius:24px;transition:300ms;}.toggle-slider::before{content:"";position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:300ms;}#dark-toggle:checked+.toggle-slider{background:var(--accent);}#dark-toggle:checked+.toggle-slider::before{transform:translateX(20px);}';
+document.head.appendChild(toggleStyle);
+
+var dmStyle = document.createElement('style');
+dmStyle.textContent = '.dark-mode{--bg:#1A1D23;--bg-warm:#23262E;--card:#2A2D36;--border:#3A3D46;--border-light:#32353E;--text:#E8E6E3;--text-secondary:#C8C5BE;--text-muted:#8A8680;--nav-bg:#0A0C10;--nav-bg-subtle:#111318;--shadow-card:0 2px 8px rgba(0,0,0,0.3);--shadow-md:0 4px 16px rgba(0,0,0,0.4);--tag-bg:#32353E;}.dark-mode .welcome-banner{background:linear-gradient(135deg,#0A0C10 0%,#14181F 60%,#1A2228 100%);}';
+document.head.appendChild(dmStyle);
+
+// --- Settings modal HTML ---
+var modalStyle = document.createElement('style');
+modalStyle.textContent = '.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);z-index:99998;display:none;justify-content:center;align-items:center;}.modal-overlay.active{display:flex;}.modal-content{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 32px;min-width:360px;max-width:440px;box-shadow:var(--shadow-lg);}.modal-title{font-family:var(--font-serif);font-size:18px;font-weight:700;color:var(--text);}.modal-close{font-size:24px;cursor:pointer;color:var(--text-muted);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);}.modal-close:hover{background:var(--bg-warm);color:var(--text);}.setting-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border-light);font-size:14px;color:var(--text);}.setting-item:last-child{border-bottom:none;}';
+document.head.appendChild(modalStyle);
+
+// --- Init on DOM ready ---
+document.addEventListener('DOMContentLoaded', function() {
+  var div = document.createElement('div');
+  div.innerHTML = '<div id="settings-modal" class="modal-overlay" onclick="if(event.target===this)closeSettings()">' +
+    '<div class="modal-content">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">' +
+    '<div class="modal-title">设置</div>' +
+    '<div class="modal-close" onclick="closeSettings()">&times;</div></div>' +
+    '<div class="setting-item"><span>深色模式</span><label style="position:relative;display:inline-block;width:44px;height:24px;"><input type="checkbox" id="dark-toggle" onchange="toggleDarkMode()" style="opacity:0;width:0;height:0;"><span class="toggle-slider"></span></label></div>' +
+    '<div class="setting-item"><span>关于</span><span style="color:var(--text-muted);font-size:12px;">智承太极 v0.3</span></div>' +
+    '</div></div>';
+  document.body.appendChild(div.firstElementChild);
+  initApp();
+  var dt = document.getElementById('dark-toggle');
+  if (dt && localStorage.getItem('zctj-dark-mode') === '1') dt.checked = true;
+});
+
+// Score page observer
+var observer = new MutationObserver(function(mutations) {
+  mutations.forEach(function(m) {
+    if (m.target.id === 'page-ai-score' && m.target.classList.contains('active')) {
+      setTimeout(animateScoreCircles, 50);
+    }
+  });
+});
+var scorePage = document.getElementById('page-ai-score');
+if (scorePage) observer.observe(scorePage, { attributes: true, attributeFilter: ['class'] });
+</script>
+
+
+
+
+</body></html>

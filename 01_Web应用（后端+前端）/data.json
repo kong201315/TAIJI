@@ -1,0 +1,54 @@
+{
+  "user": {
+    "name": "金润山",
+    "klass": "2503"
+  },
+  "forms": {
+    "起势": true,
+    "右野马分鬃": true,
+    "白鹤亮翅": true
+  },
+  "dashboard": {
+    "greeting": "早上好",
+    "streak": 4,
+    "weeklyDone": 4,
+    "weeklyTarget": 5,
+    "score": 19,
+    "scoreDelta": "+0",
+    "mastered": 3,
+    "masteredTotal": 16,
+    "perForm": 6.25,
+    "masteredDelta": "+0",
+    "toCorrect": 0,
+    "toCorrectDelta": "—",
+    "quickResume": "从「起势」开始你的训练",
+    "quickRecommend": "起势（第一式，从零起步）",
+    "feedback": "系统已就绪。完成每式训练即可累计分数，16 式满分 100 分。"
+  },
+  "records": [
+    {
+      "day": "今日",
+      "form": "起势",
+      "score": 6,
+      "isNew": true
+    },
+    {
+      "day": "今日",
+      "form": "起势",
+      "score": 6,
+      "isNew": false
+    },
+    {
+      "day": "今日",
+      "form": "右野马分鬃",
+      "score": 13,
+      "isNew": true
+    },
+    {
+      "day": "今日",
+      "form": "白鹤亮翅",
+      "score": 19,
+      "isNew": true
+    }
+  ]
+}
