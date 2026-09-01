@@ -11,7 +11,7 @@ const path = require('path');
 const PORT = process.env.PORT || 8080;
 const DIR = __dirname;
 const DATA_FILE = path.join(DIR, 'data.json');
-1
+
 const DEFAULT_DATA = {
   user: { name: '金润山', klass: '计算机科学与技术2504班' },
   forms: {},
@@ -33,12 +33,14 @@ function loadData() {
   try { return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); }
   catch (e) { return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
 }
+
+let db = loadData();
+
 function saveData() {
   try { fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2)); }
   catch (e) { console.error('[zhitaiji] 写入数据失败:', e.message); }
 }
 
-let db = loadData();
 if (!fs.existsSync(DATA_FILE)) saveData();
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }

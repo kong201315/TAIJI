@@ -1,21 +1,22 @@
 {
   "user": {
     "name": "金润山",
-    "klass": "2503"
+    "klass": "计算机2504"
   },
   "forms": {
     "起势": true,
     "右野马分鬃": true,
-    "白鹤亮翅": true
+    "白鹤亮翅": true,
+    "手挥琵琶": true
   },
   "dashboard": {
     "greeting": "早上好",
-    "streak": 4,
-    "weeklyDone": 4,
+    "streak": 5,
+    "weeklyDone": 5,
     "weeklyTarget": 5,
-    "score": 19,
+    "score": 25,
     "scoreDelta": "+0",
-    "mastered": 3,
+    "mastered": 4,
     "masteredTotal": 16,
     "perForm": 6.25,
     "masteredDelta": "+0",
@@ -48,6 +49,12 @@
       "day": "今日",
       "form": "白鹤亮翅",
       "score": 19,
+      "isNew": true
+    },
+    {
+      "day": "今日",
+      "form": "手挥琵琶",
+      "score": 25,
       "isNew": true
     }
   ]
